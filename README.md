@@ -12,7 +12,7 @@ then
 `yarn build`
 
 
-## Using thhis as a boilerplate
+## Using this as a boilerplate
 `git clone https://github.com/IanBand/webpack4-boilerplate.git`
 
 then
