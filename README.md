@@ -10,3 +10,13 @@ then
 
 ## Building the project
 `yarn build`
+
+
+## Actually using the boilerplate
+`git clone https://github.com/IanBand/webpack4-boilerplate.git`
+
+then
+
+`git remote remove origin`
+
+`git remote add origin [my new repository url]`
