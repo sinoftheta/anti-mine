@@ -1,9 +1,18 @@
-div{
-    height: 100px;
-    width: 100px;
-    border-style: solid;
-    border-color: #789834;
-    border-radius: 10px;
-    border-width: 2px;
+#game-board{
+    height: 100%;
+    width: 100%;
     
+}
+.game-row{
+    display: flex;
+
+}
+.game-cell{
+    height: 20px;
+    width: 20px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3c0f70;
+    background: #6e1acf;
+    /*margin: 1px;*/
 }
