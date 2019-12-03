@@ -25,16 +25,14 @@ export default class Board{
         //choose a kernel as an argument for placeNumbers or make one up
         //https://en.wikipedia.org/wiki/Kernel_(image_processing)
 
-        //this.placeNumbersConvolute([1,1,1]);
+        this.placeNumbersConvolute([1,2,1]);
         //this.placeNumbersConvolute([1,1,1]);
 
-        this.placeNumbersKernel([[7,1,0],
-                                 [1,69,1],
-                                 [0,1,0]]);
-                                 
-        this.placeNumbersKernel([[7,1,0],
-                                 [1,69,1],
-                                 [0,1,0]]);
+        /*this.placeNumbersKernel([[1,2,1],
+                                 [2,8,2],
+                                 [1,2,1]]);*/
+
+        
 
     }
     iterateOverBoard(fi, fo){
@@ -64,10 +62,10 @@ export default class Board{
                 //possibilities values (m) for mines are:
 
                 //m = 1
-                //target.value = 1;
+                target.value = 1;
 
                 //m is a random element of {1, -1}
-                target.value = rng() > .5 ? 1 : -1 ;
+                //target.value = rng() > .5 ? 1 : -1 ;
 
 
                 //m is a weighted value in (0,1] (tends to be one)
@@ -150,7 +148,7 @@ export default class Board{
                     if(field[i] && field[i][j + offset]){
 
                         //convolve on (i,j)
-                        field[i][j].value += tempField[i][j + offset] * k1[m]; 
+                        field[i][j].value += tempField[i][j + offset] * k1[m] / 16; 
                         ++terms;
                     }   
                 }

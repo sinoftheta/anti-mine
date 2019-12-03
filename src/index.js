@@ -31,7 +31,7 @@ class Game_manager{
 
 console.log('Hello World!');
 
-let board = new Board(Math.floor(Math.random() * 101), 10, 10, 1);
+let board = new Board(1, 10, 10, 5);
 let board_render = new BoardRender(document.getElementById("game-board"), board);
 
 

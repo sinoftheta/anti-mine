@@ -20,6 +20,9 @@
     align-items: center;
     justify-content: center;
 }
+.cell-mine{
+    background: #680b6b;
+}
 .cell-value{
     color: #ffffff;
     user-select: none;
