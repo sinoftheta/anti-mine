@@ -8,13 +8,18 @@
 
 }
 .game-cell{
-    height: 20px;
-    width: 20px;
+    color: #ffffff;
+
+    height: 50px;
+    width: 50px;
     border-style: solid;
     border-width: 1px;
     border-color: #3c0f70;
     background: #6e1acf;
     /*margin: 1px;*/
+}
+.cell-mine{
+    color: #e07512;
 }
 .game-cell:hover{
     background: #bda3db;

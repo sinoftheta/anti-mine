@@ -1,6 +1,7 @@
 import css from './style.css';
 import Board from './Board.js';
 import BoardRender from './BoardRender.js';
+//import fontawesome from 'fontawesome';
 
 //import { callbackify } from 'util'; //???
 //http://antimi.ne/ want
@@ -30,7 +31,7 @@ class Game_manager{
 
 console.log('Hello World!');
 
-let board = new Board(0, 5, 5, 5);
+let board = new Board(Math.floor(Math.random() * 101), 10, 10, 1);
 let board_render = new BoardRender(document.getElementById("game-board"), board);
 
 
