@@ -62,7 +62,7 @@ export default class Board{
                 //possibilities values (m) for mines are:
 
                 //m = 1
-                target.value = 1;
+                //target.value = 1;
 
                 //m is a random element of {1, -1}
                 //target.value = rng() > .5 ? 1 : -1 ;
@@ -74,7 +74,7 @@ export default class Board{
 
 
                 //m is a value in [-1, 1]
-                //target.value = (rng() * 2) - 1;
+                target.value = (rng() * 2) - 1;
 
 
                 /***need to playtest each!!!***/
