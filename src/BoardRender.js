@@ -26,7 +26,11 @@ export default class BoardRender{
                 //apply style and class based on a cells attributes
                 let cellChild = cellDiv.appendChild(document.createElement("div"));
                 cellChild.innerHTML = cellObj.value;
-                cellChild.className = `cell-value`
+                cellChild.className = `cell-value`;
+
+                //let colorVal =  cellObj.value + 
+                //cellDiv.style.background = 'rgb(255,0,0)';
+
                 if(cellObj.isMine){
                     cellDiv.className += ' cell-mine';
                 }

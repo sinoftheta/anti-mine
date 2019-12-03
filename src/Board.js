@@ -25,7 +25,7 @@ export default class Board{
         //choose a kernel as an argument for placeNumbers or make one up
         //https://en.wikipedia.org/wiki/Kernel_(image_processing)
 
-        this.placeNumbersConvolute([1,2,1]);
+        this.placeNumbersConvolute([1,4,1]);
         //this.placeNumbersConvolute([1,1,1]);
 
         /*this.placeNumbersKernel([[1,2,1],
@@ -65,7 +65,7 @@ export default class Board{
                 //target.value = 1;
 
                 //m is a random element of {1, -1}
-                //target.value = rng() > .5 ? 1 : -1 ;
+                target.value = rng() > .5 ? 1 : -1 ;
 
 
                 //m is a weighted value in (0,1] (tends to be one)
@@ -74,7 +74,7 @@ export default class Board{
 
 
                 //m is a value in [-1, 1]
-                target.value = (rng() * 2) - 1;
+                //target.value = (rng() * 2) - 1;
 
 
                 /***need to playtest each!!!***/
