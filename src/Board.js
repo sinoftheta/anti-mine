@@ -24,7 +24,17 @@ export default class Board{
 
         //choose a kernel as an argument for placeNumbers or make one up
         //https://en.wikipedia.org/wiki/Kernel_(image_processing)
-        this.placeNumbers([1,1,1]);
+
+        //this.placeNumbersConvolute([1,1,1]);
+        //this.placeNumbersConvolute([1,1,1]);
+
+        this.placeNumbersKernel([[7,1,0],
+                                 [1,69,1],
+                                 [0,1,0]]);
+                                 
+        this.placeNumbersKernel([[7,1,0],
+                                 [1,69,1],
+                                 [0,1,0]]);
 
     }
     iterateOverBoard(fi, fo){
@@ -78,11 +88,19 @@ export default class Board{
         
     }
     //let kernel_gauss_comp = [1,2,1];
-    placeNumbers(k){ //REWRITE IN C WITH WEBASSEMBLY
+    placeNumbersConvolute(k0, k_option){ //REWRITE IN C WITH WEBASSEMBLY...?
         //https://www.youtube.com/watch?v=SiJpkucGa1o
         //https://www.youtube.com/watch?v=C_zFhWdM4ic
         //https://en.wikipedia.org/wiki/Multidimensional_discrete_convolution
         //performs a convolution with kernel k 
+
+
+        //error checking to see if second arg exists/is valid
+        let k1 = k0;
+        if(typeof k_option === "array"){
+            k1 = k_option;
+        }
+
 
         let field = this.field;
 
@@ -102,15 +120,15 @@ export default class Board{
 
                 tempField[i][j] = 0;
 
-                for(let m = 0; m < k.length; m++){
+                for(let m = 0; m < k0.length; m++){
 
-                    let offset = m - Math.floor(k.length/2);
+                    let offset = m - Math.floor(k0.length/2);
 
                     //check if kernel is out of bounds
                     if(field[i + offset] && field[i + offset][j]){
 
                         //convolve on (i,j)
-                        tempField[i][j] += field[i + offset][j].value * k[m]; 
+                        tempField[i][j] += field[i + offset][j].value * k0[m]; 
                         ++terms;
                     }
                 }
@@ -124,61 +142,62 @@ export default class Board{
                 let terms = 0, csum = 0;
                 field[i][j].value = 0;
 
-                for(let m = 0; m < k.length; m++){
+                for(let m = 0; m < k1.length; m++){
 
-                    let offset = m - Math.floor(k.length/2);
+                    let offset = m - Math.floor(k1.length/2);
 
                     //check if kernel is out of bounds
                     if(field[i] && field[i][j + offset]){
 
                         //convolve on (i,j)
-                        field[i][j].value += tempField[i][j + offset] * k[m]; 
+                        field[i][j].value += tempField[i][j + offset] * k1[m]; 
                         ++terms;
-                    }
-                    
+                    }   
                 }
-                
             }
         }
-        
-        
+    }
+    placeNumbersKernel(k){
+        let field = this.field;
 
-        /*        
+        let tempField = [];
+        
+        
+        //instantiate temp field within first iteration
+
+        //iterate through image
         for(let i = 0; i < this.columns; i++){ //vertical
-
-            //tempField2[i] = [];
-
+            tempField[i] = [];
             for(let j = 0; j < this.rows; j++){ //horizontal
+                
+                tempField[i][j] = 0;
 
-                let csum = 0, terms = 0;
-
+                //iterate through kernel
                 for(let m = 0; m < k.length; m++){
 
-                    let offset = m - Math.floor(k.length/2);
+                    let offset_i = m - Math.floor(k.length/2);
 
-                    //check if kernel is out of bounds
-                    if(field[i] && field[i][j + offset]){
+                    for(let n = 0; n < k[0].length; n++ ){
 
-                        //calc cumulative weighted sum for (i,j)
-                        //csum += field[i][j + offset].value * k[m]; 
-                        csum += tempField[i][j + offset];
-                        ++terms;
-                    }
+                        let offset_j = n - Math.floor(k[0].length/2);
                     
+                        //check if kernel is out of bounds
+                        if(field[i + offset_i] && field[i + offset_i][j + offset_j]){
+
+                            //compute new val
+                            tempField[i][j] += field[i + offset_i][j + offset_j].value * k[m][n]; 
+                        }
+                    }
                 }
-
-                //calc weighted average for cell
-                tempField[i][j] = csum;// / terms;
-
             }
         }
-        */
-        /*
-        this.iterateOverBoard((y, x) => {
-                this.field[y][x].value = tempField[y][x];// + tempField2[y][x];
-        }, (i)=>{})
-        */
 
+        //put temp values in field
+        for(let i = 0; i < this.columns; i++){ //vertical
+            for(let j = 0; j < this.rows; j++){ //horizontal
+                this.field[i][j].value = tempField[i][j];
+            }
+        }
 
     }
 

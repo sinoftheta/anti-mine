@@ -7,7 +7,7 @@ import BoardRender from './BoardRender.js';
 //http://antimi.ne/ want
 
 let kernel_vanillaMS = [[1, 1, 1],
-                        [1, 0, 1],
+                        [1, 1, 1],
                         [1, 1, 1]];
 
 let kernel_gauss =   [[1, 2, 1],
@@ -18,7 +18,7 @@ let kernel_gauss_comp = [1,2,1];
 
 let kernel_1 =         [[0.25, 0.25, 0.25, 0.25, 0.25],
                         [0.25, 0.5, 0.5, 0.5, 0.25],
-                        [0.25, 0.5, 0, 0.5, 0.25],
+                        [0.25, 0.5, 1, 0.5, 0.25],
                         [0.25, 0.5, 0.5, 0.5, 0.25],
                         [0.25, 0.25, 0.25, 0.25, 0.25]];
 

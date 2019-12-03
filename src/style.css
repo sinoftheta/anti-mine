@@ -7,9 +7,7 @@
     display: flex;
 
 }
-.game-cell{
-    color: #ffffff;
-
+.cell{
     height: 50px;
     width: 50px;
     border-style: solid;
@@ -17,10 +15,16 @@
     border-color: #3c0f70;
     background: #6e1acf;
     /*margin: 1px;*/
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.cell-mine{
-    color: #e07512;
+.cell-value{
+    color: #ffffff;
+    user-select: none;
 }
-.game-cell:hover{
+.cell:hover{
     background: #bda3db;
 }
+

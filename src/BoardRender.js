@@ -17,15 +17,16 @@ export default class BoardRender{
 
                 //apply tags
                 cellDiv.id = cellObj.id; //unused... maybe use for animation?
-                cellDiv.className = `game-cell`;
+                cellDiv.className = `cell`;
                 cellDiv.x = j;
                 cellDiv.y = i;
                 cellDiv.onclick = (e) => {
                     console.log('' + e.target.x + ', ' + e.target.y);
                 };
-
                 //apply style and class based on a cells attributes
-                cellDiv.innerHTML = '' + cellObj.value;
+                let cellChild = cellDiv.appendChild(document.createElement("div"));
+                cellChild.innerHTML = cellObj.value;
+                cellChild.className = `cell-value`
                 if(cellObj.isMine){
                     cellDiv.className += ' cell-mine';
                 }
