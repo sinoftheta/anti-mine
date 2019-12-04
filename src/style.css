@@ -12,22 +12,31 @@
     width: 50px;
     border-style: solid;
     border-width: 1px;
-    border-color: #3c0f70;
-    background: #6e1acf;
-    /*margin: 1px;*/
+    border-color: #7a7a7a;
+    /*background: #6e1acf;
+    margin: 1px;*/
 
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.cell-mine{
-    background: #680b6b;
+.cell:hover{
+    background: #6f00ee;
 }
 .cell-value{
-    color: #ffffff;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 900;
+    -webkit-text-stroke: 1px rgb(0, 0, 0);
+    color: #ffffff; 
     user-select: none;
+    overflow: hidden;
 }
-.cell:hover{
-    background: #bda3db;
+
+
+.cell-mine{
+    /*acutally this is unused for now*/
+}
+.cell-value-mine{
+    color: #ff0000; 
 }
 

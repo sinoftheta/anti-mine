@@ -1,15 +1,38 @@
 import Cell from './Cell.js';
 import seedrandom from 'seedrandom';
 
-export default class Board{
-    //handles board memory + operations
-    constructor(seed, rows, columns, numMines){ //may change to num mines + num anti mines, maybe a mine will just have random value 
 
-        this.seed = seed;
-        this.rows = rows;
-        this.columns = columns;
-        this.numMines = numMines;
-        this.totalTiles = columns * rows;
+// note: "gravity strength" roughly relates to the radius/size of the kernel
+let kernel_vanillaMS = [[1, 1, 1],
+                        [1, 1, 1],
+                        [1, 1, 1]];
+
+let kernel_gauss =   [[1, 2, 1],
+                      [2, 4, 2],
+                      [1, 2, 1]];
+
+let my_kernel1 =       [[0.5,0.75,0.5],
+                        [0.75,1,0.75],
+                        [0.5,0.75,0.5]];
+
+let kernel_gauss_comp = [1,2,1];
+
+let my_kernel2 =         [[0, 0.25, 0.25, 0.25, 0],
+                        [0.25, 0.5, 0.5, 0.5, 0.25],
+                        [0.25, 0.5, 1, 0.5, 0.25],
+                        [0.25, 0.5, 0.5, 0.5, 0.25],
+                        [0, 0.25, 0.25, 0.25, 0]];
+
+
+
+export default class Board{
+    //contains all game logic
+    constructor(settings){ //may change to num mines + num anti mines, maybe a mine will just have random value 
+
+        this.seed = settings.seed;
+        this.columns = settings.rows; //NEEDS REFACTOR, ROWS AND COLUMNS MISLABELED
+        this.rows = settings.columns;
+        this.numMines = settings.mines;
 
         //instantiate field of cells
         this.field = [];
@@ -25,12 +48,10 @@ export default class Board{
         //choose a kernel as an argument for placeNumbers or make one up
         //https://en.wikipedia.org/wiki/Kernel_(image_processing)
 
-        this.placeNumbersConvolute([1,4,1]);
+        //this.placeNumbersConvolute([1,1,1], 1);
         //this.placeNumbersConvolute([1,1,1]);
 
-        /*this.placeNumbersKernel([[1,2,1],
-                                 [2,8,2],
-                                 [1,2,1]]);*/
+        this.placeNumbersKernel(my_kernel2, 1); //need a way of determining weight from kernel
 
         
 
@@ -86,7 +107,7 @@ export default class Board{
         
     }
     //let kernel_gauss_comp = [1,2,1];
-    placeNumbersConvolute(k0, k_option){ //REWRITE IN C WITH WEBASSEMBLY...?
+    placeNumbersConvolute(k0, normalize, k_option){ //REWRITE IN C WITH WEBASSEMBLY...?
         //https://www.youtube.com/watch?v=SiJpkucGa1o
         //https://www.youtube.com/watch?v=C_zFhWdM4ic
         //https://en.wikipedia.org/wiki/Multidimensional_discrete_convolution
@@ -148,14 +169,14 @@ export default class Board{
                     if(field[i] && field[i][j + offset]){
 
                         //convolve on (i,j)
-                        field[i][j].value += tempField[i][j + offset] * k1[m] / 16; 
+                        field[i][j].value += tempField[i][j + offset] * k1[m] / normalize; 
                         ++terms;
                     }   
                 }
             }
         }
     }
-    placeNumbersKernel(k){
+    placeNumbersKernel(k, normalize){
         let field = this.field;
 
         let tempField = [];
@@ -193,9 +214,42 @@ export default class Board{
         //put temp values in field
         for(let i = 0; i < this.columns; i++){ //vertical
             for(let j = 0; j < this.rows; j++){ //horizontal
-                this.field[i][j].value = tempField[i][j];
+                this.field[i][j].value = tempField[i][j] / normalize;
             }
         }
+
+    }
+
+
+    uncoverTile(x,y, prevMagnitude){
+
+        let target = field[x][y];
+
+        if(prevMagnitude && prevMagnitude < Math.abs(target.val)){
+                
+        }
+        //check if tile is covered
+        if(target.uncovered) return;
+
+        //reveal tile
+        target.uncovered = true;
+
+        //check lose condition
+        if(target.isMine){
+            //lose
+            return;
+        }
+
+        //check win condition
+        let gameWon = false;
+        if(gameWon){
+            return;
+        }
+
+        //recurse over all neighbors that are not mines 
+        //AND that have a smaller ABSOLUTE value than the target
+
+
 
     }
 
