@@ -43,6 +43,8 @@ export default class Board{
             }
         }
 
+        //PLACES ALL MINES... good for testing max value after place numbers
+        //this.iterateOverBoard((i,j) => {this.field[i][j].value = -1; this.field[i][j].isMine = true})
         this.placeMines();
 
         //choose a kernel as an argument for placeNumbers or make one up
@@ -58,13 +60,12 @@ export default class Board{
     }
     iterateOverBoard(fi, fo){
         for(let i = 0; i < this.columns; i++){
-            fo(i);
+            if(fo){fo(i);}
             for(let j = 0; j < this.rows; j++){
                 fi(i, j);
             }
         }
     }
-
     placeMines(){ 
         let n = this.numMines, x, y, target,
         rng = seedrandom('' + this.seed + this.rows + this.columns);
@@ -200,7 +201,7 @@ export default class Board{
 
                         let offset_j = n - Math.floor(k[0].length/2);
                     
-                        //check if kernel is out of bounds
+                        //check if kernel is out of bounds & not mine
                         if(field[i + offset_i] && field[i + offset_i][j + offset_j]){
 
                             //compute new val
