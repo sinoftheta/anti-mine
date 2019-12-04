@@ -1,3 +1,7 @@
+
+/***************
+* BOARD STYLES *
+***************/
 #game-board{
     height: 100%;
     width: 100%;
@@ -7,21 +11,26 @@
     display: flex;
 
 }
+
+/**************
+* CELL STYLES *
+**************/
 .cell{
     height: 50px;
     width: 50px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #7a7a7a;
-    /*background: #6e1acf;
-    margin: 1px;*/
 
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.cell:hover{
-    background: #6f00ee;
+.cell-covered{
+    background: #535353
+}
+.cell-covered:hover{
+    background: #7e7e7e;
+}
+.cell-revealed{
+    
 }
 .cell-value{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -31,12 +40,12 @@
     user-select: none;
     overflow: hidden;
 }
-
+.cell-value-mine{
+    color: #ff0000; 
+}
 
 .cell-mine{
     /*acutally this is unused for now*/
 }
-.cell-value-mine{
-    color: #ff0000; 
-}
+
 

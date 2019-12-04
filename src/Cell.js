@@ -5,8 +5,10 @@ export default class Cell{
         this.x = x;
         this.y = y;
         this.isMine = false;
-        this.uncovered = false;
+        this.uncovered = false; //TODO: change to "revealed"
         this.value = 0;
+
+        //TODO: add flags
     }
     get id(){
         return `cell-${this.x}-${this.y}`;

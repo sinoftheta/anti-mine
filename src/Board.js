@@ -53,7 +53,7 @@ export default class Board{
         //this.placeNumbersConvolute([1,1,1], 1);
         //this.placeNumbersConvolute([1,1,1]);
 
-        this.placeNumbersKernel(my_kernel2, 1); //need a way of determining weight from kernel
+        this.placeNumbersKernel(my_kernel2, 1); //total kernel weight = sum of all elements in kernel. Tile values will never exceed this weight as long as mine values are within [-1, 1]
 
         
 
@@ -223,17 +223,28 @@ export default class Board{
 
 
     uncoverTile(x,y, prevMagnitude){
+        let field = this.field;
 
+        //check if field[x][y] exists
+        if(!(field[x] && field[x][y])){
+            return;
+        }
+        
         let target = field[x][y];
 
-        if(prevMagnitude && prevMagnitude < Math.abs(target.val)){
-                
-        }
         //check if tile is covered
         if(target.uncovered) return;
 
+        //check that previous magnitude exists and is greater or equal to target magnitude 
+        if(prevMagnitude && prevMagnitude < Math.abs(target.val)){
+            console.log("boundary condition met");
+            return;
+        }
+
         //reveal tile
         target.uncovered = true;
+        console.log(`${x},${y} revealed`);
+
 
         //check lose condition
         if(target.isMine){
@@ -243,13 +254,36 @@ export default class Board{
 
         //check win condition
         let gameWon = false;
-        if(gameWon){
-            return;
-        }
+        if(gameWon) return;
 
         //recurse over all neighbors that are not mines 
         //AND that have a smaller ABSOLUTE value than the target
 
+        let magnitude = Math.abs(target.value);
+
+        //east
+        this.uncoverTile(x + 1, y, magnitude);
+
+        //northeast
+        this.uncoverTile(x + 1, y + 1, magnitude);
+
+        //north
+        this.uncoverTile(x, y + 1, magnitude);
+
+        //northwest
+        this.uncoverTile(x - 1, y + 1, magnitude);
+
+        //west
+        this.uncoverTile(x - 1, y, magnitude);
+
+        //southwest
+        this.uncoverTile(x - 1, y - 1, magnitude);
+
+        //south
+        this.uncoverTile(x, y - 1, magnitude);
+
+        //southeast
+        this.uncoverTile(x + 1, y - 1, magnitude);
 
 
     }
