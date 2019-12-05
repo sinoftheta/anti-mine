@@ -325,7 +325,6 @@ export default class Board{
         //the choice to recurse over diagonals depends on the kernel...
         //only recurse over diagonals if their values are the same...?
         //dont recurse over diagonals:
-        return;
 
         //northeast
         this.uncoverTile2(x + 1, y + 1, originValue);

@@ -39,10 +39,11 @@ body {
     justify-content: center;
 }
 .cell-covered{
-    background: linear-gradient(135deg, #535353 0%,#4d4d4d 100%);
+    /*background: linear-gradient(135deg, #535353 0%,#4d4d4d 100%);*/
+    background: #535353;
 }
 .cell-covered:hover{
-    background: #0ad42c2a;
+    background: #8a8a8a;
 }
 .cell-revealed{
     

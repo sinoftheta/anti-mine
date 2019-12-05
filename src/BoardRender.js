@@ -54,7 +54,7 @@ export default class BoardRender{
         let targetData = this.boardData.field[x][y];
         let targetElement = this.elements[x][y];
 
-        if(!targetData.uncovered){
+        if(!targetData.uncovered){ //if covered
             //render covered tyle
             targetElement.classList.add('cell-covered');
             targetElement.classList.remove('cell-revealed'); //not needed unless tiles can be re-covered
@@ -137,8 +137,34 @@ export default class BoardRender{
         for(let i = 0; i < this.boardData.columns; i++){
             for(let j = 0; j < this.boardData.rows; j++){
                 this.updateTileAppearence(i,j);
+                let target = this.boardData.field[i][j];
+
+                //check to reveal mines that are "solved" ... currently only works for mines that are not touching other mines... need flood fill for general solution
+                if(target.isMine){
+
+                    //check that all neighbors are revealed (uncovered)
+                    if(this.validCoordinate(i, j + 1) && !this.boardData.field[i][j + 1].uncovered) continue;
+                    if(this.validCoordinate(i, j - 1) && !this.boardData.field[i][j - 1].uncovered) continue;
+                    if(this.validCoordinate(i + 1, j) && !this.boardData.field[i + 1][j].uncovered) continue;
+                    if(this.validCoordinate(i - 1, j) && !this.boardData.field[i - 1][j].uncovered) continue;
+
+                    if(this.validCoordinate(i + 1, j + 1) && !this.boardData.field[i + 1][j + 1].uncovered) continue;
+                    if(this.validCoordinate(i - 1, j - 1) && !this.boardData.field[i - 1][j - 1].uncovered) continue;
+                    if(this.validCoordinate(i + 1, j - 1) && !this.boardData.field[i + 1][j - 1].uncovered) continue;
+                    if(this.validCoordinate(i - 1, j + 1) && !this.boardData.field[i - 1][j + 1].uncovered) continue;
+
+
+                    
+                    console.log('boop')
+                    target.uncovered = true;
+                    this.updateTileAppearence(i,j);
+                }
             }
         }
+    }
+
+    validCoordinate(x,y){
+        return this.boardData.field[x] && this.boardData.field[x][y];
     }
     //https://fontawesome.com/icons/atom?style=solid
     //https://fontawesome.com/icons/bomb?style=solid
