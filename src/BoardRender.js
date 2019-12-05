@@ -40,6 +40,7 @@ export default class BoardRender{
                 //apply tags
                 targetElement.id = cellObj.id; //unused... maybe use for animation?
                 targetElement.className = 'cell unselectable';
+                targetElement.oncontextmenu = () => {return false};
                 targetElement.x = j;
                 targetElement.y = i;
 
