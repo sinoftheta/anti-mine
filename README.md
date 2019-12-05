@@ -1,5 +1,5 @@
-# webpack4-boilerplate
-A boilerplate for simple webpages using Webpack4: https://webpack.js.org
+# Anti Mine
+A Minesweeper inspired puzzle game
 
 ## Running the project
 `yarn install`
@@ -10,13 +10,3 @@ then
 
 ## Building the project
 `yarn build`
-
-
-## Using this as a boilerplate
-`git clone https://github.com/IanBand/webpack4-boilerplate.git`
-
-then
-
-`git remote remove origin`
-
-`git remote add origin [new repository url]`
