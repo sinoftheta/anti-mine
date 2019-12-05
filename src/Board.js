@@ -10,7 +10,11 @@ export default class Board{
         this.columns = settings.rows; //NEEDS REFACTOR, ROWS AND COLUMNS MISLABELED
         this.rows = settings.columns;
         this.numMines = settings.mines;
+        this.area = this.rows * this.columns;
+        this.revealedTiles = 0;
         this.kernel = settings.kernel;
+        this.kernelWeight = 0;
+        
 
         //instantiate field of cells
         this.field = [];
@@ -20,6 +24,15 @@ export default class Board{
                 this.field[i][j] = new Cell(i,j);
             }
         }
+
+        //derive kernel weight
+        for(let i = 0; i < this.kernel.length; i++){
+            for(let j = 0; j < this.kernel[0].length; j++){
+                this.kernelWeight += this.kernel[i][j];
+            }
+        }
+        console.log("weight of kernel: " + this.kernelWeight);
+
 
         //PLACES ALL MINES... good for testing max value after place numbers
         //this.iterateOverBoard((i,j) => {this.field[i][j].value = -1; this.field[i][j].isMine = true})
@@ -153,7 +166,7 @@ export default class Board{
 
         //this logic should be able to be combined
 
-        //check that previous magnitude exists
+        //check that origin value exists
         if(originMagnitude){
 
             //prevents mines from being revealed automatically 
@@ -161,6 +174,20 @@ export default class Board{
                 return;
             }
 
+            /* 
+            //check sign of origin value
+            if(!(originValue > 0 && originValue < target.value)){
+                return;
+            }
+            else if(!(originValue < 0 && originValue > target.value)){
+                return;
+            }
+            else if(!(originValue === 0)){
+                return;
+            }
+            */
+
+            
             //check that previous magnitude is greater or equal to current magnitude 
             if(!(originMagnitude >= Math.abs(target.value))){
                 return;
@@ -174,6 +201,7 @@ export default class Board{
 
         //reveal tile
         target.uncovered = true;
+        this.revealedTiles++;
         //console.log(`${x},${y} revealed`);
 
 
@@ -181,12 +209,15 @@ export default class Board{
         //check lose condition
         if(target.isMine){
             //lose
+            //window.alert("Oh no! You where annihilated!");
             return;
         }
 
         //check win condition
-        let gameWon = false;
-        if(gameWon) return;
+        if(this.gameWon){
+            //window.alert("you survived!");
+            return;
+        }
 
         //recurse over all neighbors that are not mines 
         //AND that have a smaller ABSOLUTE value than the target
@@ -197,28 +228,34 @@ export default class Board{
         //east
         this.uncoverTile(x + 1, y, originMagnitude);
 
-        //northeast
-        this.uncoverTile(x + 1, y + 1, originMagnitude);
-
         //north
         this.uncoverTile(x, y + 1, originMagnitude);
-
-        //northwest
-        this.uncoverTile(x - 1, y + 1, originMagnitude);
 
         //west
         this.uncoverTile(x - 1, y, originMagnitude);
 
-        //southwest
-        this.uncoverTile(x - 1, y - 1, originMagnitude);
-
         //south
         this.uncoverTile(x, y - 1, originMagnitude);
+
+        //dont recurse over diagonals
+        //return;
+
+        //northeast
+        this.uncoverTile(x + 1, y + 1, originMagnitude);
+
+        //northwest
+        this.uncoverTile(x - 1, y + 1, originMagnitude);
+
+        //southwest
+        this.uncoverTile(x - 1, y - 1, originMagnitude);
 
         //southeast
         this.uncoverTile(x + 1, y - 1, originMagnitude);
 
 
+    }
+    get gameWon(){
+        return this.area - this.revealedTiles === this.numMines;
     }
     /*UNUSED, WORKS
     placeNumbersConvolute(k0, normalize, k_option){ //REWRITE IN C WITH WEBASSEMBLY...?

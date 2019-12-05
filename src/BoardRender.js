@@ -62,7 +62,7 @@ export default class BoardRender{
         targetElement.onclick = null;
 
         //append number container if one does not exist
-        if(targetElement.childNodes.length == 0){
+        if(targetElement.childNodes.length == 0 && false){
             let cellChild = targetElement.appendChild(document.createElement("div"));
             cellChild.className = `cell-value`;
             cellChild.innerHTML = targetData.value;
@@ -83,7 +83,17 @@ export default class BoardRender{
 
         //manually cap color val at 0 and 255
         let colorVal =  Math.max(0, Math.min((targetData.value/normalize_weight + normalize_midpoint) * 255, 255));
-        targetElement.style.background = `rgb(${Math.floor(colorVal / 2)},${Math.floor(colorVal / 1)},${Math.floor(colorVal / 1.2)})`;
+        targetElement.style.background = `rgb(${Math.floor(colorVal / 1.2)},${Math.floor(colorVal / 1)},${Math.floor(colorVal / 2)})`;
+
+        //color mines
+        if(targetData.isMine){
+            if(targetData.value === -1){
+                targetElement.style.background = '#000000';
+            }else{
+                targetElement.style.background = '#ffffff';
+            }
+            
+        }
 
 
     }
