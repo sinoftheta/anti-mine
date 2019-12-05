@@ -2,29 +2,6 @@ import Cell from './Cell.js';
 import seedrandom from 'seedrandom';
 
 
-// note: "gravity strength" roughly relates to the radius/size of the kernel
-let kernel_vanillaMS = [[1, 1, 1],
-                        [1, 1, 1],
-                        [1, 1, 1]];
-
-let kernel_gauss =   [[1, 2, 1],
-                      [2, 4, 2],
-                      [1, 2, 1]];
-
-let my_kernel1 =       [[0.5,0.75,0.5],
-                        [0.75,1,0.75],
-                        [0.5,0.75,0.5]];
-
-let kernel_gauss_comp = [1,2,1];
-
-let my_kernel2 =         [[0, 0.25, 0.25, 0.25, 0],
-                        [0.25, 0.5, 0.5, 0.5, 0.25],
-                        [0.25, 0.5, 1, 0.5, 0.25],
-                        [0.25, 0.5, 0.5, 0.5, 0.25],
-                        [0, 0.25, 0.25, 0.25, 0]];
-
-
-
 export default class Board{
     //contains all game logic
     constructor(settings){ //may change to num mines + num anti mines, maybe a mine will just have random value 
@@ -33,6 +10,7 @@ export default class Board{
         this.columns = settings.rows; //NEEDS REFACTOR, ROWS AND COLUMNS MISLABELED
         this.rows = settings.columns;
         this.numMines = settings.mines;
+        this.kernel = settings.kernel;
 
         //instantiate field of cells
         this.field = [];
@@ -53,7 +31,7 @@ export default class Board{
         //this.placeNumbersConvolute([1,1,1], 1);
         //this.placeNumbersConvolute([1,1,1]);
 
-        this.placeNumbersKernel(my_kernel2, 1); //total kernel weight = sum of all elements in kernel. Tile values will never exceed this weight as long as mine values are within [-1, 1]
+        this.placeNumbersKernel(this.kernel, 1); //total kernel weight = sum of all elements in kernel. Tile values will never exceed this weight as long as mine values are within [-1, 1]
 
         
 
@@ -107,7 +85,142 @@ export default class Board{
         }
         
     }
-    //let kernel_gauss_comp = [1,2,1];
+    
+    placeNumbersKernel(k, normalize){
+        let field = this.field;
+
+        let tempField = [];
+        
+        
+        //instantiate temp field within first iteration
+
+        //iterate through image
+        for(let i = 0; i < this.columns; i++){ //vertical
+            tempField[i] = [];
+            for(let j = 0; j < this.rows; j++){ //horizontal
+                
+                tempField[i][j] = 0;
+
+                //if mine
+                if(field[i][j].isMine){
+                    //preserve value of mine
+                    tempField[i][j] = field[i][j].value;
+                    continue;
+                }
+                //iterate through kernel 
+                for(let m = 0; m < k.length; m++){
+
+                    let offset_i = m - Math.floor(k.length/2);
+
+                    for(let n = 0; n < k[0].length; n++ ){
+
+                        let offset_j = n - Math.floor(k[0].length/2);
+                    
+                        //check if kernel is out of bounds
+                        if(field[i + offset_i] && field[i + offset_i][j + offset_j]){
+
+                            //compute new val
+                            tempField[i][j] += field[i + offset_i][j + offset_j].value * k[m][n]; 
+                        }
+                    }
+                }
+            }
+        }
+
+        //put temp values in field
+        for(let i = 0; i < this.columns; i++){ //vertical
+            for(let j = 0; j < this.rows; j++){ //horizontal
+                this.field[i][j].value = tempField[i][j] / normalize;
+            }
+        }
+
+    }
+
+
+    uncoverTile(x,y, originMagnitude){
+        let field = this.field;
+
+        //check if target exists
+        if(!(field[x] && field[x][y])){
+            return;
+        }
+        
+        let target = field[x][y];
+
+        //check if tile is covered
+        if(target.uncovered) return;
+
+
+        //this logic should be able to be combined
+
+        //check that previous magnitude exists
+        if(originMagnitude){
+
+            //prevents mines from being revealed automatically 
+            if(target.isMine){
+                return;
+            }
+
+            //check that previous magnitude is greater or equal to current magnitude 
+            if(!(originMagnitude >= Math.abs(target.value))){
+                return;
+            }
+        }
+        else{
+            // this is the original tile clicked
+            originMagnitude = Math.abs(target.value);
+        }
+
+
+        //reveal tile
+        target.uncovered = true;
+        //console.log(`${x},${y} revealed`);
+
+
+
+        //check lose condition
+        if(target.isMine){
+            //lose
+            return;
+        }
+
+        //check win condition
+        let gameWon = false;
+        if(gameWon) return;
+
+        //recurse over all neighbors that are not mines 
+        //AND that have a smaller ABSOLUTE value than the target
+
+        //let magnitude = Math.abs(target.value);
+        //console.log(magnitude);
+
+        //east
+        this.uncoverTile(x + 1, y, originMagnitude);
+
+        //northeast
+        this.uncoverTile(x + 1, y + 1, originMagnitude);
+
+        //north
+        this.uncoverTile(x, y + 1, originMagnitude);
+
+        //northwest
+        this.uncoverTile(x - 1, y + 1, originMagnitude);
+
+        //west
+        this.uncoverTile(x - 1, y, originMagnitude);
+
+        //southwest
+        this.uncoverTile(x - 1, y - 1, originMagnitude);
+
+        //south
+        this.uncoverTile(x, y - 1, originMagnitude);
+
+        //southeast
+        this.uncoverTile(x + 1, y - 1, originMagnitude);
+
+
+    }
+    /*UNUSED, WORKS
     placeNumbersConvolute(k0, normalize, k_option){ //REWRITE IN C WITH WEBASSEMBLY...?
         //https://www.youtube.com/watch?v=SiJpkucGa1o
         //https://www.youtube.com/watch?v=C_zFhWdM4ic
@@ -177,115 +290,6 @@ export default class Board{
             }
         }
     }
-    placeNumbersKernel(k, normalize){
-        let field = this.field;
-
-        let tempField = [];
-        
-        
-        //instantiate temp field within first iteration
-
-        //iterate through image
-        for(let i = 0; i < this.columns; i++){ //vertical
-            tempField[i] = [];
-            for(let j = 0; j < this.rows; j++){ //horizontal
-                
-                tempField[i][j] = 0;
-
-                //iterate through kernel
-                for(let m = 0; m < k.length; m++){
-
-                    let offset_i = m - Math.floor(k.length/2);
-
-                    for(let n = 0; n < k[0].length; n++ ){
-
-                        let offset_j = n - Math.floor(k[0].length/2);
-                    
-                        //check if kernel is out of bounds & not mine
-                        if(field[i + offset_i] && field[i + offset_i][j + offset_j]){
-
-                            //compute new val
-                            tempField[i][j] += field[i + offset_i][j + offset_j].value * k[m][n]; 
-                        }
-                    }
-                }
-            }
-        }
-
-        //put temp values in field
-        for(let i = 0; i < this.columns; i++){ //vertical
-            for(let j = 0; j < this.rows; j++){ //horizontal
-                this.field[i][j].value = tempField[i][j] / normalize;
-            }
-        }
-
-    }
-
-
-    uncoverTile(x,y, prevMagnitude){
-        let field = this.field;
-
-        //check if field[x][y] exists
-        if(!(field[x] && field[x][y])){
-            return;
-        }
-        
-        let target = field[x][y];
-
-        //check if tile is covered
-        if(target.uncovered) return;
-
-        //check that previous magnitude exists and is greater or equal to target magnitude 
-        if(prevMagnitude && prevMagnitude < Math.abs(target.val)){
-            console.log("boundary condition met");
-            return;
-        }
-
-        //reveal tile
-        target.uncovered = true;
-        console.log(`${x},${y} revealed`);
-
-
-        //check lose condition
-        if(target.isMine){
-            //lose
-            return;
-        }
-
-        //check win condition
-        let gameWon = false;
-        if(gameWon) return;
-
-        //recurse over all neighbors that are not mines 
-        //AND that have a smaller ABSOLUTE value than the target
-
-        let magnitude = Math.abs(target.value);
-
-        //east
-        this.uncoverTile(x + 1, y, magnitude);
-
-        //northeast
-        this.uncoverTile(x + 1, y + 1, magnitude);
-
-        //north
-        this.uncoverTile(x, y + 1, magnitude);
-
-        //northwest
-        this.uncoverTile(x - 1, y + 1, magnitude);
-
-        //west
-        this.uncoverTile(x - 1, y, magnitude);
-
-        //southwest
-        this.uncoverTile(x - 1, y - 1, magnitude);
-
-        //south
-        this.uncoverTile(x, y - 1, magnitude);
-
-        //southeast
-        this.uncoverTile(x + 1, y - 1, magnitude);
-
-
-    }
+    */
 
 }

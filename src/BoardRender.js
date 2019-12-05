@@ -61,15 +61,18 @@ export default class BoardRender{
         //update click functionality
         targetElement.onclick = null;
 
-        //show number
-        let cellChild = targetElement.appendChild(document.createElement("div"));
-        cellChild.className = `cell-value`;
-        cellChild.innerHTML = targetData.value;
-        //apply mine classes to tiles that are mines
-        if(targetData.isMine){
-            targetElement.classList.add('cell-mine');
-            cellChild.classList.add('cell-value-mine');
+        //append number container if one does not exist
+        if(targetElement.childNodes.length == 0){
+            let cellChild = targetElement.appendChild(document.createElement("div"));
+            cellChild.className = `cell-value`;
+            cellChild.innerHTML = targetData.value;
+            //apply mine classes to tiles that are mines
+            if(targetData.isMine){
+                targetElement.classList.add('cell-mine');
+                cellChild.classList.add('cell-value-mine');
+            }
         }
+
 
 
         //map value => color value
