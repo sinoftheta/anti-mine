@@ -4,6 +4,10 @@ import BoardRender from './BoardRender.js';
 //import fontawesome from 'fontawesome';
 
 //http://antimi.ne/ want but its like $420 a year lmao
+//https://www.youtube.com/watch?v=SiJpkucGa1o
+//https://www.youtube.com/watch?v=C_zFhWdM4ic
+//https://en.wikipedia.org/wiki/Multidimensional_discrete_convolution
+//https://en.wikipedia.org/wiki/Kernel_(image_processing)
 
 // note: "gravity strength" roughly relates to the radius/size of the kernel
 let kernel_vanillaMS = [[1, 1, 1],

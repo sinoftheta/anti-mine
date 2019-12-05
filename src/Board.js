@@ -16,7 +16,6 @@ export default class Board{
         this.kernelWeight = 0;
         this.gameLost = false;
         
-
         //instantiate field of cells
         this.field = [];
         for(let i = 0; i < this.columns; i++){
@@ -32,22 +31,11 @@ export default class Board{
                 this.kernelWeight += this.kernel[i][j];
             }
         }
-        console.log("weight of kernel: " + this.kernelWeight);
-
 
         //PLACES ALL MINES... good for testing max value after place numbers
         //this.iterateOverBoard((i,j) => {this.field[i][j].value = -1; this.field[i][j].isMine = true})
         this.placeMines();
-
-        //choose a kernel as an argument for placeNumbers or make one up
-        //https://en.wikipedia.org/wiki/Kernel_(image_processing)
-
-        //this.placeNumbersConvolute([1,1,1], 1);
-        //this.placeNumbersConvolute([1,1,1]);
-
-        this.placeNumbersKernel(this.kernel, 1); //total kernel weight = sum of all elements in kernel. Tile values will never exceed this weight as long as mine values are within [-1, 1]
-
-        
+        this.placeNumbersKernel(this.kernel, 1);
 
     }
     iterateOverBoard(fi, fo){
@@ -174,32 +162,9 @@ export default class Board{
             if(target.isMine){
                 return;
             }
-
-            /* TODO:
-            *game logic update:
-            *
-            *if originValue is positive, only uncover tiles where tile.value <= originValue && tile.value > 0
-            *
-            * Likewise, if originValue is negative, only uncover tiles where tile.value >= originValue && tile.value < 0
-            * 
-            * if originValue = 0, only uncover tiles where tile.value == 0
-            * */ 
-            /* 
-            //check sign of origin value
-            if(!(originValue > 0 && originValue < target.value)){
-                return;
-            }
-            else if(!(originValue < 0 && originValue > target.value)){
-                return;
-            }
-            else if(!(originValue === 0)){
-                return;
-            }
-            */
-
-            
             //check that previous magnitude is greater or equal to current magnitude 
-            if(!(originMagnitude >= Math.abs(target.value))){
+            //dont reveal if originMagnitude is smaller than current magnitude
+            if(originMagnitude < Math.abs(target.value)){
                 return;
             }
         }
@@ -231,9 +196,6 @@ export default class Board{
         //recurse over all neighbors that are not mines 
         //AND that have a smaller ABSOLUTE value than the target
 
-        //let magnitude = Math.abs(target.value);
-        //console.log(magnitude);
-
         //east
         this.uncoverTile(x + 1, y, originMagnitude);
 
@@ -263,15 +225,128 @@ export default class Board{
 
 
     }
+
     get gameWon(){
         return this.area - this.revealedTiles === this.numMines && !this.gameLost;
     }
-    /*UNUSED, WORKS
+
+
+    /*
+    *game logic update:
+    *
+    *if originValue is positive, only uncover tiles where tile.value <= originValue && tile.value > 0
+    *
+    * Likewise, if originValue is negative, only uncover tiles where tile.value >= originValue && tile.value < 0
+    * 
+    * if originValue = 0, only uncover tiles where tile.value == 0
+    * */ 
+             
+    uncoverTile2(x,y, originValue){
+        let field = this.field;
+
+        //check if target exists
+        if(!(field[x] && field[x][y])){
+            return;
+        }
+        
+        let target = field[x][y];
+
+        let recurse = true;
+
+        //check if tile is covered
+        if(target.uncovered) return;
+
+        //check that origin value exists
+        if(typeof originValue === 'number'){
+            //this is not the origonal tile clicked
+
+            //prevents mines from being revealed automatically 
+            if(target.isMine){
+                return;
+            }
+            
+            //check sign of origin 
+            if(originValue === 0){
+                //stop if target.value  != 0
+                if(target.value !== 0) recurse = false;
+                
+            }
+
+            if(originValue > 0){
+                //stop if target.value > originValue
+                if(target.value > originValue && target.value > 0) recurse = false;
+            }
+
+            if(originValue < 0){
+                //stop if target.value < originValue
+                if(target.value < originValue && target.value < 0) recurse = false;
+            }
+
+            
+        }
+        else{
+            // this is the original tile clicked
+            originValue = target.value;
+        }
+
+        //reveal tile
+        target.uncovered = true;
+        this.revealedTiles++;
+
+        //check lose condition
+        if(target.isMine){
+            //lose
+            this.gameLost = true;
+            return;
+        }
+
+        //check win condition
+        if(this.gameWon){
+            return;
+        }
+
+        
+
+        if(!recurse) return;
+        //recurse over neighbors 
+
+        //east
+        this.uncoverTile2(x + 1, y, originValue);
+
+        //north
+        this.uncoverTile2(x, y + 1, originValue);
+
+        //west
+        this.uncoverTile2(x - 1, y, originValue);
+
+        //south
+        this.uncoverTile2(x, y - 1, originValue);
+
+        //the choice to recurse over diagonals depends on the kernel...
+        //only recurse over diagonals if their values are the same...?
+        //dont recurse over diagonals:
+        //return;
+
+        //northeast
+        this.uncoverTile2(x + 1, y + 1, originValue);
+
+        //northwest
+        this.uncoverTile2(x - 1, y + 1, originValue);
+
+        //southwest
+        this.uncoverTile2(x - 1, y - 1, originValue);
+
+        //southeast
+        this.uncoverTile2(x + 1, y - 1, originValue);
+
+
+    }
+    /*UNUSED BUT WORKS
     placeNumbersConvolute(k0, normalize, k_option){ //REWRITE IN C WITH WEBASSEMBLY...?
         //https://www.youtube.com/watch?v=SiJpkucGa1o
         //https://www.youtube.com/watch?v=C_zFhWdM4ic
         //https://en.wikipedia.org/wiki/Multidimensional_discrete_convolution
-        //performs a convolution with kernel k 
+        //https://en.wikipedia.org/wiki/Kernel_(image_processing)
 
 
         //error checking to see if second arg exists/is valid

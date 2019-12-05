@@ -39,7 +39,7 @@ export default class BoardRender{
 
                 //apply tags
                 targetElement.id = cellObj.id; //unused... maybe use for animation?
-                targetElement.className = 'cell';
+                targetElement.className = 'cell unselectable';
                 targetElement.x = j;
                 targetElement.y = i;
 
@@ -59,7 +59,7 @@ export default class BoardRender{
             targetElement.classList.remove('cell-revealed'); //not needed unless tiles can be re-covered
             targetElement.onclick = (e) => {
                 //console.log('' + e.target.x + ', ' + e.target.y);
-                this.boardData.uncoverTile(x,y);
+                this.boardData.uncoverTile2(x, y);
 
                 //rerender all... could also rerender only tiles that are updated
                 this.updateAllAppearance();
