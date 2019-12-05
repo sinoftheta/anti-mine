@@ -60,7 +60,7 @@ export default class BoardRender{
             targetElement.classList.remove('cell-revealed'); //not needed unless tiles can be re-covered
             targetElement.onclick = (e) => {
                 //console.log('' + e.target.x + ', ' + e.target.y);
-                this.boardData.uncoverTile2(x, y);
+                this.boardData.uncoverTile(x, y);
 
                 //rerender all... could also rerender only tiles that are updated
                 this.updateAllAppearance();
