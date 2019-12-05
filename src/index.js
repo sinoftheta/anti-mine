@@ -37,16 +37,46 @@ let my_kernel_3 =  [[0,     0,      0.125,  0.25,   0.125,  0,      0   ],
 
 
 let my_settings = {
-    rows: 20,
-    columns: 30,
-    mines: Math.floor((Math.random() * 12) + 3),
+    rows: 25,
+    columns: 40,
+    mines: Math.floor((Math.random() * 18) + 3),
     seed: Math.floor(Math.random() * 1000),
     kernel: my_kernel_3,
 }
 console.log(my_settings);
 
 
-let board = new Board(my_settings);
-let board_render = new BoardRender(document.getElementById("game-board"), board);
+let boardContainer = document.getElementById("game-board");
+let board_render;
+
+let onWin = () => {
+    window.alert("you survived!");
+
+    //new settings
+    my_settings.mines = Math.floor((Math.random() * 18) + 3);
+    my_settings.seed = Math.floor(Math.random() * 1000);
+
+    //reset board
+    board_render.reset(new Board(my_settings));
+    board_render.destroy();
+    board_render.build();
+
+}
+
+let onLose = () => {
+    window.alert("Oh no! You where annihilated!");
+
+    //new settings
+    my_settings.mines = Math.floor((Math.random() * 18) + 3);
+    my_settings.seed = Math.floor(Math.random() * 1000);
+
+    //reset board
+    board_render.reset(new Board(my_settings));
+    board_render.destroy();
+    board_render.build();
+
+}
+
+board_render = new BoardRender(boardContainer, new Board(my_settings), onWin, onLose);
 
 

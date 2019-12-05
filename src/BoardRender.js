@@ -1,9 +1,24 @@
 export default class BoardRender{
     //initiate board elements, handle animations, handle click events
-    constructor(container, board){
+    constructor(container, board, onWin, onLose){
         this.container = container;
+        this.onWin = onWin;
+        this.onLose = onLose;
+        this.reset(board);
+        this.build();
+        
+    }
+    reset(board){
         this.boardData = board;
         this.elements = [];
+        this.color = Math.floor(Math.random() * 3);
+    }
+    destroy(){
+        while(this.container.firstChild){
+            this.container.removeChild(this.container.firstChild); 
+        }
+    }
+    build(){
 
         //build board
         for(let i = 0; i < this.boardData.columns; i++){
@@ -11,7 +26,7 @@ export default class BoardRender{
             this.elements[i] = [];
 
             //should a reference to row be saved?
-            let row = container.appendChild(document.createElement("div"));
+            let row = this.container.appendChild(document.createElement("div"));
             row.id = `row-${i}`;
             row.className = `game-row`;
 
@@ -43,11 +58,21 @@ export default class BoardRender{
             targetElement.classList.add('cell-covered');
             targetElement.classList.remove('cell-revealed'); //not needed unless tiles can be re-covered
             targetElement.onclick = (e) => {
-                console.log('' + e.target.x + ', ' + e.target.y);
+                //console.log('' + e.target.x + ', ' + e.target.y);
                 this.boardData.uncoverTile(x,y);
 
                 //rerender all... could also rerender only tiles that are updated
                 this.updateAllAppearance();
+
+                if(this.boardData.gameLost){
+                    this.onLose();
+                    return;
+                }
+                if(this.boardData.gameWon){
+                    this.onWin();
+                    return;
+                }
+
             };
             return;
         }
@@ -83,7 +108,17 @@ export default class BoardRender{
 
         //manually cap color val at 0 and 255
         let colorVal =  Math.max(0, Math.min((targetData.value/normalize_weight + normalize_midpoint) * 255, 255));
-        targetElement.style.background = `rgb(${Math.floor(colorVal / 1.2)},${Math.floor(colorVal / 1)},${Math.floor(colorVal / 2)})`;
+        switch(this.color){
+            case 0:
+                targetElement.style.background = `rgb(${Math.floor(colorVal / 1)},${Math.floor(colorVal / 2)},${Math.floor(colorVal / 1.2)})`;
+                break;
+            case 1:
+                targetElement.style.background = `rgb(${Math.floor(colorVal / 1.2)},${Math.floor(colorVal / 1)},${Math.floor(colorVal / 2)})`;
+                break;
+            default:
+                targetElement.style.background = `rgb(${Math.floor(colorVal / 2)},${Math.floor(colorVal / 1.2)},${Math.floor(colorVal / 1)})`;
+        }
+        
 
         //color mines
         if(targetData.isMine){

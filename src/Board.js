@@ -14,6 +14,7 @@ export default class Board{
         this.revealedTiles = 0;
         this.kernel = settings.kernel;
         this.kernelWeight = 0;
+        this.gameLost = false;
         
 
         //instantiate field of cells
@@ -174,6 +175,15 @@ export default class Board{
                 return;
             }
 
+            /* TODO:
+            *game logic update:
+            *
+            *if originValue is positive, only uncover tiles where tile.value <= originValue && tile.value > 0
+            *
+            * Likewise, if originValue is negative, only uncover tiles where tile.value >= originValue && tile.value < 0
+            * 
+            * if originValue = 0, only uncover tiles where tile.value == 0
+            * */ 
             /* 
             //check sign of origin value
             if(!(originValue > 0 && originValue < target.value)){
@@ -209,13 +219,12 @@ export default class Board{
         //check lose condition
         if(target.isMine){
             //lose
-            //window.alert("Oh no! You where annihilated!");
+            this.gameLost = true;
             return;
         }
 
         //check win condition
         if(this.gameWon){
-            //window.alert("you survived!");
             return;
         }
 
@@ -255,7 +264,7 @@ export default class Board{
 
     }
     get gameWon(){
-        return this.area - this.revealedTiles === this.numMines;
+        return this.area - this.revealedTiles === this.numMines && !this.gameLost;
     }
     /*UNUSED, WORKS
     placeNumbersConvolute(k0, normalize, k_option){ //REWRITE IN C WITH WEBASSEMBLY...?
