@@ -1,4 +1,4 @@
-# Anti Mine
+# Anti-Mine
 A Minesweeper inspired puzzle game
 
 ## Running the project
