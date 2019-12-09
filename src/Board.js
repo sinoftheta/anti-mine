@@ -146,11 +146,13 @@ export default class Board{
         if(!(field[x] && field[x][y])){
             return;
         }
+
         
         let target = field[x][y];
 
-        //check if tile is covered
-        if(target.uncovered) return;
+        //check if tile is uncovered or has already been checked
+        if(target.uncovered || target.checked) return;
+        target.checked = true;
 
 
         //this logic should be able to be combined

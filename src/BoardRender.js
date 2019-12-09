@@ -1,3 +1,55 @@
+let gradient = [
+    {
+        weight: 0,
+        r: 255,
+        g: 255,
+        b: 255,
+    },
+    {
+        weight: 15,
+        r: 57,
+        g: 255,
+        b: 150,
+    },
+    {
+        weight: 85,
+        r: 26,
+        g: 150,
+        b: 255,
+    },
+    {
+        weight: 100,
+        r: 0,
+        g: 0,
+        b: 0,
+    }
+
+
+];
+
+let gradientPointValue = (gradient, weight) => {
+    let i;
+    //find colors surounding weight
+    for(i = 0; i < gradient.length; i++){
+        if(gradient[i].weight > weight) break;
+    }
+    let c1 = gradient[i];
+    let c0 = gradient[i - 1];
+
+    let npw = weight - c0.w; // normalize point weight
+    let ncw = c1.w - c0.w // normalize color weight
+
+    // normalize weight, multiply by slope, add to first color
+    let r = Math.round(c0.r + npw * (c1.r - c0.r) / ncw); 
+    let g = Math.round(c0.g + npw * (c1.g - c0.g) / ncw); 
+    let b = Math.round(c0.b + npw * (c1.b - c0.b) / ncw); 
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+
+
+
 export default class BoardRender{
     //initiate board elements, handle animations, handle click events
     constructor(container, board, onWin, onLose){
@@ -138,9 +190,13 @@ export default class BoardRender{
             for(let j = 0; j < this.boardData.rows; j++){
                 this.updateTileAppearence(i,j);
                 let target = this.boardData.field[i][j];
-
+                target.checked = false;
                 //check to reveal mines that are "solved" ... currently only works for mines that are not touching other mines... need flood fill for general solution
                 if(target.isMine){
+
+                    //check to see if all neighbors are uncovered, recurse over neighbors that are mines and unchecked...this entire function belongs in board.js
+
+
 
                     //check that all neighbors are revealed (uncovered)
                     if(this.validCoordinate(i, j + 1) && !this.boardData.field[i][j + 1].uncovered) continue;

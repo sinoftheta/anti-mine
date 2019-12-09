@@ -7,6 +7,7 @@ export default class Cell{
         this.isMine = false;
         this.uncovered = false; //TODO: change to "revealed"
         this.value = 0;
+        this.checked = false;
 
         //TODO: add flags
     }

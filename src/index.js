@@ -89,6 +89,88 @@ let onLose = () => {
 
 }
 
+class Game{
+
+    constructor(boardContainer, settings){
+        this.boardContainer = boardContainer;
+        this.settings = settings;
+        this.board_render = new BoardRender(boardContainer, new Board(settings), this.onWin, this.onLose);
+        this.gameState = 'pregame';
+
+
+
+    }
+    resetGame(settings){
+        if(settings){
+            //update settings & reset
+        }
+        else{
+            //use current settings to reset game
+        }
+
+    }
+    onWin(){
+        //append message to board container
+    }
+    onLose(){
+        //append message to board container
+    }
+}
 board_render = new BoardRender(boardContainer, new Board(my_settings), onWin, onLose);
 
 
+let my_gradient = [
+    {
+        weight: 0,
+        r: 255,
+        g: 255,
+        b: 255,
+    },
+    {
+        weight: 15,
+        r: 57,
+        g: 255,
+        b: 150,
+    },
+    {
+        weight: 85,
+        r: 26,
+        g: 150,
+        b: 255,
+    },
+    {
+        weight: 101,
+        r: 0,
+        g: 0,
+        b: 0,
+    }
+
+
+];
+
+let gradientPointValue = (gradient, weight) => {
+    let i;
+    //find colors surounding weight
+    for(i = 0; i < gradient.length; i++){
+        if(gradient[i].weight > weight) break;
+    }
+    let c1 = gradient[i];
+    let c0 = gradient[i - 1];
+    console.log(c1);
+    console.log(c0);
+
+    let npw = weight - c0.weight; // normalize point weight
+    let ncw = c1.weight - c0.weight // normalize color weight
+
+    // normalize weight, multiply by slope, add to first color
+    let r = Math.round(c0.r + npw * (c1.r - c0.r) / ncw); 
+    let g = Math.round(c0.g + npw * (c1.g - c0.g) / ncw); 
+    let b = Math.round(c0.b + npw * (c1.b - c0.b) / ncw); 
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+let test = document.getElementById("test-id");
+test.style.background = gradientPointValue(my_gradient, 100);
+test.style.height = 50;
+test.style.width = 50;
