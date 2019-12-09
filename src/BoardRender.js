@@ -1,32 +1,32 @@
-let gradient = [
-    {
-        weight: 0,
-        r: 255,
-        g: 255,
-        b: 255,
-    },
-    {
-        weight: 15,
-        r: 57,
-        g: 255,
-        b: 150,
-    },
-    {
-        weight: 85,
-        r: 26,
-        g: 150,
-        b: 255,
-    },
-    {
-        weight: 100,
-        r: 0,
-        g: 0,
-        b: 0,
-    }
 
-
+let gradient_1 = [
+    {weight: 0,
+        r: 255, g: 255, b: 255,},
+    {weight: 20,
+        r: 50, g: 250, b: 150,},
+    {weight: 80,
+        r: 50, g: 150, b: 250,},
+    {weight: 100,
+        r: 0, g: 0, b: 0,},
+];
+let gradient_2 = [
+    {weight: 0,
+        r: 255, g: 0, b: 40,},
+    {weight: 50,
+        r: 255, g: 255, b: 255,},
+    {weight: 100,
+        r: 0, g: 40, b: 255,},
+];
+let gradient_3 = [
+    {weight: 0,
+        r: 255, g: 255, b: 200,},
+    {weight: 50,
+        r: 100, g: 250, b: 150,},
+    {weight: 100,
+        r: 50, g: 50, b: 0,},
 ];
 
+//note: add values to lookup table so they dont need to be recalculated
 let gradientPointValue = (gradient, weight) => {
     let i;
     //find colors surounding weight
@@ -35,9 +35,11 @@ let gradientPointValue = (gradient, weight) => {
     }
     let c1 = gradient[i];
     let c0 = gradient[i - 1];
+    console.log(c1);
+    console.log(c0);
 
-    let npw = weight - c0.w; // normalize point weight
-    let ncw = c1.w - c0.w // normalize color weight
+    let npw = weight - c0.weight; // normalize point weight
+    let ncw = c1.weight - c0.weight // normalize color weight
 
     // normalize weight, multiply by slope, add to first color
     let r = Math.round(c0.r + npw * (c1.r - c0.r) / ncw); 
@@ -46,7 +48,6 @@ let gradientPointValue = (gradient, weight) => {
 
     return `rgb(${r}, ${g}, ${b})`;
 }
-
 
 
 
@@ -154,6 +155,10 @@ export default class BoardRender{
 
 
         //map value => color value
+        //let kWeight = 8;
+        //let normVal = 100 * targetData.value / kWeight / 4;
+        //let cappedVal = Math.max(0, normVal, 99);
+
         //assumes .value is in the range [-1,1]
         //colorval mapping is slapdashed as fuck but need MVP
         let normalize_midpoint = 0.6;
@@ -161,15 +166,19 @@ export default class BoardRender{
 
         //manually cap color val at 0 and 255
         let colorVal =  Math.max(0, Math.min((targetData.value/normalize_weight + normalize_midpoint) * 255, 255));
+
         switch(this.color){
             case 0:
                 targetElement.style.background = `rgb(${Math.floor(colorVal / 1)},${Math.floor(colorVal / 2)},${Math.floor(colorVal / 1.2)})`;
+                //targetElement.style.background = gradientPointValue(gradient_1, cappedVal);
                 break;
             case 1:
                 targetElement.style.background = `rgb(${Math.floor(colorVal / 1.2)},${Math.floor(colorVal / 1)},${Math.floor(colorVal / 2)})`;
+                //targetElement.style.background = gradientPointValue(gradient_2, cappedVal);
                 break;
             default:
                 targetElement.style.background = `rgb(${Math.floor(colorVal / 2)},${Math.floor(colorVal / 1.2)},${Math.floor(colorVal / 1)})`;
+                //targetElement.style.background = gradientPointValue(gradient_3, cappedVal);
         }
         
 
