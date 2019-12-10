@@ -1,6 +1,7 @@
 import css from './style.css';
 import Board from './Board.js';
 import BoardRender from './BoardRender.js';
+import GameManager from './GameManager.js';
 //import fontawesome from 'fontawesome';
 
 //http://antimi.ne/ want but its like $420 a year lmao
@@ -47,6 +48,17 @@ let my_kernel_4 =  [[0,     0,      0.125,  0.25,   0.125,  0,      0   ], //dia
                     [0,     0,      0.125,  0.25,   0.125,  0,      0   ]];
 
 
+
+/** FUCK IT
+ *       _______________________ > Y AXIS, USE j TO ITERATE, COLUMNS
+ *      |
+ *      |
+ *      |
+ *      |
+ *      |
+ *      V X AXIS, USE i TO ITERATE, ROWS
+ * 
+ */
                 
 let my_settings = {
     rows: 25,
@@ -55,62 +67,7 @@ let my_settings = {
     seed: Math.floor(Math.random() * 1000),
     kernel: my_kernel_4,
 }
-//console.log(my_settings);
 
-
-let boardContainer = document.getElementById("game-board");
-let board_render;
-
-let onWin = () => {
-    window.alert("you survived!");
-
-    //new settings
-    my_settings.mines = Math.floor((Math.random() * 18) + 3);
-    my_settings.seed = Math.floor(Math.random() * 1000);
-
-    //reset board
-    board_render.reset(new Board(my_settings));
-    board_render.destroy();
-    board_render.build();
-
-}
-
-let onLose = () => {
-    window.alert("Oh no! You where annihilated!");
-
-    //new settings
-    my_settings.mines = Math.floor((Math.random() * 18) + 3);
-    my_settings.seed = Math.floor(Math.random() * 1000);
-
-    //reset board
-    board_render.reset(new Board(my_settings));
-    board_render.destroy();
-    board_render.build();
-
-}
-
-class Game extends EventTarget{
-
-    constructor(boardContainer, settings){
-        super();
-        this.boardContainer = boardContainer;
-        this.settings = settings;
-        this.board_render = new BoardRender(boardContainer, new Board(settings), this.onWin, this.onLose);
-        this.gameState = 'pregame';
-        this.addEventListener('tileClick', (e) => console.log(e.detail), false);
-
-    }
-    resetGame(settings){
-        
-
-    }
-    onWin(){
-        //append message to board container
-    }
-    onLose(){
-        //append message to board container
-    }
-}
 class Broadcaster{
     constructor(){
         this.subscribers = [];
@@ -126,17 +83,27 @@ class Broadcaster{
     }
 }
 
+let boardContainer = document.getElementById("game-board");
 let broadcaster = new Broadcaster;
-let game = new Game(boardContainer, my_settings);
-broadcaster.subscribe(game);
-broadcaster.dispatchEvent(new CustomEvent('tileClick', { detail: {x: 1, y: 2 }}));
+
+let game_manager = new GameManager(boardContainer, my_settings, broadcaster);
+broadcaster.subscribe(game_manager);
+
+let board = new Board(my_settings, broadcaster);
+broadcaster.subscribe(board);
+
+let board_render = new BoardRender(boardContainer, board, broadcaster);
+broadcaster.subscribe(board_render);
+
+//lol dont do this...
+//broadcaster.dispatchEvent(new CustomEvent('tileClick', { detail: {x: 1, y: 2 }}));
 
 /**
  * events:
  * gameWon
  * gameLost
  * tileClicked
- * tilesRevealed
+ * tileStateUpdated
  * tilesRendered
  * 
  */
