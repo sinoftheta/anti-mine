@@ -25,6 +25,18 @@ let gradient_3 = [
     {weight: 100,
         r: 50, g: 50, b: 0,},
 ];
+let gradient_4 = [
+    {weight: 0,
+        r: 255, g: 240, b: 250,},
+    {weight: 25,
+        r: 50, g: 255, b: 40,},
+    {weight: 50,
+        r: 120, g: 125, b: 135,},
+    {weight: 75,
+        r: 20, g: 20, b: 200,},
+    {weight: 100,
+        r: 0, g: 0, b: 0,},
+];
 
 //note: add values to lookup table so they dont need to be recalculated
 let gradientPointValue = (gradient, weight) => {
@@ -82,8 +94,8 @@ export default class BoardRender extends EventTarget{
 
     generateGradientMap(){
 
-        let set = [gradient_1, gradient_2, gradient_3];
-        let gradient = set[Math.floor(Math.random() * set.length)];
+        let set = [gradient_1, gradient_2, gradient_3, gradient_4];
+        let gradient = set[3];//set[Math.floor(Math.random() * set.length)];
 
         this.colormap = [];
         for(let i = 0; i < 100; i++){
@@ -175,8 +187,8 @@ export default class BoardRender extends EventTarget{
 
 
         //map value => color value
-        let kWeight = 8;
-        let normVal = Math.round(100* (-1 * targetData.value + kWeight - 1) / kWeight );
+        let kWeight = 2;
+        let normVal = Math.round(100* (-1 * targetData.value + kWeight/2) / kWeight );
         let cappedVal = Math.min( 99 , Math.max (0 , normVal ));
         targetElement.style.background = this.colormap[cappedVal];
         
@@ -208,10 +220,10 @@ export default class BoardRender extends EventTarget{
 
         //color mines
         if(targetData.isMine){
-            if(targetData.value === -1){
-                targetElement.style.background = '#000000';
+            if(targetData.value >= 0){
+                targetElement.style.background = this.colormap[0];
             }else{
-                targetElement.style.background = '#ffffff';
+                targetElement.style.background = this.colormap[100];
             }
             
         }
