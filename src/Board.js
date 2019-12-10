@@ -2,28 +2,64 @@ import Cell from './Cell.js';
 import seedrandom from 'seedrandom';
 
 
-export default class Board{
+/**
+ * events:
+ * gameWon
+ * gameLost
+ * tileClicked
+ * tileStateUpdated
+ * tilesRendered
+ * reset
+ * 
+ */
+/**
+ * 
+ * SUBSCRIBES TO: tileClick, reset
+ * 
+ * BROADCASTS: tileStateUpdated, gameWon, gameLost
+ * 
+ */
+export default class Board extends EventTarget{
     //contains all game logic
-    constructor(settings){ //may change to num mines + num anti mines, maybe a mine will just have random value 
+    constructor(settings, broadcaster){
+        
+        super();
+        this.broadcaster = broadcaster;
+        //console.log(this.broadcaster);
+        this.setup(settings);
+        this.addEventListener('reset', (e) => this.setup(e.detail.settings), false);
+        this.addEventListener('tileClick', (e) => this.handleClick(e) , false);
 
-        this.seed = settings.seed;
-        this.columns = settings.rows; //NEEDS REFACTOR, ROWS AND COLUMNS MISLABELED
-        this.rows = settings.columns;
-        this.numMines = settings.mines;
-        this.area = this.rows * this.columns;
-        this.revealedTiles = 0;
-        this.kernel = settings.kernel;
-        this.kernelWeight = 0;
-        this.gameLost = false;
+    }
+    handleClick(e){
+        this.uncoverTile(e.detail.x, e.detail.y); 
+        this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
+
+    }
+    setup(settings){ //may change to num mines + num anti mines, maybe a mine will just have random value 
+
+        if(settings){
+            this.seed = settings.seed;
+            this.columns = settings.columns; //NEEDS REFACTOR, ROWS AND COLUMNS MISLABELED
+            this.rows = settings.rows;
+            this.numMines = settings.mines;
+            this.area = this.rows * this.columns;
+            this.revealedTiles = 0;
+            this.kernel = settings.kernel;
+            this.kernelWeight = 0;
+            this.gameLost = false;
+        }
+
         
         //instantiate field of cells
         this.field = [];
-        for(let i = 0; i < this.columns; i++){
+        for(let i = 0; i < this.rows; i++){ 
             this.field[i] = [];
-            for(let j = 0; j < this.rows; j++){
+            for(let j = 0; j < this.columns; j++){
                 this.field[i][j] = new Cell(i,j);
             }
         }
+        //console.log(this.field[20][7]);
 
         //derive kernel weight
         for(let i = 0; i < this.kernel.length; i++){
@@ -52,9 +88,9 @@ export default class Board{
 
 
         while(n > 0){
-            y = Math.floor(rng() * this.columns );
             x = Math.floor(rng() * this.rows );
-            target = this.field[y][x];
+            y = Math.floor(rng() * this.columns );
+            target = this.field[x][y];
 
 
             //if no mine at x,y
@@ -97,9 +133,9 @@ export default class Board{
         //instantiate temp field within first iteration
 
         //iterate through image
-        for(let i = 0; i < this.columns; i++){ //vertical
+        for(let i = 0; i < this.rows; i++){ 
             tempField[i] = [];
-            for(let j = 0; j < this.rows; j++){ //horizontal
+            for(let j = 0; j < this.columns; j++){
                 
                 tempField[i][j] = 0;
 
@@ -130,8 +166,8 @@ export default class Board{
         }
 
         //put temp values in field
-        for(let i = 0; i < this.columns; i++){ //vertical
-            for(let j = 0; j < this.rows; j++){ //horizontal
+        for(let i = 0; i < this.rows; i++){ //vertical
+            for(let j = 0; j < this.columns; j++){ //horizontal
                 this.field[i][j].value = tempField[i][j] / normalize;
             }
         }
@@ -140,6 +176,7 @@ export default class Board{
 
 
     uncoverTile(x,y, originMagnitude){
+        //console.log("hello?");
         let field = this.field;
 
         //check if target exists
@@ -150,9 +187,9 @@ export default class Board{
         
         let target = field[x][y];
 
-        //check if tile is uncovered or has already been checked
-        if(target.uncovered || target.checked) return;
-        target.checked = true;
+        //check if tile is revealed or has already been checked
+        if(target.revealed /*|| target.checked*/) return;
+        //target.checked = true;
 
 
         //this logic should be able to be combined
@@ -177,7 +214,7 @@ export default class Board{
 
 
         //reveal tile
-        target.uncovered = true;
+        target.revealed = true;
         this.revealedTiles++;
         //console.log(`${x},${y} revealed`);
 
@@ -186,12 +223,13 @@ export default class Board{
         //check lose condition
         if(target.isMine){
             //lose
-            this.gameLost = true;
+            this.broadcaster.dispatchEvent(new CustomEvent('gameLost', {}));
             return;
         }
 
         //check win condition
         if(this.gameWon){
+            this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
             return;
         }
 
@@ -256,7 +294,7 @@ export default class Board{
         let recurse = true;
 
         //check if tile is covered
-        if(target.uncovered) return;
+        if(target.revealed) return;
 
         //check that origin value exists
         if(typeof originValue === 'number'){
@@ -292,7 +330,7 @@ export default class Board{
         }
 
         //reveal tile
-        target.uncovered = true;
+        target.revealed = true;
         this.revealedTiles++;
 
         //check lose condition
