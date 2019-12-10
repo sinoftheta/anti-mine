@@ -2,6 +2,23 @@ import Cell from './Cell.js';
 import seedrandom from 'seedrandom';
 
 
+/**
+ * events:
+ * gameWon
+ * gameLost
+ * tileClicked
+ * tileStateUpdated
+ * tilesRendered
+ * reset
+ * 
+ */
+/**
+ * 
+ * SUBSCRIBES TO: tileClicked, reset
+ * 
+ * BROADCASTS: tileStateUpdated, gameWon, gameLost
+ * 
+ */
 export default class Board{
     //contains all game logic
     constructor(settings){ //may change to num mines + num anti mines, maybe a mine will just have random value 

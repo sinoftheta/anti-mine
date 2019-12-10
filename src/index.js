@@ -97,17 +97,11 @@ class Game extends EventTarget{
         this.settings = settings;
         this.board_render = new BoardRender(boardContainer, new Board(settings), this.onWin, this.onLose);
         this.gameState = 'pregame';
-
         this.addEventListener('tileClick', (e) => console.log(e.detail), false);
 
     }
     resetGame(settings){
-        if(settings){
-            //update settings & reset
-        }
-        else{
-            //use current settings to reset game
-        }
+        
 
     }
     onWin(){

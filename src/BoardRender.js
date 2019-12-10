@@ -49,11 +49,27 @@ let gradientPointValue = (gradient, weight) => {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
-
-
-export default class BoardRender{
+/**
+ * events:
+ * gameWon
+ * gameLost
+ * tileClicked
+ * tileStateUpdated
+ * tilesRendered
+ * reset
+ * 
+ */
+/**
+ * 
+ * SUBSCRIBES TO: tileStateUpdated, gameWon, gameLost, reset
+ * 
+ * BROADCASTS: tileClicked, tilesRendered
+ * 
+ */
+export default class BoardRender extends EventTarget{
     //initiate board elements, handle animations, handle click events
-    constructor(container, board, onWin, onLose){
+    constructor(container, board){
+        super();
         this.container = container;
         this.onWin = onWin;
         this.onLose = onLose;
