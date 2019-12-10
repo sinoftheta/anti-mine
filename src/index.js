@@ -55,7 +55,7 @@ let my_settings = {
     seed: Math.floor(Math.random() * 1000),
     kernel: my_kernel_4,
 }
-console.log(my_settings);
+//console.log(my_settings);
 
 
 let boardContainer = document.getElementById("game-board");
@@ -89,15 +89,16 @@ let onLose = () => {
 
 }
 
-class Game{
+class Game extends EventTarget{
 
     constructor(boardContainer, settings){
+        super();
         this.boardContainer = boardContainer;
         this.settings = settings;
         this.board_render = new BoardRender(boardContainer, new Board(settings), this.onWin, this.onLose);
         this.gameState = 'pregame';
 
-
+        this.addEventListener('tileClick', (e) => console.log(e.detail), false);
 
     }
     resetGame(settings){
@@ -116,5 +117,32 @@ class Game{
         //append message to board container
     }
 }
-board_render = new BoardRender(boardContainer, new Board(my_settings), onWin, onLose);
+class Broadcaster{
+    constructor(){
+        this.subscribers = [];
+    }
+    subscribe(subscriber){
 
+        this.subscribers.push(subscriber);
+    }
+    dispatchEvent(event, data){
+        this.subscribers.forEach((subscriber) =>{
+            subscriber.dispatchEvent(event, data);
+        });
+    }
+}
+
+let broadcaster = new Broadcaster;
+let game = new Game(boardContainer, my_settings);
+broadcaster.subscribe(game);
+broadcaster.dispatchEvent(new CustomEvent('tileClick', { detail: {x: 1, y: 2 }}));
+
+/**
+ * events:
+ * gameWon
+ * gameLost
+ * tileClicked
+ * tilesRevealed
+ * tilesRendered
+ * 
+ */
