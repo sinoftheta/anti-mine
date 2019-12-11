@@ -71,7 +71,9 @@ export default class Board extends EventTarget{
         //PLACES ALL MINES... good for testing max value after place numbers
         //this.iterateOverBoard((i,j) => {this.field[i][j].value = -1; this.field[i][j].isMine = true})
         this.placeMines();
-        this.placeNumbersKernel(this.kernel, 1);
+
+        let kernelCenter = this.kernel[Math.floor(this.kernel.length/2)][Math.floor(this.kernel[0].length/2)];
+        this.placeNumbersKernel(this.kernel, kernelCenter);
 
     }
     iterateOverBoard(fi, fo){

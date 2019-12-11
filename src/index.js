@@ -2,6 +2,7 @@ import css from './style.css';
 import Board from './Board.js';
 import BoardRender from './BoardRender.js';
 import GameManager from './GameManager.js';
+import * as kernel from './Kernels.js';
 //import fontawesome from 'fontawesome';
 
 //http://antimi.ne/ want but its like $420 a year lmao
@@ -9,63 +10,6 @@ import GameManager from './GameManager.js';
 //https://www.youtube.com/watch?v=C_zFhWdM4ic
 //https://en.wikipedia.org/wiki/Multidimensional_discrete_convolution
 //https://en.wikipedia.org/wiki/Kernel_(image_processing)
-
-// note: "gravity strength" roughly relates to the radius/size of the kernel
-let kernel_vanillaMS = [[1, 1, 1],
-                        [1, 1, 1],
-                        [1, 1, 1]];
-
-let kernel_gauss =   [[1, 2, 1],
-                      [2, 4, 2],
-                      [1, 2, 1]];
-
-let my_kernel_1 =       [[0.5,0.75,0.5],
-                        [0.75,1,0.75],
-                        [0.5,0.75,0.5]];
-
-let kernel_gauss_comp = [1,2,1];
-
-let my_kernel_2 =         [[0, 0.25, 0.25, 0.25, 0],
-                        [0.25, 0.5, 0.5, 0.5, 0.25],
-                        [0.25, 0.5, 1, 0.5, 0.25],
-                        [0.25, 0.5, 0.5, 0.5, 0.25],
-                        [0, 0.25, 0.25, 0.25, 0]];
-
-let my_kernel_3 =  [[0,     0,      0.125,  0.25,   0.125,  0,      0   ],
-                    [0,     0.125,  0.25,   0.5,    0.25,   0.125,  0   ],
-                    [0.125, 0.25,   0.5,    0.5,    0.5,    0.25,   .125],
-                    [0.25, 0.5,   0.5,      1,      0.5,    0.5,    0.25],
-                    [0.125, 0.25,   0.5,    0.5,    0.5,    0.25,   .125],
-                    [0,     0.125,  0.25,   0.5,    0.25,   0.125,  0   ],
-                    [0,     0,      0.125,  0.25,  0.125,  0,       0   ]];
-
-let my_kernel_4 =  [[0,     0,      0.125,  0.25,   0.125,  0,      0   ], //diagonal bands seem to work the best for kernels...
-                    [0,     0.125,  0.25,   0.5,    0.25,   0.125,  0   ],
-                    [0.125, 0.25,   0.5,    0.75,   0.5,    0.25,   0.125],
-                    [0.25,  0.5,    0.75,   1,      0.75,   0.5,    0.25],
-                    [0.125, 0.25,   0.5,    0.75,   0.5,    0.25,   0.125],
-                    [0,     0.125,  0.25,   0.5,    0.25,   0.125,  0   ],
-                    [0,     0,      0.125,  0.25,   0.125,  0,      0   ]];
-
-let my_kernel_5 = 
-[[0,0,0,0,0,],
- [0,0,0,],
- [0,0,],
- [0,],
- [0,],
- [],
- [],
- [],
- [],
- [],
- [],
- [],
- [],
- [],
- [],
- [],
- []];
-
 
 
 /** FUCK IT
@@ -94,7 +38,7 @@ let my_settings = {
     mines: Math.floor((Math.random() * 18) + 3),
     seed: Math.floor(Math.random() * 1000),
     cellSize: 20,
-    kernel: my_kernel_4,
+    kernel: kernel._9x9,
 }
 if(window.mobilecheck()){
     my_settings.cellSize = 30;

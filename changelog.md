@@ -1,5 +1,19 @@
 # Change Log
 
+
+## Alpha 0.1 - 12/??/2019
+### Changes
+- Improved color mapping
+- Chnged color schemes
+- Updated kernel to be 15x15
+- Updated webpage style
+
+### Additions
+- Added new win/lose message
+
+### Known Issues
+
+
 ## Alpha 0.1 - 12/5/2019
 ### Changes
 - Updated tile uncovering mechanics. Revealing a tile with a positive value will not automatically reveal tiles with a negative value and vice-versa
