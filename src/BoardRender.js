@@ -21,9 +21,9 @@ let gradient_3 = [
     {weight: 0,
         r: 255, g: 255, b: 200,},
     {weight: 50,
-        r: 100, g: 250, b: 150,},
+        r: 100, g: 200, b: 150,},
     {weight: 100,
-        r: 50, g: 50, b: 0,},
+        r: 60, g: 52, b: 45,},
 ];
 let gradient_4 = [
     {weight: 0,
@@ -80,32 +80,40 @@ let gradientPointValue = (gradient, weight) => {
  */
 export default class BoardRender extends EventTarget{
     //initiate board elements, handle animations, handle click events
-    constructor(container, board, broadcaster){
+    constructor(container, board, settings, broadcaster){
         
         super();
+        this.settings = settings;
         this.broadcaster = broadcaster;
         this.container = container;
-        this.reset(board);
+        this.boardData = board;
+        this.elements = [];
+        this.generateGradientMap();
         this.build();
-        this.addEventListener('reset', (e) => this.setup(e.detail.settings), false);
+        this.addEventListener('reset', (e) => {
+            this.generateGradientMap();
+            this.destroy();
+            this.build();
+        }, false);
         this.addEventListener('tileStateUpdated', (e) => this.updateAllAppearance(), false);
+        this.addEventListener('gameLost', (e) => this.revealAllExceptMines(), false);
+        this.addEventListener('gameWon', (e) => this.revealAllMines(), false);
         
     }
 
     generateGradientMap(){
 
         let set = [gradient_1, gradient_2, gradient_3, gradient_4];
-        let gradient = set[3];//set[Math.floor(Math.random() * set.length)];
+        let choice = Math.floor(Math.random() * set.length);
+        let gradient = set[choice];
+
+        console.log("using color gradient: " + (choice + 1));
+        
 
         this.colormap = [];
         for(let i = 0; i < 100; i++){
             this.colormap[i] = gradientPointValue(gradient, i);
         }
-    }
-    reset(board){
-        this.boardData = board;
-        this.elements = [];
-        this.generateGradientMap();
     }
     destroy(){
         while(this.container.firstChild){
@@ -137,6 +145,8 @@ export default class BoardRender extends EventTarget{
                 targetElement.oncontextmenu = () => {return false};
                 targetElement.x = i;
                 targetElement.y = j;
+                targetElement.style.height = this.settings.cellSize;
+                targetElement.style.width = this.settings.cellSize;
 
                 //init tile style
                 this.coverTile(i,j);
@@ -234,13 +244,21 @@ export default class BoardRender extends EventTarget{
         for(let i = 0; i < this.boardData.rows; i++){
             for(let j = 0; j < this.boardData.columns; j++){
                 if(this.boardData.field[i][j].revealed) this.uncoverTile(i,j);
-                //let targetElement = this.elements[i][j];
-                
-                //console.log(targetData);
-                //console.log(targetElement);
-
-                
-                
+            }
+        }
+    }
+    revealAllExceptMines(){ //inefficent, should only update a list of tiles that have actually been updated
+        for(let i = 0; i < this.boardData.rows; i++){
+            for(let j = 0; j < this.boardData.columns; j++){
+                if(!this.boardData.field[i][j].isMine)this.uncoverTile(i,j);
+                else this.elements[i][j].onclick = null; //remove onclick from unrevealed mines
+            }
+        }
+    }
+    revealAllMines(){ //inefficent, should only update a list of tiles that have actually been updated
+        for(let i = 0; i < this.boardData.rows; i++){
+            for(let j = 0; j < this.boardData.columns; j++){
+                if(this.boardData.field[i][j].isMine)this.uncoverTile(i,j);
             }
         }
     }

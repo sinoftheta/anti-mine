@@ -10,7 +10,7 @@
  */
 /**
  * 
- * SUBSCRIBES TO: gameWon, gameLost
+ * SUBSCRIBES TO: gameWon, gameLost, reset
  * 
  * BROADCASTS: reset
  * 
@@ -23,24 +23,42 @@
   */
 export default class GameManager extends EventTarget{
 
-    constructor(messageContainer, settings, broadcaster){
+    constructor(modalContainer, settings, broadcaster){
         super();
-        this.messageContainer = messageContainer;
-        this.broadcaster = broadcaster;
         this.settings = settings;
-        this.gameState = 'pregame';
+        this.modalContainer = modalContainer;
+        this.broadcaster = broadcaster;
         //this.addEventListener('tileClick', (e) => console.log(e.detail), false);
-        this.addEventListener('gameWon', (e) => {
+        this.addEventListener('gameWon', (e) => this.playAgainPopup("Congrats, you safely located all the mines!"), false);
+        this.addEventListener('gameLost', (e) => this.playAgainPopup("Oh no, you were annihilated!"), false);
 
+        this.addEventListener('reset', (e) => {
+            this.modalContainer.removeChild(this.modal);
         }, false);
-        this.addEventListener('gameLost', (e) => console.log(e.detail), false);
 
     }
-    resetGame(settings){
-
+    createNewGame(){
+        this.settings.mines =  Math.floor((Math.random() * 18) + 3);
+        this.settings.seed =  Math.floor(Math.random() * 20);
+        this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));
     }
-    showWin(){
-        let winMessage = document.createElement("div");
+    playAgainPopup(message){
+        this.modal = document.createElement("div");
+        let resetButton = document.createElement("button");
+        let messageContainer = document.createElement("div");
+
+        this.modal.id = "game-over-modal"
+        this.modal.appendChild(messageContainer);
+        this.modal.appendChild(resetButton);
+
+        resetButton.onclick = (e) => this.createNewGame();
+        resetButton.innerHTML = "Play Again";
+
+        messageContainer.innerHTML = message;
+
+        this.modalContainer.appendChild(this.modal);
+
+
     }
 
 }
