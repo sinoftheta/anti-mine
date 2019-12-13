@@ -17,6 +17,7 @@
 ### Known Issues
 - Game playable with menu open
 - Various menu issues
+- Game does not register win when playing a game with a preset number of mines
 
 
 ## Alpha 0.1 - 12/5/2019
