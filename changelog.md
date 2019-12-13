@@ -5,11 +5,13 @@
 ### Changes
 - Improved color mapping
 - Chnged color schemes
-- Updated kernel to be 15x15
+- Updated kernel to be ??x??
 - Updated webpage style
+- Mines are now revealed on win
 
 ### Additions
 - Added new win/lose message
+- Added glossary
 
 ### Known Issues
 

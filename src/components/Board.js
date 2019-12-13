@@ -59,21 +59,13 @@ export default class Board extends EventTarget{
                 this.field[i][j] = new Cell(i,j);
             }
         }
-        //console.log(this.field[20][7]);
-
-        //derive kernel weight
-        for(let i = 0; i < this.kernel.length; i++){
-            for(let j = 0; j < this.kernel[0].length; j++){
-                this.kernelWeight += this.kernel[i][j];
-            }
-        }
 
         //PLACES ALL MINES... good for testing max value after place numbers
         //this.iterateOverBoard((i,j) => {this.field[i][j].value = -1; this.field[i][j].isMine = true})
         this.placeMines();
 
-        let kernelCenter = this.kernel[Math.floor(this.kernel.length/2)][Math.floor(this.kernel[0].length/2)];
-        this.placeNumbersKernel(this.kernel, kernelCenter);
+        //let kernelCenter = this.kernel[Math.floor(this.kernel.length/2)][Math.floor(this.kernel[0].length/2)];
+        this.placeNumbersKernel(this.kernel);
 
     }
     iterateOverBoard(fi, fo){
@@ -126,7 +118,7 @@ export default class Board extends EventTarget{
         
     }
     
-    placeNumbersKernel(k, normalize){
+    placeNumbersKernel(k){
         let field = this.field;
 
         let tempField = [];
@@ -142,11 +134,11 @@ export default class Board extends EventTarget{
                 tempField[i][j] = 0;
 
                 //if mine
-                if(field[i][j].isMine){
+                /*if(field[i][j].isMine){
                     //preserve value of mine
                     tempField[i][j] = field[i][j].value;
                     continue;
-                }
+                }*/
                 //iterate through kernel 
                 for(let m = 0; m < k.length; m++){
 
@@ -170,7 +162,7 @@ export default class Board extends EventTarget{
         //put temp values in field
         for(let i = 0; i < this.rows; i++){ //vertical
             for(let j = 0; j < this.columns; j++){ //horizontal
-                this.field[i][j].value = tempField[i][j] / normalize;
+                this.field[i][j].value = tempField[i][j];
             }
         }
 

@@ -21,24 +21,20 @@ if(diameter % 2 == undefined || diameter % 2 === 0){
 //console.log("diameter = " + diameter);
 
 let k = [];
-let r = Math.floor(diameter / 2);
+
+*/
+
+
+//let r = Math.floor(diameter / 2);
 for(let i = 0; i < diameter; i++){
     k[i] = [];
     for(let j = 0; j < diameter; j++){
 
-        k[i][j] = 0;
+        //k[i][j] = 0;
 
         //pythagorean theorem to find distance from origin ... this algorithm sucks
-        let distance = Math.pow(Math.pow((i - r), 2) + Math.pow((j - r), 2), 0.5);
-
-        //TODO: replace this with a (radius, weight) tuple array
-        if(distance <= (r * 1)) k[i][j] = 1;
-        if(distance <= (r * .8)) k[i][j] = 1/8;
-        if(distance <= (r * .6)) k[i][j] = 1/4;
-        if(distance <= (r * .4)) k[i][j] = 1/2;
-        if(distance <= (r * .2)) k[i][j] = 0.75;
-
-        if(i === Math.floor(diameter / 2) && j === Math.floor(diameter / 2)) k[i][j] = 1;
+        //let distance = Math.pow(Math.pow((i - r), 2) + Math.pow((j - r), 2), 0.5);
+        //if(i === Math.floor(diameter / 2) && j === Math.floor(diameter / 2)) k[i][j] = 1;
             
     }
 }

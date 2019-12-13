@@ -73,7 +73,9 @@ body {
     -webkit-text-stroke: 1px rgb(0, 0, 0);
     color: #ffffff; 
     user-select: none;
-    overflow: hidden;
+    /*overflow: hidden;*/
+
+    
 }
 .cell-value-mine{
     color: #ff0000; 
@@ -81,6 +83,16 @@ body {
 
 .cell-mine{
     /*acutally this is unused for now*/
+}
+
+
+/*.cell-value-geo is all shite*/
+.cell-value-geo{
+    opacity: 0;
+    z-index: 5;
+}
+.cell-value-geo:hover{
+    opacity: 1;
 }
 
 
@@ -121,6 +133,9 @@ body {
 #game-over-modal div {
     width: max-content;
     color: #ffffff;
+    background: #00000042;
+    padding: 5px;
+    margin-bottom: 7px;
 }
 #game-over-modal button {
     color: #ffffff;
@@ -134,6 +149,19 @@ body {
     color: #000000;
     background: #f5f5f5;
 }
+
+/****************
+* OPTIONS MENU
+*****************/
+@keyframes options-pan-in{
+    0% {
+        right: -60%;
+    }
+    100%{
+        right: 50%;
+    }
+}
+
 
 /**************
 * UTILITY     *

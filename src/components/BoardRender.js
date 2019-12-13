@@ -1,14 +1,4 @@
-import {gradientPointValueFromChoice} from './ColorMap.js';
-/**
- * events:
- * gameWon
- * gameLost
- * tileClicked
- * tileStateUpdated
- * tilesRendered
- * reset
- * 
- */
+import {colorMap} from '../functions/ColorMap.js';
 /**
  * 
  * SUBSCRIBES TO: tileStateUpdated, gameWon, gameLost, reset
@@ -26,10 +16,8 @@ export default class BoardRender extends EventTarget{
         this.container = container;
         this.boardData = board;
         this.elements = [];
-        this.generateGradientMap();
         this.build();
         this.addEventListener('reset', (e) => {
-            this.generateGradientMap();
             this.destroy();
             this.build();
         }, false);
@@ -39,23 +27,16 @@ export default class BoardRender extends EventTarget{
         
     }
 
-    generateGradientMap(){
-
-        let choice = Math.floor(Math.random() * 4); //4 gradients to choose from, coupled code, TODO: refactor
-        console.log("using color gradient: " + (choice + 1));
-        
-
-        this.colormap = [];
-        for(let i = 0; i < 100; i++){
-            this.colormap[i] = gradientPointValueFromChoice(choice, i);
-        }
-    }
     destroy(){
         while(this.container.firstChild){
             this.container.removeChild(this.container.firstChild); 
         }
     }
     build(){
+
+        //choose color
+        this.colorChoice = Math.floor( Math.random() * this.settings.gradients.length);
+        console.log("color scheme #" + (this.colorChoice + 1));
 
         //build board
         for(let i = 0; i < this.boardData.rows; i++){
@@ -118,7 +99,9 @@ export default class BoardRender extends EventTarget{
         targetElement.onclick = null;
 
         //append number container if one does not exist
-        if(targetElement.childNodes.length == 0 && false){
+        if(targetElement.childNodes.length == 0 && this.settings.displayNums){
+
+            //this only works for linear kernels
             let cellChild = targetElement.appendChild(document.createElement("div"));
             cellChild.className = `cell-value`;
             cellChild.innerHTML = targetData.value;
@@ -127,28 +110,14 @@ export default class BoardRender extends EventTarget{
                 targetElement.classList.add('cell-mine');
                 cellChild.classList.add('cell-value-mine');
             }
+
         }
+        // would be cool if color mapping could be done before the game
+        let n = colorMap(targetData.value, this.settings.kernelWeight, 0.1, 1.4);
 
+        targetElement.style.background = this.settings.gradients[this.colorChoice][n];
 
-
-        //map value => color value
-        let kWeight = 2;
-        let normVal = Math.round(100* (1 * targetData.value + kWeight/2) / kWeight );
-        let cappedVal = Math.min( 99 , Math.max (0 , normVal ));
-        targetElement.style.background = this.colormap[cappedVal];
-        
-        //color mines
-        if(targetData.isMine){
-            if(targetData.value > 0){
-                targetElement.style.background = this.colormap[100];
-            }else if(targetData.value < 0){
-                targetElement.style.background = this.colormap[0];
-            }
-            else{
-                targetElement.style.background = this.colormap[50]
-            }
-            
-        }
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-==-=-==-=-=-=-=-===-=-=-=-=-==-=-=-=-=-=-=-=-=-=
 
 
     }

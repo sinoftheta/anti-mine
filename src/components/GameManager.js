@@ -38,8 +38,9 @@ export default class GameManager extends EventTarget{
 
     }
     createNewGame(){
-        this.settings.mines =  Math.floor((Math.random() * 18) + 3);
-        this.settings.seed =  Math.floor(Math.random() * 20);
+        this.settings.mines =  Math.floor(Math.random() * 30) + 45;
+        this.settings.seed =  Math.floor(Math.random() * 1337);
+        console.log("mines: " + this.settings.mines);
         this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));
     }
     playAgainPopup(message){
