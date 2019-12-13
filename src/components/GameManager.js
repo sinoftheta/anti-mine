@@ -33,12 +33,12 @@ export default class GameManager extends EventTarget{
         this.addEventListener('gameLost', (e) => this.playAgainPopup("Oh no, you were annihilated!"), false);
 
         this.addEventListener('reset', (e) => {
-            this.modalContainer.removeChild(this.modal);
+            this.modal && this.modal.parentNode === this.modalContainer ? this.modalContainer.removeChild(this.modal) : null;
         }, false);
 
     }
     createNewGame(){
-        this.settings.mines =  Math.floor(Math.random() * 30) + 45;
+        this.settings.randMines ? this.settings.mines =  Math.floor(Math.random() * 30) + 45 : null;
         this.settings.seed =  Math.floor(Math.random() * 1337);
         console.log("mines: " + this.settings.mines);
         this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));

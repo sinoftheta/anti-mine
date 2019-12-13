@@ -1,19 +1,22 @@
 # Change Log
 
 
-## Alpha 0.1 - 12/??/2019
+## Alpha 0.2 - 12/13/2019
 ### Changes
 - Improved color mapping
 - Chnged color schemes
-- Updated kernel to be ??x??
+- Updated kernel to be 15x15
 - Updated webpage style
 - Mines are now revealed on win
 
 ### Additions
+- Added menu
 - Added new win/lose message
 - Added glossary
 
 ### Known Issues
+- Game playable with menu open
+- Various menu issues
 
 
 ## Alpha 0.1 - 12/5/2019

@@ -4,6 +4,7 @@ import Board from './components/Board.js';
 import BoardRender from './components/BoardRender.js';
 import GameManager from './components/GameManager.js';
 import Broadcaster from './components/Broadcaster.js';
+import OptionsMenu from './components/OptionsMenu.js';
 
 //assets
 import * as kernel from './assets/Kernels.js';
@@ -18,6 +19,7 @@ import {rasterizeGradient} from './functions/ColorMap.js'
 let init_settings = {
     rows: 30,
     columns: 40,
+    randMines: true,
     mines: Math.floor(Math.random() * 30) + 45,
     seed: Math.floor(Math.random() * 1337),
     cellSize: 20,
@@ -46,11 +48,12 @@ init_settings.kernelWeight = kernelWeight;
 
 // generate raster for gradients
 init_settings.gradients.push(rasterizeGradient(gradient.g1));
-//init_settings.gradients.push(rasterizeGradient(gradient.g2));
+init_settings.gradients.push(rasterizeGradient(gradient.g2));
 init_settings.gradients.push(rasterizeGradient(gradient.g3));
-//init_settings.gradients.push(rasterizeGradient(gradient.g4));
+init_settings.gradients.push(rasterizeGradient(gradient.g4));
 init_settings.gradients.push(rasterizeGradient(gradient.g5));
 init_settings.gradients.push(rasterizeGradient(gradient.g6));
+
 
 //presetBoard:
 
@@ -70,6 +73,8 @@ broadcaster.subscribe(board);
 
 let board_render = new BoardRender(boardContainer, board, init_settings, broadcaster);
 broadcaster.subscribe(board_render);
+
+let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);
 
 
 /**

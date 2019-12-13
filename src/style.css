@@ -7,6 +7,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #8a8a8a;
+  overflow: hidden;
 
 }
 
@@ -137,29 +138,52 @@ body {
     padding: 5px;
     margin-bottom: 7px;
 }
-#game-over-modal button {
-    color: #ffffff;
-    background: #535353;
-    box-shadow: 3px 3px 5px #00000085;
-    border: none;
-    cursor: pointer;
 
-}
-#game-over-modal button:hover{
-    color: #000000;
-    background: #f5f5f5;
-}
 
 /****************
 * OPTIONS MENU
 *****************/
-@keyframes options-pan-in{
-    0% {
-        right: -60%;
-    }
-    100%{
-        right: 50%;
-    }
+
+#menu-container{
+
+    bottom: -50vh; /*COUPLED CODE #1*/
+    left: 50%;
+    transform: translate(-50%,0%);
+    position: fixed;
+    transition: bottom .7s ease-in-out 0s;
+    display: flex;
+    flex-direction: column;
+}
+.menu-open-anim{
+    bottom: 0 !important;
+}
+#menu-open-close{
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    margin-left: 50%;
+    transform: translate(-50%, 0);
+}
+#menu-panel{
+    background: #0000005e;
+    width: 20vw;
+    transition: width .7s ease-in-out .3s;
+    height: 50vh; /*COUPLED CODE #1*/
+}
+#menu-icon{
+    fill: #00000042 !important;
+}
+#menu-panel *{
+    margin-left: 50%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    transform: translate(-50%,0%);
+    border: none;
+}
+#menu-panel input{
+    background: rgba(0, 0, 0, 0.644);
+    color: #ffffff;
+    padding: 2px;
 }
 
 
@@ -178,3 +202,20 @@ body {
     -ms-user-select: none;
     user-select: none;
  }
+
+ /**************
+  BUTTONS
+  *************/
+
+button {
+    color: #ffffff;
+    background: #535353;
+    box-shadow: 3px 3px 5px #00000085;
+    border: none;
+    cursor: pointer;
+
+}
+button:hover{
+    color: #000000;
+    background: #f5f5f5;
+}
