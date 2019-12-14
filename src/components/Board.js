@@ -40,17 +40,17 @@ export default class Board extends EventTarget{
 
         if(settings){
             this.seed = settings.seed;
-            this.columns = settings.columns; //NEEDS REFACTOR, ROWS AND COLUMNS MISLABELED
+            this.columns = settings.columns;
             this.rows = settings.rows;
             this.numMines = settings.mines;
             this.area = this.rows * this.columns;
-            this.revealedTiles = 0;
             this.kernel = settings.kernel;
             this.kernelWeight = 0;
-            this.gameLost = false;
+            
         }
+        this.revealedTiles = 0;
+        this.gameLost = false;
 
-        
         //instantiate field of cells
         this.field = [];
         for(let i = 0; i < this.rows; i++){ 
@@ -220,7 +220,6 @@ export default class Board extends EventTarget{
             this.broadcaster.dispatchEvent(new CustomEvent('gameLost', {}));
             return;
         }
-
         //check win condition
         if(this.gameWon){
             this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
@@ -261,7 +260,12 @@ export default class Board extends EventTarget{
     }
 
     get gameWon(){
-        return this.area - this.revealedTiles === this.numMines && !this.gameLost;
+        //console.log("area: " + this.area);
+        //console.log("revealedTiles: " + this.revealedTiles)
+        //console.log("numMines: " + this.numMines)
+        //console.log("game lost?: " + this.gameLost)
+        //console.log("gameWon?" + (this.area - this.revealedTiles == this.numMines && !this.gameLost))
+        return this.area - this.revealedTiles == this.numMines && !this.gameLost;
     }
 
 
