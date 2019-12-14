@@ -16,6 +16,13 @@ let svg = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon
         this.settings = settings;
         this.container = container;
         this.open = false;
+        window.addEventListener('keydown', (e) => {
+            if(e.keyCode == 27 && this.open){
+                this.open = false;
+                this.menuContainer.classList.remove("menu-open-anim");
+                this.container.removeChild(this.backdrop);
+            } 
+        });
 
         this.init();
 
@@ -27,22 +34,29 @@ let svg = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon
         this.menuContainer = document.createElement("div");
         this.menuContainer.id = "menu-container";
         
-
-
         //create button
         this.openCloseButton = document.createElement("div");
         this.openCloseButton.id = "menu-open-close";
         this.openCloseButton.innerHTML = svg;
-        //this.openCloseButton.style.backgroundImage = `url(${menuIcon})`;
+        
+        //TODO: open menu wuth key press, dissable TileSelector
+        //this.openCloseButton.tabIndex = 0;
+        
         this.openCloseButton.onclick = (e) => {
             this.open = !this.open;
 
             if(this.open){
                 //apply animate-in 
                 this.menuContainer.classList.add("menu-open-anim");
+
+                //create backdrop
+                this.backdrop = document.createElement("div");
+                this.backdrop.id = 'menu-backdrop';
+                this.container.appendChild(this.backdrop);
             }else{
                 //apply animate-out
                 this.menuContainer.classList.remove("menu-open-anim");
+                this.container.removeChild(this.backdrop);
             }
         }
 

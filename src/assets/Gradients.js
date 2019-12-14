@@ -14,7 +14,7 @@ export const g3 = [ //"Love" 10/10!
         {weight: 50,  r: 227, g: 129, b: 250,},
         {weight: 0,   r: 64,  g: 31,  b: 156,},
     ];
-export const g4 = [ //cookiezzz
+export const g4 = [ //ombre
         {weight: 100, r: 255, g: 249, b: 207,},
         {weight: 0,   r: 23,  g: 7,  b: 3,},
     ];
@@ -28,5 +28,4 @@ export const g6 = [ //classic ... nightshade
         {weight: 50,  r: 69,  g: 19,  b: 235,},
         {weight: 0,   r: 0,  g: 0,  b: 0,},
     ];
-
 //should gradients be objects with human readable names?

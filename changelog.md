@@ -1,6 +1,19 @@
 # Change Log
 
 
+## Alpha 0.2.1 - 12/12/2019
+### Changes
+- Fixed issue where game does not register win when playing a game with a preset number of mines
+- Play again button gains focus when game ends
+- Removed black and white color scheme
+### Additions
+- Added How To Play document
+- Added keyboard controls 
+
+### Known Issues
+- Game playable with menu open
+- Various menu issues
+
 ## Alpha 0.2 - 12/13/2019
 ### Changes
 - Improved color mapping

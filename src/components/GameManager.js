@@ -59,6 +59,8 @@ export default class GameManager extends EventTarget{
 
         this.modalContainer.appendChild(this.modal);
 
+        resetButton.focus();
+
 
     }
 

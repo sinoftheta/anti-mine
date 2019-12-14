@@ -5,6 +5,7 @@ import BoardRender from './components/BoardRender.js';
 import GameManager from './components/GameManager.js';
 import Broadcaster from './components/Broadcaster.js';
 import OptionsMenu from './components/OptionsMenu.js';
+import TileSelector from './components/TileSelector.js';
 
 //assets
 import * as kernel from './assets/Kernels.js';
@@ -22,7 +23,7 @@ let init_settings = {
     randMines: true,
     mines: Math.floor(Math.random() * 30) + 45,
     seed: Math.floor(Math.random() * 1337),
-    cellSize: 20,
+    cellSize: 30,
     kernel: kernel._15x15_geo2,
     kernelWeight: 0,
     gradients: [],
@@ -75,6 +76,9 @@ let board_render = new BoardRender(boardContainer, board, init_settings, broadca
 broadcaster.subscribe(board_render);
 
 let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);
+
+let tile_selector = new TileSelector(boardContainer, init_settings, broadcaster);
+broadcaster.subscribe(tile_selector);
 
 
 /**
