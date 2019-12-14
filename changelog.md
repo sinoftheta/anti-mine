@@ -1,7 +1,16 @@
 # Change Log
 
+## Alpha 0.2.2 - 12/14/2019
+### Changes
+- Updated tile uncover logic. Adjacent tiles with values between 0 and the origin tile are uncovered.
+- Readme links Glossary, How To Play, and Changelog
 
-## Alpha 0.2.1 - 12/12/2019
+### Known Issues
+- In rare cases, it is possible to spawn two Tile Select Cursors
+- Game playable with menu open
+- Various menu issues
+
+## Alpha 0.2.1 - 12/14/2019
 ### Changes
 - Fixed issue where game does not register win when playing a game with a preset number of mines
 - Play again button gains focus when game ends

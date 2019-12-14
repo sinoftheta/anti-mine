@@ -33,6 +33,7 @@ export default class Board extends EventTarget{
     }
     handleClick(e){
         this.uncoverTile(e.detail.x, e.detail.y); 
+        console.log('=-=-=-=-=-=-=End Click-=-=-=-=-=-=-=-=')
         this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
 
     }
@@ -169,7 +170,7 @@ export default class Board extends EventTarget{
     }
 
 
-    uncoverTile(x,y, originMagnitude){
+    uncoverTile(x,y, originValue){
         //console.log("hello?");
         let field = this.field;
 
@@ -189,26 +190,44 @@ export default class Board extends EventTarget{
         //this logic should be able to be combined
 
         //check that origin value exists
-        if(originMagnitude){
+        if(originValue){
 
             //prevents mines from being revealed automatically 
             if(target.isMine){
                 return;
             }
             //check that previous magnitude is greater or equal to current magnitude 
-            //dont reveal if originMagnitude is smaller than current magnitude
-            if(originMagnitude < Math.abs(target.value)){
+            //dont reveal if originValue is smaller than current magnitude
+            
+            /*if(originValue < Math.abs(target.value)){ //OLD REVEAL LOGIC, "DOWNHILL BOTH WAYS"
                 return;
-            }
+            }*/
+            console.log("=-=-=-Start Tile=-=-=-=-")
+            console.log("origin: " + originValue);
+            console.log("targetval: " + target.value);
+            //console.log(-1 > -2);
+            if(originValue > 0 && target.value > originValue){ console.log('=-=-=- not revealed 1 =-=-=-=-='); return;} //only uncover "down hill" if positive
+            if(originValue < 0 && target.value < originValue){ console.log('=-=-=- not revealed 2 =-=-=-=-='); return;} //only uncover "up hill" if negative
+
+            //stop at 0 or sign change boundary
+            if(target.value == 0 && originValue !== 0){ console.log('=-=-=- not revealed 3 =-=-=-=-='); return;}
+            if(target.value > 0 && originValue < 0){ console.log('=-=-=- not revealed 4 =-=-=-=-='); return;}
+            if(target.value < 0 && originValue > 0){ console.log('=-=-=- not revealed 5 =-=-=-=-='); return;}
+
+
+
+            //origin must be equal to zero, keep recursing
+            
         }
         else{
             // this is the original tile clicked
-            originMagnitude = Math.abs(target.value);
+            originValue = target.value;
         }
 
 
         //reveal tile
         target.revealed = true;
+        console.log('=-=-=-=-revealed=-=-=-=-=--')
         this.revealedTiles++;
         //console.log(`${x},${y} revealed`);
 
@@ -230,31 +249,31 @@ export default class Board extends EventTarget{
         //AND that have a smaller ABSOLUTE value than the target
 
         //east
-        this.uncoverTile(x + 1, y, originMagnitude);
+        this.uncoverTile(x + 1, y, originValue);
 
         //north
-        this.uncoverTile(x, y + 1, originMagnitude);
+        this.uncoverTile(x, y + 1, originValue);
 
         //west
-        this.uncoverTile(x - 1, y, originMagnitude);
+        this.uncoverTile(x - 1, y, originValue);
 
         //south
-        this.uncoverTile(x, y - 1, originMagnitude);
+        this.uncoverTile(x, y - 1, originValue);
 
         //dont recurse over diagonals
         //return;
 
         //northeast
-        this.uncoverTile(x + 1, y + 1, originMagnitude);
+        this.uncoverTile(x + 1, y + 1, originValue);
 
         //northwest
-        this.uncoverTile(x - 1, y + 1, originMagnitude);
+        this.uncoverTile(x - 1, y + 1, originValue);
 
         //southwest
-        this.uncoverTile(x - 1, y - 1, originMagnitude);
+        this.uncoverTile(x - 1, y - 1, originValue);
 
         //southeast
-        this.uncoverTile(x + 1, y - 1, originMagnitude);
+        this.uncoverTile(x + 1, y - 1, originValue);
 
 
     }
@@ -279,105 +298,6 @@ export default class Board extends EventTarget{
     * if originValue = 0, only uncover tiles where tile.value == 0
     * */ 
              
-    uncoverTile2(x,y, originValue){
-        let field = this.field;
-
-        //check if target exists
-        if(!(field[x] && field[x][y])){
-            return;
-        }
-        
-        let target = field[x][y];
-
-        let recurse = true;
-
-        //check if tile is covered
-        if(target.revealed) return;
-
-        //check that origin value exists
-        if(typeof originValue === 'number'){
-            //this is not the origonal tile clicked
-
-            //prevents mines from being revealed automatically 
-            if(target.isMine){
-                return;
-            }
-            
-            //check sign of origin 
-            if(originValue === 0){
-                //stop if target.value  != 0
-                if(target.value !== 0) recurse = false;
-                
-            }
-
-            if(originValue > 0){
-                //stop if target.value > originValue
-                if(target.value > originValue && target.value > 0) recurse = false;
-            }
-
-            if(originValue < 0){
-                //stop if target.value < originValue
-                if(target.value < originValue && target.value < 0) recurse = false;
-            }
-
-            
-        }
-        else{
-            // this is the original tile clicked
-            originValue = target.value;
-        }
-
-        //reveal tile
-        target.revealed = true;
-        this.revealedTiles++;
-
-        //check lose condition
-        if(target.isMine){
-            //lose
-            this.gameLost = true;
-            return;
-        }
-
-        //check win condition
-        if(this.gameWon){
-            return;
-        }
-
-        
-
-        if(!recurse) return;
-        //recurse over neighbors 
-
-        //east
-        this.uncoverTile2(x + 1, y, originValue);
-
-        //north
-        this.uncoverTile2(x, y + 1, originValue);
-
-        //west
-        this.uncoverTile2(x - 1, y, originValue);
-
-        //south
-        this.uncoverTile2(x, y - 1, originValue);
-
-        //the choice to recurse over diagonals depends on the kernel...
-        //only recurse over diagonals if their values are the same...?
-        //dont recurse over diagonals:
-
-        //northeast
-        this.uncoverTile2(x + 1, y + 1, originValue);
-
-        //northwest
-        this.uncoverTile2(x - 1, y + 1, originValue);
-
-        //southwest
-        this.uncoverTile2(x - 1, y - 1, originValue);
-
-        //southeast
-        this.uncoverTile2(x + 1, y - 1, originValue);
-
-
-    }
     /*UNUSED BUT WORKS
     placeNumbersConvolute(k0, normalize, k_option){ //REWRITE IN C WITH WEBASSEMBLY...?
         //https://www.youtube.com/watch?v=SiJpkucGa1o

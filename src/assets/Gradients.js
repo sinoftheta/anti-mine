@@ -18,7 +18,7 @@ export const g4 = [ //ombre
         {weight: 100, r: 255, g: 249, b: 207,},
         {weight: 0,   r: 23,  g: 7,  b: 3,},
     ];
-export const g5 = [ //classic ... METROID
+export const g5 = [ //classic ... MetroRobo
         {weight: 100, r: 255, g: 255, b: 255,},
         {weight: 50,  r: 235,  g: 69,  b: 19,},
         {weight: 0,   r: 0,  g: 0,  b: 0,},
