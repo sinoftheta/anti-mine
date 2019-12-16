@@ -33,7 +33,6 @@ export default class BoardRender extends EventTarget{
         }
     }
     build(){
-
         //choose color
         this.colorChoice = Math.floor( Math.random() * this.settings.gradients.length);
         console.log("color scheme #" + (this.colorChoice + 1));
@@ -66,6 +65,10 @@ export default class BoardRender extends EventTarget{
 
                 //init tile style
                 this.coverTile(i,j);
+
+                if(this.settings.debug && this.settings.debug.active && this.settings.debug.uncoverAll){
+                    this.uncoverTile(i,j);
+                }
                 
             }
         }
@@ -112,12 +115,26 @@ export default class BoardRender extends EventTarget{
             }
 
         }
-        // would be cool if color mapping could be done before the game
+        // would be cool if color mapping was done before the game
         let n = colorMap(targetData.value, this.settings.kernelWeight, 0.1, 1.4);
 
         targetElement.style.background = this.settings.gradients[this.colorChoice][n];
 
-        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-==-=-==-=-=-=-=-===-=-=-=-=-==-=-=-=-=-=-=-=-=-=
+        if(this.settings.debug && this.settings.debug.active && this.settings.debug.showMines){
+            
+            
+            if(targetData.isMine && targetData.value > 0){
+                targetElement.style.background = '#ff2200';
+            }
+            if(targetData.isMine && targetData.value < 0){
+                targetElement.style.background = '#00ff22';
+            }
+            if(targetData.isMine && targetData.value == 0){
+                targetElement.style.background = '#2200ff';
+            }
+            
+        }
+
 
 
     }

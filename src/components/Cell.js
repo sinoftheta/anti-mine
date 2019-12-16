@@ -5,7 +5,7 @@ export default class Cell{
         this.x = x;
         this.y = y;
         this.isMine = false;
-        this.revealed = false; //TODO: change to "revealed"
+        this.revealed = false; 
         this.value = 0;
         this.checked = false;
 

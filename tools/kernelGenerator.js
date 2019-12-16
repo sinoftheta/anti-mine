@@ -22,7 +22,6 @@ if(diameter % 2 == undefined || diameter % 2 === 0){
 
 let k = [];
 
-*/
 
 
 //let r = Math.floor(diameter / 2);

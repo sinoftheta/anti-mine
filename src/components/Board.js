@@ -1,17 +1,5 @@
 import Cell from './Cell.js';
 import seedrandom from 'seedrandom';
-
-
-/**
- * events:
- * gameWon
- * gameLost
- * tileClicked
- * tileStateUpdated
- * tilesRendered
- * reset
- * 
- */
 /**
  * 
  * SUBSCRIBES TO: tileClick, reset
@@ -24,33 +12,38 @@ export default class Board extends EventTarget{
     constructor(settings, broadcaster){
         
         super();
+        this.settings = settings;
         this.broadcaster = broadcaster;
         //console.log(this.broadcaster);
-        this.setup(settings);
-        this.addEventListener('reset', (e) => this.setup(e.detail.settings), false);
+        this.setup();
+        this.addEventListener('reset', (e) => this.setup(), false);
         this.addEventListener('tileClick', (e) => this.handleClick(e) , false);
 
     }
     handleClick(e){
         this.uncoverTile(e.detail.x, e.detail.y); 
-        console.log('=-=-=-=-=-=-=End Click-=-=-=-=-=-=-=-=')
         this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
+        this.resetCheckStatus();
+
+        //check for loss
+        if(this.gameLost) this.broadcaster.dispatchEvent(new CustomEvent('gameLost', {}));
+
+        //check win condition
+        this.gameWon = (this.area - this.revealedTiles === this.numMines);
+        if(this.gameWon) this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
 
     }
-    setup(settings){ //may change to num mines + num anti mines, maybe a mine will just have random value 
+    setup(){ //may change to num mines + num anti mines, maybe a mine will just have random value 
 
-        if(settings){
-            this.seed = settings.seed;
-            this.columns = settings.columns;
-            this.rows = settings.rows;
-            this.numMines = settings.mines;
-            this.area = this.rows * this.columns;
-            this.kernel = settings.kernel;
-            this.kernelWeight = 0;
-            
-        }
+        this.numMines = this.settings.mines;
+        this.rows = this.settings.rows;
+        this.columns = this.settings.columns;
+        this.area = this.rows * this.columns;
+        this.kernelWeight = 0;
+    
         this.revealedTiles = 0;
         this.gameLost = false;
+        this.gameWon = false;
 
         //instantiate field of cells
         this.field = [];
@@ -60,87 +53,44 @@ export default class Board extends EventTarget{
                 this.field[i][j] = new Cell(i,j);
             }
         }
-
-        //PLACES ALL MINES... good for testing max value after place numbers
-        //this.iterateOverBoard((i,j) => {this.field[i][j].value = -1; this.field[i][j].isMine = true})
         this.placeMines();
-
-        //let kernelCenter = this.kernel[Math.floor(this.kernel.length/2)][Math.floor(this.kernel[0].length/2)];
-        this.placeNumbersKernel(this.kernel);
+        this.placeNumbersKernel();
 
     }
-    iterateOverBoard(fi, fo){
-        for(let i = 0; i < this.columns; i++){
-            if(fo){fo(i);}
-            for(let j = 0; j < this.rows; j++){
-                fi(i, j);
-            }
-        }
-    }
+    
     placeMines(){ 
         let n = this.numMines, x, y, target,
-        rng = seedrandom('' + this.seed + this.rows + this.columns);
-
+        rng = seedrandom('' + this.settings.seed + this.rows + this.columns);
 
         while(n > 0){
             x = Math.floor(rng() * this.rows );
             y = Math.floor(rng() * this.columns );
             target = this.field[x][y];
 
-
-            //if no mine at x,y
+            //if no mine already at x,y
             if(!target.isMine){
-
-                //place mine at target
-                //possibilities values (m) for mines are:
-
-                //m = 1
-                //target.value = 1;
-
-                //m is a random element of {1, -1}
                 target.value = rng() > .5 ? 1 : -1 ;
-
-
-                //m is a weighted value in (0,1] (tends to be one)
-                //let r = rng();
-                //target.value = 1 - r * r;
-
-
-                //m is a value in [-1, 1]
-                //target.value = (rng() * 2) - 1;
-
-
-                /***need to playtest each!!!***/
-
                 target.isMine = true;
                 --n;
             }
         }
-        
     }
     
-    placeNumbersKernel(k){
+    placeNumbersKernel(){
+        let k = this.settings.kernel;
         let field = this.field;
-
         let tempField = [];
-        
         
         //instantiate temp field within first iteration
 
-        //iterate through image
+        //iterate through board
         for(let i = 0; i < this.rows; i++){ 
             tempField[i] = [];
             for(let j = 0; j < this.columns; j++){
                 
                 tempField[i][j] = 0;
 
-                //if mine
-                /*if(field[i][j].isMine){
-                    //preserve value of mine
-                    tempField[i][j] = field[i][j].value;
-                    continue;
-                }*/
-                //iterate through kernel 
+                //iterate through kernel
                 for(let m = 0; m < k.length; m++){
 
                     let offset_i = m - Math.floor(k.length/2);
@@ -171,82 +121,48 @@ export default class Board extends EventTarget{
 
 
     uncoverTile(x,y, originValue){
-        //console.log("hello?");
         let field = this.field;
 
         //check if target exists
-        if(!(field[x] && field[x][y])){
-            return;
-        }
+        if(!(field[x] && field[x][y])) return;
 
-        
         let target = field[x][y];
 
-        //check if tile is revealed or has already been checked
-        if(target.revealed /*|| target.checked*/) return;
-        //target.checked = true;
+        //check if mine is revealed or has been checked
+        if(target.checked || target.revealed) return;
+        target.checked = true;
 
+        console.log('checking ' + x + ', ' + y);
 
-        //this logic should be able to be combined
+        if(typeof originValue === 'number'){
+            //not original click, auto reveal behavor
 
-        //check that origin value exists
-        if(originValue){
-
-            //prevents mines from being revealed automatically 
-            if(target.isMine){
-                return;
-            }
-            //check that previous magnitude is greater or equal to current magnitude 
-            //dont reveal if originValue is smaller than current magnitude
-            
-            /*if(originValue < Math.abs(target.value)){ //OLD REVEAL LOGIC, "DOWNHILL BOTH WAYS"
-                return;
-            }*/
-            console.log("=-=-=-Start Tile=-=-=-=-")
-            console.log("origin: " + originValue);
-            console.log("targetval: " + target.value);
-            //console.log(-1 > -2);
-            if(originValue > 0 && target.value > originValue){ console.log('=-=-=- not revealed 1 =-=-=-=-='); return;} //only uncover "down hill" if positive
-            if(originValue < 0 && target.value < originValue){ console.log('=-=-=- not revealed 2 =-=-=-=-='); return;} //only uncover "up hill" if negative
+            //dont auto reveal mines
+            if(target.isMine) return; //replace with mine auto reveal logic
 
             //stop at 0 or sign change boundary
-            if(target.value == 0 && originValue !== 0){ console.log('=-=-=- not revealed 3 =-=-=-=-='); return;}
-            if(target.value > 0 && originValue < 0){ console.log('=-=-=- not revealed 4 =-=-=-=-='); return;}
-            if(target.value < 0 && originValue > 0){ console.log('=-=-=- not revealed 5 =-=-=-=-='); return;}
+            if(target.value !== 0 && originValue === 0)return;
 
+            if(target.value > 0 && originValue < 0)return;//{ console.log('=-=-=- not revealed 4 =-=-=-=-='); return;}
+            if(target.value < 0 && originValue > 0)return;//{ console.log('=-=-=- not revealed 5 =-=-=-=-='); return;}
+            if(originValue > 0 && target.value > originValue)return;//{ console.log('=-=-=- not revealed 1 =-=-=-=-='); return;} //only uncover "down hill" if positive
+            if(originValue < 0 && target.value < originValue)return;//{ console.log('=-=-=- not revealed 2 =-=-=-=-='); return;} //only uncover "up hill" if negative
 
-
-            //origin must be equal to zero, keep recursing
-            
         }
         else{
-            // this is the original tile clicked
             originValue = target.value;
         }
 
 
+
+        //check lose condition (win cond is checked after recursion)
+        if(target.isMine) this.gameLost = true;
+
         //reveal tile
         target.revealed = true;
-        console.log('=-=-=-=-revealed=-=-=-=-=--')
         this.revealedTiles++;
-        //console.log(`${x},${y} revealed`);
-
-
-
-        //check lose condition
-        if(target.isMine){
-            //lose
-            this.broadcaster.dispatchEvent(new CustomEvent('gameLost', {}));
-            return;
-        }
-        //check win condition
-        if(this.gameWon){
-            this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
-            return;
-        }
-
-        //recurse over all neighbors that are not mines 
-        //AND that have a smaller ABSOLUTE value than the target
+        
+        //recurse over all neighbors
 
         //east
         this.uncoverTile(x + 1, y, originValue);
@@ -277,28 +193,16 @@ export default class Board extends EventTarget{
 
 
     }
-
-    get gameWon(){
-        //console.log("area: " + this.area);
-        //console.log("revealedTiles: " + this.revealedTiles)
-        //console.log("numMines: " + this.numMines)
-        //console.log("game lost?: " + this.gameLost)
-        //console.log("gameWon?" + (this.area - this.revealedTiles == this.numMines && !this.gameLost))
-        return this.area - this.revealedTiles == this.numMines && !this.gameLost;
+    resetCheckStatus(){
+        for(let i = 0; i < this.rows; i++){ //vertical
+            for(let j = 0; j < this.columns; j++){ //horizontal
+                this.field[i][j].checked = false;
+            }
+        }
     }
 
 
-    /*
-    *game logic update:
-    *
-    *if originValue is positive, only uncover tiles where tile.value <= originValue && tile.value > 0
-    *
-    * Likewise, if originValue is negative, only uncover tiles where tile.value >= originValue && tile.value < 0
-    * 
-    * if originValue = 0, only uncover tiles where tile.value == 0
-    * */ 
-             
-    /*UNUSED BUT WORKS
+/*
     placeNumbersConvolute(k0, normalize, k_option){ //REWRITE IN C WITH WEBASSEMBLY...?
         //https://www.youtube.com/watch?v=SiJpkucGa1o
         //https://www.youtube.com/watch?v=C_zFhWdM4ic

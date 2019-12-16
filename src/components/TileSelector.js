@@ -85,8 +85,9 @@
             this.y = Math.floor(this.settings.rows / 2);
 
             this.standby = false;
-
-            this.initCursor();
+            if(this.active){
+                this.initCursor();
+            }
         }, false);
 
         //event listeners for directions

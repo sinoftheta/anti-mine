@@ -2,3 +2,4 @@ node_modules
 fugit
 .gitignore
 dist
+tools/kernel-output.json

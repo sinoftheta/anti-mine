@@ -3,13 +3,15 @@ var fs = require('fs');
 
 
 let unprocessedK = //might want to remake
-[[0,0,1,2,1,0,0],
-[0,1,2,3,2,1,0],
-[1,2,3,4,3,2,1],
-[2,3,4,5,4,3,2],
-[1,2,3,4,3,2,1],
-[0,1,2,3,2,1,0],
-[0,0,1,2,1,0,0]];
+[[0,  0,  1,  1,  2,  1,  1,  0,  0],
+ [0,  1,  2,  2,  3,  2,  2,  1,  0],
+ [1,  2,  3,  3,  4,  3,  3,  2,  1],
+ [1,  2,  3,  4,  5,  4,  3,  2,  1],
+ [2,  3,  4,  5,  6,  5,  4,  3,  2],
+ [1,  2,  3,  4,  5,  4,  3,  2,  1],
+ [1,  2,  3,  3,  4,  3,  3,  2,  1],
+ [0,  1,  2,  2,  3,  2,  2,  1,  0],
+ [0,  0,  1,  1,  2,  1,  1,  0,  0]];  
 
 let invPow2 = (n) => {
     return 1 / Math.pow(2, n)
@@ -32,9 +34,7 @@ let preprocess = (kernel, f) => {
     for(let i = 0; i < kernel.length; i++){
         for(let j = 0; j < kernel[0].length; j++){
             if(kernel[i][j] !== 0){
-                
-                //kernel[i][j] = linear(kernel[i][j], elems);
-                //kernel[i][j] = invPow2(kernel[i][j] - 1, elems);
+                kernel[i][j] = kernel[i][j] * kernel[i][j]; 
             }
         }
     }

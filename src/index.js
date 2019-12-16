@@ -18,27 +18,37 @@ import {rasterizeGradient} from './functions/ColorMap.js'
 
 //initial game settings
 let init_settings = {
-    rows: 30,
-    columns: 40,
+    rows: 5,
+    columns: 5,
+    presetBoard: false,
     randMines: true,
-    mines: Math.floor(Math.random() * 30) + 45,
-    seed: Math.floor(Math.random() * 1337),
-    cellSize: 30,
-    kernel: kernel._15x15_geo2,
+    mines: 2,//Math.floor(Math.random() * 30) + 45,
+    seed: 2,//Math.floor(Math.random() * 1337),
+    cellSize: 20,
+    kernel: kernel._5x5_exp2,
     kernelWeight: 0,
     gradients: [],
     displayNums: false,
     boardPreset: [],
+    /*debug: {
+        active: false,
+        uncoverAll: true,
+        showMines: false,
+
+    }*/
 }
 console.log("mines: " + init_settings.mines)
+console.log("seed: " + init_settings.seed)
 
 /*
-* Init kernel and gradients
+* Settings Prepreocessing
 */
-
+if(init_settings.presetBoard){
+    init_settings.rows = init_settings.presetBoard[0].length;
+    init_settings.columns = init_settings.presetBoard.length;
+}
 
 // derive kernel weight
-// weight does not need to be normalized if kernel is already normalized
 let kernelWeight = 0;
 for(let i = 0; i < init_settings.kernel.length; i++){
     for(let j = 0; j < init_settings.kernel[0].length; j++){
@@ -56,7 +66,6 @@ init_settings.gradients.push(rasterizeGradient(gradient.g5));
 init_settings.gradients.push(rasterizeGradient(gradient.g6));
 
 
-//presetBoard:
 
 
 /*
