@@ -21,9 +21,16 @@ export default class Board extends EventTarget{
 
     }
     handleClick(e){
+        if(this.gameLost || this.gameWon) return;
         this.uncoverTile(e.detail.x, e.detail.y); 
         this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
         this.resetCheckStatus();
+
+        //check for solved mines
+        //for(let i = 0; I < this.mineRevealList.length; i++){
+        //    
+        //}
+
 
         //check for loss
         if(this.gameLost) this.broadcaster.dispatchEvent(new CustomEvent('gameLost', {}));
@@ -44,6 +51,7 @@ export default class Board extends EventTarget{
         this.revealedTiles = 0;
         this.gameLost = false;
         this.gameWon = false;
+        this.mineRevealList = [];
 
         //instantiate field of cells
         this.field = [];
@@ -53,12 +61,20 @@ export default class Board extends EventTarget{
                 this.field[i][j] = new Cell(i,j);
             }
         }
-        this.placeMines();
+
+        if(this.settings.presetBoard) this.placeMinesPreset();
+        else this.placeMinesRandom();
+        
         this.placeNumbersKernel();
 
     }
     
-    placeMines(){ 
+    placeMinesRandom(){ 
+
+        if(this.numMines >= this.area){
+            console.log('Error: too many mines for this board size');
+            return;
+        }
         let n = this.numMines, x, y, target,
         rng = seedrandom('' + this.settings.seed + this.rows + this.columns);
 
@@ -72,6 +88,18 @@ export default class Board extends EventTarget{
                 target.value = rng() > .5 ? 1 : -1 ;
                 target.isMine = true;
                 --n;
+            }
+        }
+    }
+    placeMinesPreset(){
+        this.numMines = 0;
+        for(let i = 0; i < this.rows; i++){ 
+            for(let j = 0; j < this.columns; j++){
+                if(this.settings.presetBoard[i][j] !== 0){
+                    this.field[i][j].isMine = true;
+                    this.numMines++;
+                }
+                this.field[i][j].value = this.settings.presetBoard[i][j];
             }
         }
     }
@@ -132,13 +160,14 @@ export default class Board extends EventTarget{
         if(target.checked || target.revealed) return;
         target.checked = true;
 
-        console.log('checking ' + x + ', ' + y);
-
         if(typeof originValue === 'number'){
             //not original click, auto reveal behavor
 
             //dont auto reveal mines
-            if(target.isMine) return; //replace with mine auto reveal logic
+            if(target.isMine){
+                this.mineRevealList.push(target);
+                return;
+            } 
 
             //stop at 0 or sign change boundary
             if(target.value !== 0 && originValue === 0)return;

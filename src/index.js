@@ -10,6 +10,7 @@ import TileSelector from './components/TileSelector.js';
 //assets
 import * as kernel from './assets/Kernels.js';
 import * as gradient from './assets/Gradients.js';
+import * as boards from './assets/PresetBoards.js';
 
 //functions
 import {rasterizeGradient} from './functions/ColorMap.js'
@@ -18,14 +19,14 @@ import {rasterizeGradient} from './functions/ColorMap.js'
 
 //initial game settings
 let init_settings = {
-    rows: 5,
-    columns: 5,
-    presetBoard: false,
+    rows: 15,
+    columns: 15,
+    presetBoard: boards._diag,
     randMines: true,
-    mines: 2,//Math.floor(Math.random() * 30) + 45,
-    seed: 2,//Math.floor(Math.random() * 1337),
+    mines: 10,//Math.floor(Math.random() * 30) + 45,
+    seed: Math.floor(Math.random() * 1337),
     cellSize: 20,
-    kernel: kernel._5x5_exp2,
+    kernel: kernel._5x5_square,
     kernelWeight: 0,
     gradients: [],
     displayNums: false,
@@ -44,9 +45,11 @@ console.log("seed: " + init_settings.seed)
 * Settings Prepreocessing
 */
 if(init_settings.presetBoard){
-    init_settings.rows = init_settings.presetBoard[0].length;
-    init_settings.columns = init_settings.presetBoard.length;
+    init_settings.rows = init_settings.presetBoard.length;
+    init_settings.columns = init_settings.presetBoard[0].length;
 }
+console.log('rows: ' + init_settings.rows)
+console.log('columns: ' + init_settings.columns)
 
 // derive kernel weight
 let kernelWeight = 0;
