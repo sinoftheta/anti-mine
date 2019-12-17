@@ -33,12 +33,13 @@ export default class Board extends EventTarget{
 
         this.mineRevealList.forEach((e) => {
             this.autoRevealMine(e);
-            this.mineRevealList.forEach(mine => mine.checked = false);
         });
         
+        //use these and/or perhapse a tilesUpdated list for animations
         this.resetCheckStatus();
+        this.mineRevealList = []; 
 
-        this.mineRevealList = []; //play animation for revealed mines in this list before destroying...
+
         this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
 
 
@@ -81,6 +82,14 @@ export default class Board extends EventTarget{
             let field = this.field;
             let islandRevealed = island.reduce((acc, mine) => {
                 let x = mine.x, y = mine.y;
+                    /*console.log(field[x][y+1] ? (field[x][y+1].revealed || field[x][y+1].isMine) : true)
+                    console.log(field[x][y-1] ? (field[x][y-1].revealed || field[x][y-1].isMine) : true)
+                    console.log(field[x+1] ? (field[x+1][y].revealed || field[x+1][y].isMine) : true)
+                    console.log(field[x-1] ? (field[x-1][y].revealed || field[x-1][y].isMine) : true)
+                    console.log((field[x+1] && field[x+1][y+1]) ? (field[x+1][y+1].revealed || field[x+1][y+1].isMine) : true)
+                    console.log((field[x-1] && field[x-1][y+1]) ? (field[x-1][y+1].revealed || field[x-1][y+1].isMine) : true)
+                    console.log((field[x+1] && field[x+1][y-1]) ? (field[x+1][y-1].revealed || field[x+1][y-1].isMine) : true)
+                    console.log((field[x-1] && field[x-1][y-1]) ? (field[x-1][y-1].revealed || field[x-1][y-1].isMine) : true) */
 
                 //very sloppy, a fuck ton of redundant checks, should use recursion to check perimeter...?
                 return (
@@ -97,24 +106,24 @@ export default class Board extends EventTarget{
             }, true);
 
             if(islandRevealed){
-                //console.log('revealing island');
+                console.log('revealing island');
                 island.forEach(member => member.revealed = true);
             }
-
     }
-    mineIslandFinder(x, y, island){
-
+    mineIslandFinder(x, y, island){//finding too many islands
         let field = this.field;
         if(!(field[x] && field[x][y])) return;
 
         let target = field[x][y];
         if(target.checked) return;
-
-        if(target.isMine) island.push(target);
-
         target.checked = true;
 
-        if(!target.isMine) return;
+
+        if(target.isMine){ //only add to an island if its not part of an existing island... need island IDs... or more elegant code...
+            island.push(target);
+        }else{
+            return;
+        }
 
         //east
         this.mineIslandFinder(x + 1, y, island);

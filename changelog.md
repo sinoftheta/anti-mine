@@ -1,5 +1,12 @@
 # Change Log
 
+## Alpha 0.2.3 - 12/17/2019
+### Changes
+- Solved mines and solved mine islands are now automatically revealed.
+
+### Additions
+- Game now capable of using predetermined mine positions
+
 ## Alpha 0.2.2 - 12/14/2019
 ### Changes
 - Updated tile uncover logic. Adjacent tiles with values between 0 and the origin tile are uncovered.

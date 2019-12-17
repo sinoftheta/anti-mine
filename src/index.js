@@ -32,10 +32,10 @@ let init_settings = {
     displayNums: false,
     boardPreset: [],
     debug: {
-        active: false,
-        uncoverAll: true,
+        active: true,
+        uncoverAll: false,
         showMines: false,
-
+        indicate_hidden_mine: true,
     }
 }
 console.log("mines: " + init_settings.mines)

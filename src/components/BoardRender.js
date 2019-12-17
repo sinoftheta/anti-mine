@@ -80,6 +80,10 @@ export default class BoardRender extends EventTarget{
         targetElement.classList.add('cell-covered');
         //targetElement.classList.remove('cell-revealed'); //not needed unless tiles can be re-covered
         targetElement.onclick = (e) => this.broadcaster.dispatchEvent(new CustomEvent('tileClick', {detail: {x: e.target.x, y: e.target.y }}));
+
+        if(this.settings.debug && this.settings.debug.active && this.settings.debug.indicate_hidden_mine && targetData.isMine){
+            targetElement.style.background = '#ff0000'
+        }
     }
 
     uncoverTile(x, y){
