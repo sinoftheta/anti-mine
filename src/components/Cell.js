@@ -6,7 +6,7 @@ export default class Cell{
         this.y = y;
         this.isMine = false;
         this.revealed = false; 
-        this.value = (Math.random() - 0.5) * 0.05;
+        this.value = 0;
         this.checked = false;
 
         //TODO: add flags

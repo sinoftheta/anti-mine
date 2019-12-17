@@ -23,13 +23,23 @@ export default class Board extends EventTarget{
     handleClick(e){
         if(this.gameLost || this.gameWon) return;
         this.uncoverTile(e.detail.x, e.detail.y); 
-        this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
+        
         this.resetCheckStatus();
 
         //check for solved mines
-        //for(let i = 0; I < this.mineRevealList.length; i++){
-        //    
-        //}
+
+        console.log('=-=-=-=-=-=-=-mine list=-=-=-=-=-=-=-=')
+        console.log(this.mineRevealList);
+
+        this.mineRevealList.forEach((e) => {
+            this.autoRevealMine(e);
+            this.mineRevealList.forEach(mine => mine.checked = false);
+        });
+        
+        this.resetCheckStatus();
+
+        this.mineRevealList = []; //play animation for revealed mines in this list before destroying...
+        this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
 
 
         //check for loss
@@ -40,6 +50,98 @@ export default class Board extends EventTarget{
         if(this.gameWon) this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
 
     }
+    autoRevealMine(target){ 
+        //each mine will be in one of 4 cases
+            
+            //case 1: all revealed + safe neighbors -> reveal
+
+            //case 2: mine has a safe + unrevealed neighbor -> dont reveal
+
+            //case 3: part of a mine island with revealed + safe neighbors -> reveal all mines in island
+
+            //case 4: part of a mine island with a safe + unrevealed neighbor -> dont reveal any mines in island
+
+
+            //case 1 & 2 are instances of 3 & 4, respectively 
+            //mines are guarenteed to be unrevealed
+            //all tiles are "unchecked" to start
+
+
+            //THEREFORE
+
+            //1: determine mine island
+            let island = [];
+            this.mineIslandFinder(target.x, target.y ,island);
+            console.log('-=-=-=island=-=-=-')
+            console.log(island);
+
+
+            
+            //2: determine if perimeter of island is revealed
+            let field = this.field;
+            let islandRevealed = island.reduce((acc, mine) => {
+                let x = mine.x, y = mine.y;
+
+                //very sloppy, a fuck ton of redundant checks, should use recursion to check perimeter...?
+                return (
+                    acc &&
+                    (field[x][y+1] ? (field[x][y+1].revealed || field[x][y+1].isMine) : true) &&//if neighbor exists, check if neighbor is revealed OR is mine
+                    (field[x][y-1] ? (field[x][y-1].revealed || field[x][y-1].isMine) : true) &&
+                    (field[x+1] ? (field[x+1][y].revealed || field[x+1][y].isMine) : true) &&
+                    (field[x-1] ? (field[x-1][y].revealed || field[x-1][y].isMine) : true) &&
+                    ((field[x+1] && field[x+1][y+1]) ? (field[x+1][y+1].revealed || field[x+1][y+1].isMine) : true) &&
+                    ((field[x-1] && field[x-1][y+1]) ? (field[x-1][y+1].revealed || field[x-1][y+1].isMine) : true) &&
+                    ((field[x+1] && field[x+1][y-1]) ? (field[x+1][y-1].revealed || field[x+1][y-1].isMine) : true) &&
+                    ((field[x-1] && field[x-1][y-1]) ? (field[x-1][y-1].revealed || field[x-1][y-1].isMine) : true)
+                );
+            }, true);
+
+            if(islandRevealed){
+                //console.log('revealing island');
+                island.forEach(member => member.revealed = true);
+            }
+
+    }
+    mineIslandFinder(x, y, island){
+
+        let field = this.field;
+        if(!(field[x] && field[x][y])) return;
+
+        let target = field[x][y];
+        if(target.checked) return;
+
+        if(target.isMine) island.push(target);
+
+        target.checked = true;
+
+        if(!target.isMine) return;
+
+        //east
+        this.mineIslandFinder(x + 1, y, island);
+
+        //north
+        this.mineIslandFinder(x, y + 1, island);
+
+        //west
+        this.mineIslandFinder(x - 1, y, island);
+
+        //south
+        this.mineIslandFinder(x, y - 1, island);
+
+        //northeast
+        this.mineIslandFinder(x + 1, y + 1, island);
+
+        //northwest
+        this.mineIslandFinder(x - 1, y + 1, island);
+
+        //southwest
+        this.mineIslandFinder(x - 1, y - 1, island);
+
+        //southeast
+        this.mineIslandFinder(x + 1, y - 1, island);
+    
+    }
+
     setup(){ //may change to num mines + num anti mines, maybe a mine will just have random value 
 
         this.numMines = this.settings.mines;
@@ -146,8 +248,6 @@ export default class Board extends EventTarget{
         }
 
     }
-
-
     uncoverTile(x,y, originValue){
         let field = this.field;
 
@@ -191,7 +291,7 @@ export default class Board extends EventTarget{
         target.revealed = true;
         this.revealedTiles++;
         
-        //recurse over all neighbors
+        //recurse over all neighbors, example of a DFS
 
         //east
         this.uncoverTile(x + 1, y, originValue);
