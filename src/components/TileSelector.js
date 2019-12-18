@@ -8,6 +8,7 @@
  * 
  */
 
+
  export default class TileSelecor extends EventTarget{
 
     constructor(boardContainer, settings, broadcaster){
@@ -38,14 +39,13 @@
         window.addEventListener('keydown', (e) => {
             if((e.keyCode == 32 || e.keyCode == 13) && this.active && !this.standby){
                 //uncover tile
-                this.broadcaster.dispatchEvent(new CustomEvent('tileClick', {detail: {x: this.y, y: this.x}}));
+                this.broadcaster.dispatchEvent(new CustomEvent('tileReveal', {detail: {x: this.y, y: this.x}}));
             }
             else if((e.keyCode == 32 || e.keyCode == 13) && !this.active){
                 this.active = true;
                 this.initCursor();
             }
         });
-        
 
         //arrow key listener
         window.addEventListener('keydown', (e) => {

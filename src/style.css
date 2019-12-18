@@ -167,6 +167,45 @@ body {
         transform: translate(-6px,-6px);
     }
 }
+/****************
+* HEALTH BAR
+*****************/
+
+#health-bar-container{
+    position: absolute;
+    left: 30%;
+    top: 70px;
+    width: 50px;
+    background: green;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+}
+/*#health-bar-container {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+
+    margin-top: 1px;
+    margin-bottom: 1px;
+
+    background: #535353;
+    box-shadow: 3px 3px 5px #00000085;
+    height: 100%;
+    width: 70px;
+}*/
+
+#health-bar-animate{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: 40px;
+
+    background: red;
+    transition: all .7s ease-in-out 0s;
+    
+}
+
 
 /****************
 * OPTIONS MENU

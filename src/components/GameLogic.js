@@ -1,4 +1,5 @@
 import Cell from './Cell.js';
+import {hitpointsCalc} from '../functions/HitpointsCalc.js';
 import seedrandom from 'seedrandom';
 /**
  * 
@@ -7,7 +8,7 @@ import seedrandom from 'seedrandom';
  * BROADCASTS: tileStateUpdated, gameWon, gameLost
  * 
  */
-export default class Board extends EventTarget{
+export default class GameLogic extends EventTarget{
     //contains all game logic
     constructor(settings, broadcaster){
         
@@ -27,13 +28,15 @@ export default class Board extends EventTarget{
         this.rows = this.settings.rows;
         this.columns = this.settings.columns;
         this.area = this.rows * this.columns;
-        this.kernelWeight = 0;
     
         this.revealedTiles = 0;
         this.gameLost = false;
         this.gameWon = false;
         this.mineRevealList = [];
         this.minesRevealed = 0;
+
+        this.hitpoints = hitpointsCalc(this.settings.kernelWeight, this.numMines);
+        //console.log("HP: " + this.hitpoints)
 
         //instantiate field of cells
         this.field = [];
@@ -60,11 +63,23 @@ export default class Board extends EventTarget{
     }*/
     handleReveal(e){
         if(this.gameLost || this.gameWon) return;
-        this.uncoverTile(e.detail.x, e.detail.y); 
+        let x = e.detail.x, y = e.detail.y;
+
+        let target = this.field[x][y];
+
+        if(target.isMine){
+            this.mineHit(target.value);
+            target.revealed = true;
+            this.minesRevealed++;
+
+        }else{
+            this.autoRevealTile(x, y); 
+        }
         
-        this.resetCheckStatus();
+        
 
         //check for solved mines
+        this.resetCheckStatus();
 
         //console.log('=-=-=-=-=-=-=-mine list=-=-=-=-=-=-=-=')
         //console.log(this.mineRevealList);
@@ -89,6 +104,22 @@ export default class Board extends EventTarget{
         this.gameWon = this.minesRevealed === this.numMines;
         if(this.gameWon) this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
 
+        console.log('mines revealed: ' + this.minesRevealed + ' totalMines: ' + this.numMines);
+
+    }
+    mineHit(value){
+
+        let c = 5; //constant ensures that hitting a null mine results in losing health
+
+        let damage = Math.abs(value + 5); 
+        //console.log('you lost ' + damage + ' health');
+        this.hitpoints -= damage;
+
+        //console.log('HP: ' + this.hitpoints);
+        this.broadcaster.dispatchEvent(new CustomEvent('damageTaken', {}));
+
+        //check for loss
+        if(this.hitpoints <= 0) this.gameLost = true;
     }
     autoRevealMine(target){//TODO: NEED TO RECHECK WIN CONDITION
         
@@ -155,7 +186,7 @@ export default class Board extends EventTarget{
                 });
             }
     }
-    mineIslandFinder(x, y, island){//finding too many islands
+    mineIslandFinder(x, y, island){
         let field = this.field;
         if(!(field[x] && field[x][y])) return;
 
@@ -273,7 +304,7 @@ export default class Board extends EventTarget{
         }
 
     }
-    uncoverTile(x,y, originValue){
+    autoRevealTile(x,y, originValue){
         let field = this.field;
 
         //check if target exists
@@ -307,45 +338,38 @@ export default class Board extends EventTarget{
             originValue = target.value;
         }
 
-
-
-        //check lose condition (win cond is checked after recursion)
-        if(target.isMine) this.gameLost = true;
-
         //reveal tile
         target.revealed = true;
-        this.revealedTiles++;
+        this.revealedTiles++; //revealedTiles is unused... for now
         
         //recurse over all neighbors, example of a DFS
 
         //east
-        this.uncoverTile(x + 1, y, originValue);
+        this.autoRevealTile(x + 1, y, originValue);
 
         //north
-        this.uncoverTile(x, y + 1, originValue);
+        this.autoRevealTile(x, y + 1, originValue);
 
         //west
-        this.uncoverTile(x - 1, y, originValue);
+        this.autoRevealTile(x - 1, y, originValue);
 
         //south
-        this.uncoverTile(x, y - 1, originValue);
+        this.autoRevealTile(x, y - 1, originValue);
 
         //dont recurse over diagonals
         //return;
 
         //northeast
-        this.uncoverTile(x + 1, y + 1, originValue);
+        this.autoRevealTile(x + 1, y + 1, originValue);
 
         //northwest
-        this.uncoverTile(x - 1, y + 1, originValue);
+        this.autoRevealTile(x - 1, y + 1, originValue);
 
         //southwest
-        this.uncoverTile(x - 1, y - 1, originValue);
+        this.autoRevealTile(x - 1, y - 1, originValue);
 
         //southeast
-        this.uncoverTile(x + 1, y - 1, originValue);
-
-
+        this.autoRevealTile(x + 1, y - 1, originValue);
     }
     resetCheckStatus(){
         for(let i = 0; i < this.rows; i++){ //vertical
@@ -353,6 +377,17 @@ export default class Board extends EventTarget{
                 this.field[i][j].checked = false;
             }
         }
+    }
+    applyFuncNeighbors(x, y, f, arg){ //doesnt work...?
+        
+        if(this.field[x][y+1]) f(x,y+1, arg);
+        if(this.field[x][y-1]) f(x,y-1, arg);
+        if(this.field[x+1] && this.field[x+1][y]) f(x+1,y, arg);
+        if(this.field[x-1] && this.field[x-1][y]) f(x-1,y, arg);
+        if(this.field[x+1] && this.field[x+1][y+1]) f(x+1,y+1, arg);
+        if(this.field[x-1] && this.field[x-1][y-1]) f(x-1,y-1, arg);
+        if(this.field[x+1] && this.field[x+1][y-1]) f(x+1,y-1, arg);
+        if(this.field[x-1] && this.field[x-1][y+1]) f(x-1,y+1, arg);
     }
 
 

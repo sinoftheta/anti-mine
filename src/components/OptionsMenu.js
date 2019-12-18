@@ -59,7 +59,7 @@ let svg = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon
             }else{
                 //apply animate-out
                 this.menuContainer.classList.remove("menu-open-anim");
-                this.container.removeChild(this.backdrop);
+                if(this.backdrop) this.container.removeChild(this.backdrop);
             }
         }
 
