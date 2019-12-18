@@ -37,8 +37,6 @@ export default class BoardRender extends EventTarget{
         this.colorChoice = Math.floor( Math.random() * this.settings.gradients.length);
         console.log("color scheme #" + (this.colorChoice + 1));
 
-        this.colorChoice = 1;
-
         //build board
         for(let i = 0; i < this.boardData.rows; i++){
 
