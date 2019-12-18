@@ -37,7 +37,7 @@ export default function(){
         displayNums: false,
         boardPreset: [],
         debug: {
-            active: true,
+            active: false,
             uncoverAll: false,
             showMines: false,
             indicate_hidden_mine: true,

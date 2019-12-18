@@ -69,8 +69,11 @@ export default class GameLogic extends EventTarget{
 
         if(target.isMine){
             this.mineHit(target.value);
-            target.revealed = true;
-            this.minesRevealed++;
+
+            if(!target.revealed){
+                target.revealed = true;
+                this.minesRevealed++;
+            }
 
         }else{
             this.autoRevealTile(x, y); 
@@ -181,8 +184,10 @@ export default class GameLogic extends EventTarget{
             if(islandRevealed){
                 //console.log('revealing island');
                 island.forEach(member => {
-                    member.revealed = true;
-                    this.minesRevealed++;
+                    if(!member.revealed){
+                        member.revealed = true;
+                        this.minesRevealed++;
+                    }
                 });
             }
     }

@@ -1,4 +1,4 @@
-import css from './style.css';
+import css from './desktop_style.css';
 
 import Game from './views/Game.js';
 
