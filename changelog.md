@@ -1,13 +1,13 @@
 # Change Log
 
-## Alpha 0.2.3 - 12/17/2019
+## v0.5 - 12/17/2019
 ### Changes
 - Solved mines and solved mine islands are now automatically revealed.
 
 ### Additions
 - Game now capable of using predetermined mine positions
 
-## Alpha 0.2.2 - 12/14/2019
+## v0.4 - 12/14/2019
 ### Changes
 - Updated tile uncover logic. Adjacent tiles with values between 0 and the origin tile are uncovered.
 - Readme links Glossary, How To Play, and Changelog
@@ -17,7 +17,7 @@
 - Game playable with menu open
 - Various menu issues
 
-## Alpha 0.2.1 - 12/14/2019
+## v0.3 - 12/14/2019
 ### Changes
 - Fixed issue where game does not register win when playing a game with a preset number of mines
 - Play again button gains focus when game ends
@@ -30,7 +30,7 @@
 - Game playable with menu open
 - Various menu issues
 
-## Alpha 0.2 - 12/13/2019
+## v0.2 - 12/13/2019
 ### Changes
 - Improved color mapping
 - Chnged color schemes
@@ -49,7 +49,7 @@
 - Game does not register win when playing a game with a preset number of mines
 
 
-## Alpha 0.1 - 12/5/2019
+## v0.1 - 12/5/2019
 ### Changes
 - Updated tile uncovering mechanics. Revealing a tile with a positive value will not automatically reveal tiles with a negative value and vice-versa
 - Mines will automatically be visually uncovered when they are surrounded by uncovered tiles, or "solved"
