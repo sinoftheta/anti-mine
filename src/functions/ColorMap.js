@@ -1,3 +1,25 @@
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=COLOR MAPPING LOGIC=-==-=-==-=-=-=-=-===-=-=-=-=-==-=-=-=-=-=-=-
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-==-=-==-=-=-=-=-===-=-=-=-=-==-=-=-=-=-=-=-=-=-=
+// cutoff is the ratio of kernelWeight that will be treated as the maximum color value
+        //for example, if cutoff is 0.2, then any tile with weight >= 0.2 * kernelWeight will be drawn with the darkest/lightest color
+
+export const colorMap = (tileVal, kWeight, cutoff, multiplier) => {
+
+    //cutoff should be based on a lot of things, but a reasonable value is roughly around 0.12 to 0.06
+    !cutoff ? cutoff = 0.07 : null;
+    !multiplier ? multiplier = 1 : null;
+
+    //cap value based on cutoff
+    let cappedVal = Math.min(cutoff * kWeight, Math.max (-1 * cutoff * kWeight, tileVal * multiplier));
+
+    //transform value into n [0,99]
+    cappedVal += cutoff * kWeight; //shift value to be in [0, 2 * cutoff * kWeight]
+    return Math.floor(cappedVal * 99 / (2 * cutoff * kWeight));
+}
+
+
+
+
 /*
 * gradientPointValue()
 *
@@ -51,25 +73,4 @@ export const rasterizeGradient = (g) => {
         raster.push(gradientPointValue(g, i));
     }
     return raster;
-}
-
-
-
-//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=COLOR MAPPING LOGIC=-==-=-==-=-=-=-=-===-=-=-=-=-==-=-=-=-=-=-=-
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-==-=-==-=-=-=-=-===-=-=-=-=-==-=-=-=-=-=-=-=-=-=
-// cutoff is the ratio of kernelWeight that will be treated as the maximum color value
-        //for example, if cutoff is 0.2, then any tile with weight >= 0.2 * kernelWeight will be drawn with the darkest/lightest color
-
-export const colorMap = (tileVal, kWeight, cutoff, multiplier) => {
-
-    //cutoff should be based on a lot of things, but a reasonable value is roughly around 0.12 to 0.06
-    !cutoff ? cutoff = 0.07 : null;
-    !multiplier ? multiplier = 1 : null;
-
-    //cap value based on cutoff
-    let cappedVal = Math.min(cutoff * kWeight, Math.max (-1 * cutoff * kWeight, tileVal * multiplier));
-
-    //transform value into n [0,99]
-    cappedVal += cutoff * kWeight; //shift value to be in [0, 2 * cutoff * kWeight]
-    return Math.floor(cappedVal * 99 / (2 * cutoff * kWeight));
 }

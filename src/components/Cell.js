@@ -8,8 +8,17 @@ export default class Cell{
         this.revealed = false; 
         this.value = 0;
         this.checked = false;
+        
+        /*
+        *Flag States:
+        * 0: none
+        * 1: flag
+        * 2: anti-flag
+        */
+        this.flagState = 0; 
 
         //TODO: add flags
+
     }
     get id(){
         return `cell-${this.x}-${this.y}`;

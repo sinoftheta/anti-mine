@@ -2,7 +2,7 @@ import Cell from './Cell.js';
 import seedrandom from 'seedrandom';
 /**
  * 
- * SUBSCRIBES TO: tileClick, reset
+ * SUBSCRIBES TO: tileReveal, reset
  * 
  * BROADCASTS: tileStateUpdated, gameWon, gameLost
  * 
@@ -17,10 +17,48 @@ export default class Board extends EventTarget{
         //console.log(this.broadcaster);
         this.setup();
         this.addEventListener('reset', (e) => this.setup(), false);
-        this.addEventListener('tileClick', (e) => this.handleClick(e) , false);
+        this.addEventListener('tileReveal', (e) => this.handleReveal(e) , false);
+        //this.addEventListener('tileFlag', (e) => this.handleFlag(e) , false);
 
     }
-    handleClick(e){
+    setup(){ //may change to num mines + num anti mines, maybe a mine will just have random value 
+
+        this.numMines = this.settings.mines;
+        this.rows = this.settings.rows;
+        this.columns = this.settings.columns;
+        this.area = this.rows * this.columns;
+        this.kernelWeight = 0;
+    
+        this.revealedTiles = 0;
+        this.gameLost = false;
+        this.gameWon = false;
+        this.mineRevealList = [];
+        this.minesRevealed = 0;
+
+        //instantiate field of cells
+        this.field = [];
+        for(let i = 0; i < this.rows; i++){ 
+            this.field[i] = [];
+            for(let j = 0; j < this.columns; j++){
+                this.field[i][j] = new Cell(i,j);
+            }
+        }
+
+        if(this.settings.presetBoard) this.placeMinesPreset();
+        else this.placeMinesRandom();
+        
+        this.placeNumbersKernel();
+
+    }
+    /*handleFlag(e){
+        let target = this.field[e.detail.x][e.detail.y];
+
+        //cycle flag value
+        target.flagState = (target.flagState + 1) % 3;
+        console.log(target.flagState);
+
+    }*/
+    handleReveal(e){
         if(this.gameLost || this.gameWon) return;
         this.uncoverTile(e.detail.x, e.detail.y); 
         
@@ -28,8 +66,8 @@ export default class Board extends EventTarget{
 
         //check for solved mines
 
-        console.log('=-=-=-=-=-=-=-mine list=-=-=-=-=-=-=-=')
-        console.log(this.mineRevealList);
+        //console.log('=-=-=-=-=-=-=-mine list=-=-=-=-=-=-=-=')
+        //console.log(this.mineRevealList);
 
         this.mineRevealList.forEach((e) => {
             this.autoRevealMine(e);
@@ -47,34 +85,38 @@ export default class Board extends EventTarget{
         if(this.gameLost) this.broadcaster.dispatchEvent(new CustomEvent('gameLost', {}));
 
         //check win condition
-        this.gameWon = (this.area - this.revealedTiles === this.numMines);
+        //this.gameWon = (this.area - this.revealedTiles === this.numMines);
+        this.gameWon = this.minesRevealed === this.numMines;
         if(this.gameWon) this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
 
     }
-    autoRevealMine(target){ 
-        //each mine will be in one of 4 cases
+    autoRevealMine(target){//TODO: NEED TO RECHECK WIN CONDITION
+        
+            /*
+            each mine will be in one of 4 cases
             
-            //case 1: all revealed + safe neighbors -> reveal
+            case 1: all revealed + safe neighbors -> reveal
 
-            //case 2: mine has a safe + unrevealed neighbor -> dont reveal
+            case 2: mine has a safe + unrevealed neighbor -> dont reveal
 
-            //case 3: part of a mine island with revealed + safe neighbors -> reveal all mines in island
+            case 3: part of a mine island with revealed + safe neighbors -> reveal all mines in island
 
-            //case 4: part of a mine island with a safe + unrevealed neighbor -> dont reveal any mines in island
+            case 4: part of a mine island with a safe + unrevealed neighbor -> dont reveal any mines in island
 
 
-            //case 1 & 2 are instances of 3 & 4, respectively 
-            //mines are guarenteed to be unrevealed
-            //all tiles are "unchecked" to start
+            case 1 & 2 are instances of 3 & 4, respectively
+            mines are guarenteed to be unrevealed
+            all tiles are "unchecked" to start
 
 
             //THEREFORE
+            */
 
             //1: determine mine island
             let island = [];
             this.mineIslandFinder(target.x, target.y ,island);
-            console.log('-=-=-=island=-=-=-')
-            console.log(island);
+            //console.log('-=-=-=island=-=-=-')
+            //console.log(island);
 
 
             
@@ -106,8 +148,11 @@ export default class Board extends EventTarget{
             }, true);
 
             if(islandRevealed){
-                console.log('revealing island');
-                island.forEach(member => member.revealed = true);
+                //console.log('revealing island');
+                island.forEach(member => {
+                    member.revealed = true;
+                    this.minesRevealed++;
+                });
             }
     }
     mineIslandFinder(x, y, island){//finding too many islands
@@ -149,35 +194,6 @@ export default class Board extends EventTarget{
         //southeast
         this.mineIslandFinder(x + 1, y - 1, island);
     
-    }
-
-    setup(){ //may change to num mines + num anti mines, maybe a mine will just have random value 
-
-        this.numMines = this.settings.mines;
-        this.rows = this.settings.rows;
-        this.columns = this.settings.columns;
-        this.area = this.rows * this.columns;
-        this.kernelWeight = 0;
-    
-        this.revealedTiles = 0;
-        this.gameLost = false;
-        this.gameWon = false;
-        this.mineRevealList = [];
-
-        //instantiate field of cells
-        this.field = [];
-        for(let i = 0; i < this.rows; i++){ 
-            this.field[i] = [];
-            for(let j = 0; j < this.columns; j++){
-                this.field[i][j] = new Cell(i,j);
-            }
-        }
-
-        if(this.settings.presetBoard) this.placeMinesPreset();
-        else this.placeMinesRandom();
-        
-        this.placeNumbersKernel();
-
     }
     
     placeMinesRandom(){ 

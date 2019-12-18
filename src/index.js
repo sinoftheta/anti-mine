@@ -21,21 +21,21 @@ import {rasterizeGradient} from './functions/ColorMap.js'
 let init_settings = {
     rows: 30,
     columns: 30,
-    presetBoard: boards._diag,
+    presetBoard: false,
     randMines: true,
-    mines: 2,//Math.floor(Math.random() * 30) + 45,
-    seed: Math.floor(Math.random() * 1337),
+    mines: 63,//Math.floor(Math.random() * 30) + 45,
+    seed: 755,//Math.floor(Math.random() * 1337),
     cellSize: 20,
-    kernel: kernel._9x9_square,
+    kernel: kernel._7x7_exp2,
     kernelWeight: 0,
     gradients: [],
     displayNums: false,
     boardPreset: [],
     debug: {
         active: true,
-        uncoverAll: false,
+        uncoverAll: true,
         showMines: false,
-        indicate_hidden_mine: true,
+        indicate_hidden_mine: false,
     }
 }
 console.log("mines: " + init_settings.mines)

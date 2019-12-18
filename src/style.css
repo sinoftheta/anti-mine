@@ -57,6 +57,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bolder;
+
 }
 .cell-covered{
     /*background: linear-gradient(135deg, #535353 0%,#4d4d4d 100%);*/
@@ -86,15 +88,13 @@ body {
     /*acutally this is unused for now*/
 }
 
+.cell-flagged-1{
+    color: #ffffff;
+}
+.cell-flagged-2{
+    color: #000000;
+}
 
-/*.cell-value-geo is all shite*/
-.cell-value-geo{
-    opacity: 0;
-    z-index: 5;
-}
-.cell-value-geo:hover{
-    opacity: 1;
-}
 
 
 /**************

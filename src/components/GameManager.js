@@ -1,14 +1,4 @@
 /**
- * events:
- * gameWon
- * gameLost
- * tileClicked
- * tileStateUpdated
- * tilesRendered
- * reset
- * 
- */
-/**
  * 
  * SUBSCRIBES TO: gameWon, gameLost, reset
  * 

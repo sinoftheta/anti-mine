@@ -23,7 +23,7 @@ export default class BoardRender extends EventTarget{
         }, false);
         this.addEventListener('tileStateUpdated', (e) => this.updateAllAppearance(), false);
         this.addEventListener('gameLost', (e) => this.revealAllExceptMines(), false);
-        this.addEventListener('gameWon', (e) => this.revealAllMines(), false);
+        this.addEventListener('gameWon', (e) => this.revealAll(), false);
         
     }
 
@@ -36,6 +36,8 @@ export default class BoardRender extends EventTarget{
         //choose color
         this.colorChoice = Math.floor( Math.random() * this.settings.gradients.length);
         console.log("color scheme #" + (this.colorChoice + 1));
+
+        this.colorChoice = 1;
 
         //build board
         for(let i = 0; i < this.boardData.rows; i++){
@@ -77,9 +79,26 @@ export default class BoardRender extends EventTarget{
         let targetData = this.boardData.field[x][y];
         let targetElement = this.elements[x][y];
 
+        //apply class
         targetElement.classList.add('cell-covered');
-        //targetElement.classList.remove('cell-revealed'); //not needed unless tiles can be re-covered
-        targetElement.onclick = (e) => this.broadcaster.dispatchEvent(new CustomEvent('tileClick', {detail: {x: e.target.x, y: e.target.y }}));
+
+        //click behavior
+        targetElement.onclick = (e) => this.broadcaster.dispatchEvent(new CustomEvent('tileReveal', {detail: {x: e.target.x, y: e.target.y }}));
+
+        //left click behavior
+        targetElement.oncontextmenu = (e) => {
+            //this.broadcaster.dispatchEvent(new CustomEvent('tileClick', {detail: {x: e.target.x, y: e.target.y }})); ...overcomplicates things...?
+
+            targetElement.classList.remove(`cell-flagged-${targetData.flagState}`);
+            targetData.flagState = (targetData.flagState + 1) % 3;
+            targetElement.classList.add(`cell-flagged-${targetData.flagState}`);
+            
+            if(targetData.flagState === 0) targetElement.textContent = '';
+            else targetElement.textContent = '+';
+
+
+            return false;
+        };
 
         if(this.settings.debug && this.settings.debug.active && this.settings.debug.indicate_hidden_mine && targetData.isMine){
             targetElement.style.background = '#ff0000'
@@ -100,10 +119,13 @@ export default class BoardRender extends EventTarget{
         targetElement.classList.remove('cell-covered');
         targetElement.classList.add('cell-revealed');
 
+        //remove flag text
+        targetElement.textContent = '';
         
 
         //update click functionality
         targetElement.onclick = null;
+        targetElement.oncontextmenu = () => false;
 
         //append number container if one does not exist
         if(targetElement.childNodes.length == 0 && this.settings.displayNums){
@@ -120,12 +142,12 @@ export default class BoardRender extends EventTarget{
 
         }
         // would be cool if color mapping was done before the game
-        let n = colorMap(targetData.value, this.settings.kernelWeight, 0.1, 1.4);
+        //colorMap(tileVal, kWeight, cutoff, multiplier)
+        let n = colorMap(targetData.value, this.settings.kernelWeight, 0.7, 4.5);
 
         targetElement.style.background = this.settings.gradients[this.colorChoice][n];
 
         if(this.settings.debug && this.settings.debug.active && this.settings.debug.showMines){
-            
             
             if(targetData.isMine && targetData.value > 0){
                 targetElement.style.background = '#ff2200';
@@ -135,12 +157,8 @@ export default class BoardRender extends EventTarget{
             }
             if(targetData.isMine && targetData.value == 0){
                 targetElement.style.background = '#2200ff';
-            }
-            
+            }   
         }
-
-
-
     }
     updateAllAppearance(){ //inefficent, should only update a list of tiles that have actually been updated
         for(let i = 0; i < this.boardData.rows; i++){
@@ -157,10 +175,10 @@ export default class BoardRender extends EventTarget{
             }
         }
     }
-    revealAllMines(){ //inefficent, should only update a list of tiles that have actually been updated
+    revealAll(){ //inefficent, should only update a list of tiles that have actually been updated
         for(let i = 0; i < this.boardData.rows; i++){
             for(let j = 0; j < this.boardData.columns; j++){
-                if(this.boardData.field[i][j].isMine)this.uncoverTile(i,j);
+                this.uncoverTile(i,j);
             }
         }
     }

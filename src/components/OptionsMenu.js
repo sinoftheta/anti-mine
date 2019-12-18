@@ -18,14 +18,17 @@ let svg = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon
         this.open = false;
         window.addEventListener('keydown', (e) => {
             if(e.keyCode == 27 && this.open){
-                this.open = false;
-                this.menuContainer.classList.remove("menu-open-anim");
-                this.container.removeChild(this.backdrop);
+                this.close();
             } 
         });
 
         this.init();
 
+    }
+    close(){
+        this.open = false;
+        this.menuContainer.classList.remove("menu-open-anim");
+        this.container.removeChild(this.backdrop);
     }
 
     init(){
@@ -84,31 +87,69 @@ let svg = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon
         this.minesField.value = "mines";
         this.minesField.onfocus = (e) => {e.target.value === "mines"? e.target.value = "" : null;};
         this.minesField.onblur = (e) => {e.target.value === "" || isNaN(e.target.value) ? e.target.value = "mines" : null;};
+        this.minesField.oninput = (e) => {
+            
+            //check that input is number
+            if(isNaN(e.target.value)) return;
+            
+            //get current area from settings or input fields
+            let currentArea = ((isNaN(this.widthField.value) ? this.settings.columns : this.widthField.value) * 
+                              (isNaN(this.heightField.value) ? this.settings.rows : this.heightField.value));
+
+            //cap mines value to 95% of current area
+            if(Number(this.minesField.value) > 0.95 * currentArea) this.minesField.value = Math.floor(0.95 * currentArea);
+
+            //convert mine value to slider value
+            this.minesSlider.value = Math.floor(this.minesField.value / (currentArea * 0.95));
+        }
+        
+        this.minesSlider = document.createElement("INPUT");
+        this.minesSlider.type = "range";
+        this.minesSlider.min = "1";
+        this.minesSlider.max = "95";
+        this.minesSlider.value = "15";
+        this.minesSlider.oninput = (e) => {
+
+            //get current area from settings or input fields
+            let currentArea = ((isNaN(this.widthField.value) ? this.settings.columns : this.widthField.value) * 
+                              (isNaN(this.heightField.value) ? this.settings.rows : this.heightField.value));
+
+            //convert slider value to mines value
+            this.minesField.value = Math.floor(currentArea * e.target.value / 100);
+        }
 
         let okButton = document.createElement("button");
         okButton.innerHTML = "apply";
         okButton.onclick = (e) => {
         
+            //check mines field
             if(!isNaN(this.minesField.value) && this.minesField.value > 0){
                 this.settings.mines = this.minesField.value;
                 this.settings.randMines = false;
             }
+
+            //write field values to settings
             if(!isNaN(this.heightField.value) && this.heightField.value > 0) this.settings.rows = this.heightField.value;
             if(!isNaN(this.widthField.value) && this.widthField.value > 0) this.settings.columns = this.widthField.value;
 
+            //broadcast reset event
             this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));
+
+            //close menu
+            this.close();
+
 
         }
         
         menuPanel.appendChild(this.heightField);
         menuPanel.appendChild(this.widthField);
         menuPanel.appendChild(this.minesField);
+        menuPanel.appendChild(this.minesSlider);
         menuPanel.appendChild(okButton);
 
         this.menuContainer.appendChild(this.openCloseButton);
         this.menuContainer.appendChild(menuPanel);
         
-
         this.container.appendChild(this.menuContainer);
 
         
