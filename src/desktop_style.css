@@ -24,16 +24,21 @@ body {
 #header div{
     color: #ffffff;
 }
+#game-area{
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+
+    display: flex;
+    justify-content: space-between;
+}
 
 
 /***************
 * BOARD STYLES *
 ***************/
 #game-board{
-    position: absolute;
-    top: 70px;
-    left: 50%;
-    transform: translate(-50%, 0%);
     
     width: min-content;
     /*url('path'); for image backgrounds*/
@@ -171,39 +176,44 @@ body {
 * HEALTH BAR
 *****************/
 
-#health-bar-container{
-    position: absolute;
-    left: 30%;
-    top: 70px;
-    width: 50px;
-    background: green;
-    display: flex;
-    flex-direction: column-reverse;
+#health-bar-container{  
+    /*display: flex;
+    flex-direction: column;*/
     justify-content: space-between;
+    margin-left: 5px;
+    margin-right: 5px;
+
+    position: relative;
 }
-/*#health-bar-container {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0%);
-
-    margin-top: 1px;
-    margin-bottom: 1px;
-
-    background: #535353;
-    box-shadow: 3px 3px 5px #00000085;
-    height: 100%;
-    width: 70px;
-}*/
 
 #health-bar-animate{
     position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0%);
-    width: 40px;
+    /*right: 50%;*/
+    transform: translate(50%, 0%);
+    width: 48px;  
 
-    background: red;
+    background: rgb(77, 0, 0);
     transition: all .7s ease-in-out 0s;
+    box-shadow: 3px 3px 5px #00000085;
+
+    bottom: 0;
+}
+#health-bar-counter{
+    z-index: 5;
+    width: 48px;  
+
+    bottom: 0;
     
+    position: absolute;
+    /*left: 50%;*/
+    transform: translate(33%, 0%);
+    
+    padding: 5px;
+    transition: all 570ms ease-in-out 100ms;
+
+    font-weight: bolder;
+    background: #0000005e;
+    color: #ffffff6d;
 }
 
 
@@ -214,7 +224,7 @@ body {
 #menu-container{
 
     bottom: -50vh; /*COUPLED CODE #1*/
-    left: 50%;
+    right: 50%;
     transform: translate(-50%,0%);
     position: fixed;
     transition: bottom .7s ease-in-out 0s;
@@ -234,7 +244,7 @@ body {
 #menu-panel{
     background: #0000005e;
     width: 20vw;
-    transition: width .7s ease-in-out .3s;
+    transition: width 500ms ease-in-out .3s;
     height: 50vh; /*COUPLED CODE #1*/
 }
 #menu-icon{
@@ -252,6 +262,26 @@ body {
     color: #ffffff5d;
     padding: 2px;
 }
+#mine-slider{
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    height: 5px;
+    opacity: 0.7;
+    transition: opacity 150ms ease-in-out;
+}
+#mine-slider:hover{
+    opacity: 1;
+}
+#mine-slider::-webkit-slider-thumb{
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    cursor: pointer; /* Cursor on hover */
+
+    width: 15px; 
+    height: 15px;
+    background: #c2c2c2;
+}
+
 
 
 /**************
@@ -280,6 +310,7 @@ button {
     box-shadow: 3px 3px 5px #00000085;
     border: none;
     cursor: pointer;
+    transition: all 150ms ease-in-out;
 
 }
 button:hover{

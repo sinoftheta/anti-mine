@@ -68,6 +68,11 @@ let svg = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon
 
         menuPanel.id = "menu-panel";
 
+
+        /************************FIELD SETTINGS***************************************** */
+        let fieldGroup = document.createElement("div");
+        fieldGroup.classList.add('menu-group');
+
         this.heightField = document.createElement("INPUT");
         this.heightField.type = "text";
         this.heightField.value = "height";
@@ -104,6 +109,7 @@ let svg = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon
         }
         
         this.minesSlider = document.createElement("INPUT");
+        this.minesSlider.id = 'mine-slider';
         this.minesSlider.type = "range";
         this.minesSlider.min = "1";
         this.minesSlider.max = "95";
@@ -118,6 +124,66 @@ let svg = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon
             this.minesField.value = Math.floor(currentArea * e.target.value / 100);
         }
 
+                
+        menuPanel.appendChild(this.heightField);
+        menuPanel.appendChild(this.widthField);
+        menuPanel.appendChild(this.minesField);
+        menuPanel.appendChild(this.minesSlider);
+        /************************END FIELD SETTINGS********************************************* */
+
+
+        //KERNEL SIZE GROUP
+        /*let buttonGroupKsize = document.createElement('div');
+        buttonGroupKsize.classList.add('menu-group');
+        buttonGroupKsize.innerHTML = 'Kernel Size';
+        let _3x3 = document.createElement('INTPUT');
+        _3x3.setAttribute("type", "radio");
+        _3x3.name = 'k-size';
+        _3x3.value = '3x3';
+        _3x3.innerHTML = '3x3';
+        let _5x5 = document.createElement('INTPUT');
+        _5x5.setAttribute("type", "radio");
+        _5x5.name = 'k-size';
+        _5x5.value = '5x5';
+        _5x5.innerHTML = '5x5';
+        let _7x7 = document.createElement('INTPUT');
+        _7x7.setAttribute("type", "radio");
+        _7x7.name = 'k-size';
+        _7x7.value = '7x7';
+        _7x7.innerHTML = '7x7';
+        let _9x9 = document.createElement('INTPUT');
+        _9x9.setAttribute("type", "radio");
+        _9x9.name = 'k-size';
+        _9x9.value = '9x9';
+        _9x9.innerHTML = '9x9';
+        let _15x15 = document.createElement('INTPUT');
+        _15x15.setAttribute("type", "radio");
+        _15x15.name = 'k-size';
+        _15x15.value = '15x15';
+        _15x15.innerHTML = '15x15';
+        buttonGroupKsize.appendChild(_3x3);
+        buttonGroupKsize.appendChild(_5x5);
+        buttonGroupKsize.appendChild(_7x7);
+        buttonGroupKsize.appendChild(_9x9);
+        buttonGroupKsize.appendChild(_15x15);
+        
+
+
+
+        //KERNEL DECAY GROUP
+        let buttonGroupKDecay = document.createElement('div');
+        buttonGroupKDecay.classList.add('menu-group');
+
+        //GRAPHICS GROUP
+        let graphicsGroup = document.createElement('div');
+        graphicsGroup.classList.add('menu-group');
+        */
+
+
+
+
+
+        //SUBMIT BUTTON
         let okButton = document.createElement("button");
         okButton.innerHTML = "apply";
         okButton.onclick = (e) => {
@@ -138,15 +204,32 @@ let svg = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon
             //close menu
             this.close();
 
-
         }
-        
-        menuPanel.appendChild(this.heightField);
-        menuPanel.appendChild(this.widthField);
-        menuPanel.appendChild(this.minesField);
-        menuPanel.appendChild(this.minesSlider);
-        menuPanel.appendChild(okButton);
 
+
+        menuPanel.appendChild(fieldGroup);
+        
+        menuPanel.insertAdjacentHTML('beforeend',`
+        <div classname="menu-group">
+            <select id='kernel-size'>
+                <option value='default'>Kernel Size</option>
+                <option value='_3x3'>3x3</option>
+                <option value='_5x5'>5x5</option>
+                <option value='_7x7'2>7x7</option>
+                <option value='_9x9'>9x9</option>
+                <option value='_15x15'>15x15</option>
+            </select>
+            <select id='kernel-decay'>
+                <option value='default'>Kernel Decay</option>
+                <option value='exp2'>Exponential</option>
+                <option value='square'>Square</option>
+                <option value='linear'>Linear</option>
+
+            </select>
+        </div>
+
+        `.trim());
+        menuPanel.appendChild(okButton);
         this.menuContainer.appendChild(this.openCloseButton);
         this.menuContainer.appendChild(menuPanel);
         

@@ -24,14 +24,14 @@ export default function(){
 
     //initial game settings
     let init_settings = {
-        rows: 12,
-        columns: 12,
+        rows: 20,
+        columns: 40,
         presetBoard: false,
         randMines: true,
-        mines: 7,//Math.floor(Math.random() * 30) + 45,
-        seed: 7,//Math.floor(Math.random() * 1337),
+        mines: Math.floor(Math.random() * 30) + 45,
+        seed: Math.floor(Math.random() * 1337),
         cellSize: 20,
-        kernel: kernel._9x9_exp2,
+        kernel: kernel._15x15_geo2,
         kernelWeight: 0,
         gradients: [],
         displayNums: false,
@@ -92,7 +92,7 @@ export default function(){
     let board_render = new BoardRender(boardContainer, game_logic, init_settings, broadcaster);
     broadcaster.subscribe(board_render);
 
-    let healthbar = new HealthBar(document.body, game_logic, init_settings, broadcaster);
+    let healthbar = new HealthBar(document.getElementById('health-bar'), game_logic, init_settings, broadcaster);
     broadcaster.subscribe(healthbar);
 
     let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);

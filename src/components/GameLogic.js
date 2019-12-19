@@ -29,11 +29,12 @@ export default class GameLogic extends EventTarget{
         this.columns = this.settings.columns;
         this.area = this.rows * this.columns;
     
-        this.revealedTiles = 0;
+        
         this.gameLost = false;
         this.gameWon = false;
         this.mineRevealList = [];
         this.minesRevealed = 0;
+        this.safeTilesRevealed = 0;
 
         this.hitpoints = hitpointsCalc(this.settings.kernelWeight, this.numMines);
         //console.log("HP: " + this.hitpoints)
@@ -104,10 +105,11 @@ export default class GameLogic extends EventTarget{
 
         //check win condition
         //this.gameWon = (this.area - this.revealedTiles === this.numMines);
-        this.gameWon = this.minesRevealed === this.numMines;
+        this.gameWon = this.minesRevealed === this.numMines || (this.minesRevealed + this.safeTilesRevealed === this.area) || this.numMines + this.safeTilesRevealed === this.area;
         if(this.gameWon) this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
 
         console.log('mines revealed: ' + this.minesRevealed + ' totalMines: ' + this.numMines);
+        console.log('safe tiles revealed: ' + this.safeTilesRevealed + ' area: ' + this.area);
 
     }
     mineHit(value){
@@ -344,8 +346,12 @@ export default class GameLogic extends EventTarget{
         }
 
         //reveal tile
-        target.revealed = true;
-        this.revealedTiles++; //revealedTiles is unused... for now
+
+        if(!target.revealed){
+                target.revealed = true;
+                this.safeTilesRevealed++; 
+        }
+
         
         //recurse over all neighbors, example of a DFS
 
