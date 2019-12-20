@@ -8,7 +8,7 @@ import TileSelector from '../components/TileSelector.js';
 import HealthBar from '../components/HealthBar.js';
 
 //assets
-import * as kernel from '../assets/Kernels.js';
+import {kernels} from '../assets/Kernels.js';
 import * as gradient from '../assets/Gradients.js';
 import * as boards from '../assets/PresetBoards.js';
 
@@ -24,14 +24,14 @@ export default function(){
 
     //initial game settings
     let init_settings = {
-        rows: 20,
-        columns: 40,
+        rows: 5,
+        columns: 5,
         presetBoard: false,
         randMines: true,
-        mines: Math.floor(Math.random() * 30) + 45,
+        mines: 5,//Math.floor(Math.random() * 30) + 45,
         seed: Math.floor(Math.random() * 1337),
         cellSize: 20,
-        kernel: kernel._15x15_geo2,
+        kernel: kernels._9x9.exp2,
         kernelWeight: 0,
         gradients: [],
         displayNums: false,

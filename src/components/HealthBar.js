@@ -41,9 +41,7 @@ export default class BoardRender extends EventTarget{
     }
     build(){
 
-        this.container = document.createElement("div");
-        this.container.id = 'health-bar-container';
-        this.container.style.height = this.settings.rows * this.settings.cellSize;
+        this.parent.style.height = this.settings.rows * this.settings.cellSize;
 
         this.bar = document.createElement("div");
         this.bar.id = 'health-bar-animate';
@@ -54,9 +52,8 @@ export default class BoardRender extends EventTarget{
         this.counter.textContent = this.maxHitpoints;
 
 
-        this.container.appendChild(this.counter);
-        this.container.appendChild(this.bar);
-        this.parent.appendChild(this.container);
+        this.parent.appendChild(this.counter);
+        this.parent.appendChild(this.bar);
         
     }
 

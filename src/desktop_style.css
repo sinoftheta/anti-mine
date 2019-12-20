@@ -19,7 +19,7 @@ body {
     background: #535353;
     box-shadow: 0px 3px 5px #00000085;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 #header div{
     color: #ffffff;
@@ -29,9 +29,10 @@ body {
     top: 70px;
     left: 50%;
     transform: translate(-50%, 0%);
+    width: min-content;
 
     display: flex;
-    justify-content: space-between;
+    /*justify-content: space-evenly;*/
 }
 
 
@@ -44,6 +45,7 @@ body {
     /*url('path'); for image backgrounds*/
     /*background: linear-gradient(135deg, #535353 0%,#4d4d4d 100%);*/
     box-shadow: 3px 3px 5px #00000085;
+
     
     
 }
@@ -51,6 +53,54 @@ body {
     display: flex;
 
 }
+/****************
+* HEALTH BAR
+*****************/
+
+#health-bar{  
+    /*display: flex;
+    flex-direction: column;
+    justify-content: space-between;*/
+    /*margin-left: 5px;
+    margin-right: 5px;*/
+    width: 48px;
+    margin-right: 10;
+
+    position: relative;
+}
+
+#health-bar-animate{
+    position: absolute;
+    /*right: 50%;
+    transform: translate(50%, 0%);*/
+    width: inherit;  
+
+    background: rgb(77, 0, 0);
+    transition: all .7s ease-in-out 0s;
+    box-shadow: 3px 3px 5px #00000085;
+
+    bottom: 0;
+    left:0;
+}
+#health-bar-counter{
+    z-index: 5;
+    width: calc(inherit - 10px);  
+
+    bottom: 0;
+    left:0;
+    
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    
+    padding: 5px;
+    transition: all 570ms ease-in-out 100ms;
+
+    font-weight: bolder;
+    background: #0000005e;
+    color: #ffffff6d;
+}
+
 
 /**************
 * CELL STYLES *
@@ -172,50 +222,6 @@ body {
         transform: translate(-6px,-6px);
     }
 }
-/****************
-* HEALTH BAR
-*****************/
-
-#health-bar-container{  
-    /*display: flex;
-    flex-direction: column;*/
-    justify-content: space-between;
-    margin-left: 5px;
-    margin-right: 5px;
-
-    position: relative;
-}
-
-#health-bar-animate{
-    position: absolute;
-    /*right: 50%;*/
-    transform: translate(50%, 0%);
-    width: 48px;  
-
-    background: rgb(77, 0, 0);
-    transition: all .7s ease-in-out 0s;
-    box-shadow: 3px 3px 5px #00000085;
-
-    bottom: 0;
-}
-#health-bar-counter{
-    z-index: 5;
-    width: 48px;  
-
-    bottom: 0;
-    
-    position: absolute;
-    /*left: 50%;*/
-    transform: translate(33%, 0%);
-    
-    padding: 5px;
-    transition: all 570ms ease-in-out 100ms;
-
-    font-weight: bolder;
-    background: #0000005e;
-    color: #ffffff6d;
-}
-
 
 /****************
 * OPTIONS MENU
@@ -224,7 +230,7 @@ body {
 #menu-container{
 
     bottom: -50vh; /*COUPLED CODE #1*/
-    right: 50%;
+    left: 50%;
     transform: translate(-50%,0%);
     position: fixed;
     transition: bottom .7s ease-in-out 0s;
@@ -243,7 +249,7 @@ body {
 }
 #menu-panel{
     background: #0000005e;
-    width: 20vw;
+    width: 80vw;
     transition: width 500ms ease-in-out .3s;
     height: 50vh; /*COUPLED CODE #1*/
 }
