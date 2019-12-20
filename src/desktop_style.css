@@ -74,7 +74,11 @@ body {
     transform: translate(50%, 0%);*/
     width: inherit;  
 
-    background: rgb(77, 0, 0);
+    background: #4d0000;
+    /*border-style: solid;
+    border-color: #5d0000 #3d0000 #3d0000 #5d0000; 
+    border-width: 2px;*/
+
     transition: all .7s ease-in-out 0s;
     box-shadow: 3px 3px 5px #00000085;
 
@@ -83,16 +87,17 @@ body {
 }
 #health-bar-counter{
     z-index: 5;
-    width: calc(inherit - 10px);  
+    width: calc(inherit - 10px);
 
     bottom: 0;
     left:0;
     
+    padding: 5px;
     position: absolute;
     left: 50%;
     transform: translate(-50%, 0%);
     
-    padding: 5px;
+    padding: 2px;
     transition: all 570ms ease-in-out 100ms;
 
     font-weight: bolder;
@@ -117,12 +122,20 @@ body {
 .cell-covered{
     /*background: linear-gradient(135deg, #535353 0%,#4d4d4d 100%);*/
     background: #535353;
+    border-style: solid;
+    border-color: #696969 #444444 #444444 #696969; 
+    border-width: 2px;
+    transition: all 49ms ease-in-out;
+
+    box-shadow: 1px 1px 1px #00000085;
+
+    z-index: 3;
 }
 .cell-covered:hover{
     background: #8a8a8a;
 }
 .cell-revealed{
-    
+    padding: 2px;
 }
 .cell-value{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -203,7 +216,7 @@ body {
     position: absolute;
     top: 0;
     left:0;
-    z-index: 2;
+    z-index: 9;
     background: #00000000;
     border-style: solid;
 

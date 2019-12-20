@@ -8,6 +8,7 @@
  * 
  */
 
+const padding = 4; //TODO: make this dynamic
 
  export default class TileSelecor extends EventTarget{
 
@@ -107,8 +108,9 @@
 
     }
     updateVisualPosition(){
-        this.cursor.style.top = this.y * this.settings.cellSize;
-        this.cursor.style.left = this.x * this.settings.cellSize;
+        
+        this.cursor.style.top = this.y * (this.settings.cellSize + padding) + (padding / 2);
+        this.cursor.style.left = this.x * (this.settings.cellSize + padding) + (padding / 2);
     }
 
  }

@@ -87,6 +87,8 @@ export default class BoardRender extends EventTarget{
         targetElement.oncontextmenu = (e) => {
             //this.broadcaster.dispatchEvent(new CustomEvent('tileClick', {detail: {x: e.target.x, y: e.target.y }})); ...overcomplicates things...?
 
+            return false;
+            //the flag styling is trash rn
             targetElement.classList.remove(`cell-flagged-${targetData.flagState}`);
             targetData.flagState = (targetData.flagState + 1) % 3;
             targetElement.classList.add(`cell-flagged-${targetData.flagState}`);

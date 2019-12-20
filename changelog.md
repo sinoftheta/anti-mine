@@ -1,5 +1,16 @@
 # Change Log
 
+## v0.6 - 12/20/2019
+### Changes
+- Improved/changed some color gradients
+- Updated covered cell appearance
+
+### Additions
+- Added Health Bar
+- Added Kenel options to the settings menu
+- Added Mine density slider in the settings menu
+
+
 ## v0.5 - 12/17/2019
 ### Changes
 - Solved mines and solved mine islands are now automatically revealed.
