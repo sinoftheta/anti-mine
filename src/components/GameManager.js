@@ -19,7 +19,7 @@ export default class GameManager extends EventTarget{
         this.modalContainer = modalContainer;
         this.broadcaster = broadcaster;
         //this.addEventListener('tileClick', (e) => console.log(e.detail), false);
-        this.addEventListener('gameWon', (e) => this.playAgainPopup("Congrats, you safely located all the mines!"), false);
+        this.addEventListener('gameWon', (e) => this.playAgainPopup("Congrats, you located all the mines!"), false);
         this.addEventListener('gameLost', (e) => this.playAgainPopup("Oh no, you were annihilated!"), false);
 
         this.addEventListener('reset', (e) => {

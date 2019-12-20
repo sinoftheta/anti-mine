@@ -141,7 +141,7 @@ export default class BoardRender extends EventTarget{
         }
         // would be cool if color mapping was done before the game
         //colorMap(tileVal, kWeight, cutoff, multiplier)
-        let n = colorMap(targetData.value, this.settings.kernelWeight, 0.7, 4.5);
+        let n = colorMap(targetData.value, this.settings.kernelWeight, this.settings.cutoff, this.settings.multiplier);
 
         targetElement.style.background = this.settings.gradients[this.colorChoice][n];
 

@@ -31,13 +31,8 @@ export default class BoardRender extends EventTarget{
     updateHealth(){
         //play animation or something
         console.log('ouch!')
-
-        
         this.counter.textContent = Math.max(0, this.game_state.hitpoints);
-
         this.bar.style.height = `${Math.max(0, Math.floor(100 * this.game_state.hitpoints / this.maxHitpoints))}%`;
-
-        console.log('HP: ' + this.game_state.hitpoints);
     }
     build(){
 
@@ -50,7 +45,6 @@ export default class BoardRender extends EventTarget{
         this.counter = document.createElement("div");
         this.counter.id = 'health-bar-counter';
         this.counter.textContent = this.maxHitpoints;
-
 
         this.parent.appendChild(this.counter);
         this.parent.appendChild(this.bar);

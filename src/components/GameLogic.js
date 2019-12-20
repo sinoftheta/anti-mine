@@ -63,7 +63,7 @@ export default class GameLogic extends EventTarget{
 
     }*/
     handleReveal(e){
-        if(this.gameLost || this.gameWon) return;
+        if(this.gameLost || this.gameWon || this.field[e.detail.x][e.detail.y].revealed) return;
         let x = e.detail.x, y = e.detail.y;
 
         let target = this.field[x][y];
@@ -108,8 +108,8 @@ export default class GameLogic extends EventTarget{
         this.gameWon = this.minesRevealed === this.numMines || (this.minesRevealed + this.safeTilesRevealed === this.area) || this.numMines + this.safeTilesRevealed === this.area;
         if(this.gameWon && !this.gameLost) this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
 
-        console.log('mines revealed: ' + this.minesRevealed + ' totalMines: ' + this.numMines);
-        console.log('safe tiles revealed: ' + this.safeTilesRevealed + ' area: ' + this.area);
+        //console.log('mines revealed: ' + this.minesRevealed + ' totalMines: ' + this.numMines);
+        //console.log('safe tiles revealed: ' + this.safeTilesRevealed + ' area: ' + this.area);
 
     }
     mineHit(value){
@@ -270,7 +270,8 @@ export default class GameLogic extends EventTarget{
     }
     
     placeNumbersKernel(){
-        let k = this.settings.kernel;
+        //console.log(this.settings.kernels);
+        let k = this.settings.kernels[this.settings.kernelSize][this.settings.kernelDecay];
         let field = this.field;
         let tempField = [];
         

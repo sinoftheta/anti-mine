@@ -1,7 +1,6 @@
 export const g1 = [ //"pond", light blue base, changes hue to dark blue and light green, is nice
         {weight: 100, r: 255, g: 255, b: 255,},
-        //{weight: 80,  r: 50,  g: 250, b: 150,},
-        {weight: 20,  r: 50,  g: 150, b: 250,}, //comment this line and it becomes "froggy"
+        {weight: 20,  r: 19,  g: 180, b: 212,}, //comment this line and it becomes "froggy"
         {weight: 0,   r: 0,   g: 0,   b: 0,},
     ];
 export const g2 = [ //"mint chocolate chip"! //really good...
@@ -16,9 +15,10 @@ export const g3 = [ //"Love" 10/10!
         {weight: 50,  r: 227, g: 129, b: 250,},
         {weight: 0,   r: 64,  g: 31,  b: 156,},
     ];
-export const g4 = [ //ombre
-        {weight: 100, r: 255, g: 249, b: 207,},
-        {weight: 0,   r: 23,  g: 7,  b: 3,},
+export const g4 = [ //cool red
+        {weight: 100, r: 255, g: 191, b: 236,},
+        {weight: 50,  r: 224,  g: 20,  b: 44,},
+        {weight: 0,   r: 20,  g: 1,  b: 28,},
     ];
 export const g5 = [ //classic ... MetroRobo
         {weight: 100, r: 255, g: 255, b: 255,},

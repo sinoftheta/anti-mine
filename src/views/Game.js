@@ -14,6 +14,7 @@ import * as boards from '../assets/PresetBoards.js';
 
 //functions
 import {rasterizeGradient} from '../functions/ColorMap.js';
+import {deriveSettingsData} from '../functions/DeriveSettingsData.js';
 
 
 /************************************************************** 
@@ -24,18 +25,30 @@ export default function(){
 
     //initial game settings
     let init_settings = {
+
+        /*board settings */
         rows: 20,
         columns: 30,
-        presetBoard: false,
+        presetBoard: false, //boolean indicating the existance of a preset board
+        boardPreset: [], //the preset board obj TODO: MAKE THESE 1 VAR
         randMines: true,
-        mines: 5,//Math.floor(Math.random() * 30) + 45,
+        mines: Math.floor(Math.random() * 10) + 15,
         seed: Math.floor(Math.random() * 1337),
-        cellSize: 20,
-        kernel: kernels._9x9.exp2,
+        
+        /*kernel settings */
+        kernelSize: "_7x7",
+        kernelDecay: "exp2",
+        kernels: kernels,
         kernelWeight: 0,
+
+        /*graphics settings */
+        cellSize: 20,
         gradients: [],
-        displayNums: false,
-        boardPreset: [],
+        cutoff: 0.7, //cutoff = 0.7 and multiplier = 4.5 are good defaults
+        multiplier: 4.5,
+        displayNums: false, //might turn into a debug feature idk
+
+        /*debug */
         debug: {
             active: false,
             uncoverAll: false,
@@ -43,27 +56,7 @@ export default function(){
             indicate_hidden_mine: true,
         }
     }
-    console.log("mines: " + init_settings.mines)
-    console.log("seed: " + init_settings.seed)
 
-    /*
-    * Settings Prepreocessing
-    */
-    if(init_settings.presetBoard){
-        init_settings.rows = init_settings.presetBoard.length;
-        init_settings.columns = init_settings.presetBoard[0].length;
-    }
-    console.log('rows: ' + init_settings.rows)
-    console.log('columns: ' + init_settings.columns)
-
-    // derive kernel weight
-    let kernelWeight = 0;
-    for(let i = 0; i < init_settings.kernel.length; i++){
-        for(let j = 0; j < init_settings.kernel[0].length; j++){
-            kernelWeight += init_settings.kernel[i][j];
-        }
-    }
-    init_settings.kernelWeight = kernelWeight;
 
     // generate raster for gradients
     init_settings.gradients.push(rasterizeGradient(gradient.g1));
@@ -72,6 +65,9 @@ export default function(){
     init_settings.gradients.push(rasterizeGradient(gradient.g4));
     init_settings.gradients.push(rasterizeGradient(gradient.g5));
     init_settings.gradients.push(rasterizeGradient(gradient.g6));
+
+
+    deriveSettingsData(init_settings);
 
 
 
