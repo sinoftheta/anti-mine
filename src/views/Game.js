@@ -27,12 +27,12 @@ export default function(){
     let init_settings = {
 
         /*board settings */
-        rows: 20,
-        columns: 30,
+        rows: 12,
+        columns: 20,
         presetBoard: false, //boolean indicating the existance of a preset board
         boardPreset: [], //the preset board obj TODO: MAKE THESE 1 VAR
         randMines: true,
-        mines: Math.floor(Math.random() * 10) + 15,
+        mines: Math.floor(Math.random() * 10) + 5,
         seed: Math.floor(Math.random() * 1337),
         
         /*kernel settings */
