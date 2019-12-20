@@ -24,8 +24,8 @@ export default function(){
 
     //initial game settings
     let init_settings = {
-        rows: 5,
-        columns: 5,
+        rows: 20,
+        columns: 30,
         presetBoard: false,
         randMines: true,
         mines: 5,//Math.floor(Math.random() * 30) + 45,
@@ -80,7 +80,6 @@ export default function(){
     * Instantiate components
     */
 
-    let boardContainer = document.getElementById("game-board");
     let broadcaster = new Broadcaster;
 
     let game_manager = new GameManager(document.body, init_settings, broadcaster);
@@ -89,7 +88,7 @@ export default function(){
     let game_logic = new GameLogic(init_settings, broadcaster);
     broadcaster.subscribe(game_logic);
 
-    let board_render = new BoardRender(boardContainer, game_logic, init_settings, broadcaster);
+    let board_render = new BoardRender(document.getElementById("game-board"), game_logic, init_settings, broadcaster);
     broadcaster.subscribe(board_render);
 
     let healthbar = new HealthBar(document.getElementById('health-bar'), game_logic, init_settings, broadcaster);
@@ -97,7 +96,7 @@ export default function(){
 
     let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);
 
-    let tile_selector = new TileSelector(boardContainer, init_settings, broadcaster);
+    let tile_selector = new TileSelector(document.getElementById("game-board"), init_settings, broadcaster);
     broadcaster.subscribe(tile_selector);
 
 

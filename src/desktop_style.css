@@ -19,7 +19,7 @@ body {
     background: #535353;
     box-shadow: 0px 3px 5px #00000085;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 #header div{
     color: #ffffff;
@@ -30,9 +30,7 @@ body {
     left: 50%;
     transform: translate(-50%, 0%);
     width: min-content;
-
     display: flex;
-    /*justify-content: space-evenly;*/
 }
 
 
@@ -41,6 +39,7 @@ body {
 ***************/
 #game-board{
     
+    position: relative; /*needed for TileSelector to align properly, it must be "relatively absolute"*/
     width: min-content;
     /*url('path'); for image backgrounds*/
     /*background: linear-gradient(135deg, #535353 0%,#4d4d4d 100%);*/
@@ -63,7 +62,7 @@ body {
     justify-content: space-between;*/
     /*margin-left: 5px;
     margin-right: 5px;*/
-    width: 48px;
+    width: 40px;
     margin-right: 10;
 
     position: relative;
@@ -197,6 +196,9 @@ body {
 /****************
 * CURSOR
 ****************/
+#game-board{
+    
+}
 #tile-cursor{
     position: absolute;
     top: 0;

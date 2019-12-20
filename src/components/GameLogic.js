@@ -106,7 +106,7 @@ export default class GameLogic extends EventTarget{
         //check win condition
         //this.gameWon = (this.area - this.revealedTiles === this.numMines);
         this.gameWon = this.minesRevealed === this.numMines || (this.minesRevealed + this.safeTilesRevealed === this.area) || this.numMines + this.safeTilesRevealed === this.area;
-        if(this.gameWon) this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
+        if(this.gameWon && !this.gameLost) this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
 
         console.log('mines revealed: ' + this.minesRevealed + ' totalMines: ' + this.numMines);
         console.log('safe tiles revealed: ' + this.safeTilesRevealed + ' area: ' + this.area);
