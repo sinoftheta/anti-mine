@@ -6,6 +6,7 @@ import Broadcaster from '../components/Broadcaster.js';
 import OptionsMenu from '../components/OptionsMenu.js';
 import TileSelector from '../components/TileSelector.js';
 import HealthBar from '../components/HealthBar.js';
+import MinesCounter from '../components/MinesCounter.js';
 
 //assets
 import {kernels} from '../assets/Kernels.js';
@@ -84,16 +85,21 @@ export default function(){
     let game_logic = new GameLogic(init_settings, broadcaster);
     broadcaster.subscribe(game_logic);
 
+    let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);
+
+    /**GAME INTERFACES */
+
     let board_render = new BoardRender(document.getElementById("game-board"), game_logic, init_settings, broadcaster);
     broadcaster.subscribe(board_render);
 
-    let healthbar = new HealthBar(document.getElementById('health-bar'), game_logic, init_settings, broadcaster);
+    let healthbar = new HealthBar(document.getElementById('hp-container'), game_logic, init_settings, broadcaster);
     broadcaster.subscribe(healthbar);
-
-    let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);
 
     let tile_selector = new TileSelector(document.getElementById("game-board"), init_settings, broadcaster);
     broadcaster.subscribe(tile_selector);
+
+    let mines_counter = new MinesCounter(document.getElementById("mine-counter-container"), game_logic, init_settings);
+    broadcaster.subscribe(mines_counter);
 
 
 }

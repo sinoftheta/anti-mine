@@ -1,0 +1,153 @@
+
+#game-area{
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+
+    height: auto;
+    width: min-content;
+
+
+    display: grid;
+    grid-template-columns: 40px auto;
+    grid-template-rows: auto 40px;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+
+    justify-content: center;
+
+}
+
+#hp-container{
+    grid-column-start: 1;
+    grid-column-end: 2;
+
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+    background: blue;
+}
+#game-board{
+
+    width: min-content; /*???*/
+
+    grid-column-start: 2;
+    grid-column-end: 3;
+
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+#mine-counter-container{
+    grid-column-start: 1;
+    grid-column-end: 2;
+
+    grid-row-start: 2;
+    grid-row-end: 3;
+
+    background: green;
+}
+#color-levels-container{
+    grid-column-start: 2;
+    grid-column-end: 3;
+
+    grid-row-start: 2;
+    grid-row-end: 3;
+
+    background: yellow;
+}
+.game-element{
+    box-shadow: 3px 3px 5px #00000085;
+}
+
+
+
+
+/***************
+* BOARD STYLES *
+***************/
+.game-row{
+    display: flex;
+
+}
+/****************
+* HEALTH BAR 
+*****************/
+
+/*
+#health-bar-animate{
+
+    background: #4d0000;
+
+    transition: all .7s ease-in-out 0s;
+    box-shadow: 3px 3px 5px #00000085;
+}
+#health-bar-counter{
+    z-index: 5;
+
+    font-weight: bolder;
+    background: #0000005e;
+    color: #ffffff6d;
+}
+*/
+/******************
+* REMAINING MINES *
+******************/
+
+
+/**************
+* CELL STYLES *
+**************/
+.cell{
+    /*height: 20px;
+    width: 20px;*/
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bolder;
+
+}
+.cell-covered{
+    /*background: linear-gradient(135deg, #535353 0%,#4d4d4d 100%);*/
+    background: #535353;
+    border-style: solid;
+    border-color: #696969 #444444 #444444 #696969; 
+    border-width: 2px;
+    transition: all 49ms ease-in-out;
+
+    box-shadow: 1px 1px 1px #00000085;
+
+    z-index: 3;
+}
+.cell-covered:hover{
+    background: #8a8a8a;
+}
+.cell-revealed{
+    padding: 2px;
+}
+.cell-value{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 900;
+    -webkit-text-stroke: 1px rgb(0, 0, 0);
+    color: #ffffff; 
+    user-select: none;
+    /*overflow: hidden;*/
+
+    
+}
+.cell-value-mine{
+    color: #ff0000; 
+}
+
+.cell-mine{
+    /*acutally this is unused for now*/
+}
+
+.cell-flagged-1{
+    color: #ffffff;
+}
+.cell-flagged-2{
+    color: #000000;
+}
+

@@ -7,20 +7,19 @@ import {hitpointsCalc} from '../functions/HitpointsCalc.js';
  * BROADCASTS: tileClick, tilesRendered
  * 
  */
-export default class BoardRender extends EventTarget{
+export default class HealthBar extends EventTarget{
     //initiate board elements, handle animations, handle click events
-    constructor(parent, game_state, settings, broadcaster){
+    constructor(container, game_state, settings){
         
         super();
         this.settings = settings;
-        this.broadcaster = broadcaster;
-        this.parent = parent;
+        this.container = container;
         this.game_state = game_state;
         this.maxHitpoints = hitpointsCalc(this.settings.kernelWeight, this.settings.mines);
         this.build();
         this.addEventListener('reset', (e) => {
             this.maxHitpoints = hitpointsCalc(this.settings.kernelWeight, this.settings.mines);
-            this.counter.textContent = this.maxHitpoints;
+            this.counter_HP.textContent = this.maxHitpoints;
             this.bar.style.height = '100%';
         }, false);
         this.addEventListener('damageTaken', (e) => this.updateHealth(), false);
@@ -30,24 +29,27 @@ export default class BoardRender extends EventTarget{
     }
     updateHealth(){
         //play animation or something
-        console.log('ouch!')
-        this.counter.textContent = Math.max(0, this.game_state.hitpoints);
+        console.log('ouch!');
+        this.counter_HP.textContent = Math.max(0, this.game_state.hitpoints);
         this.bar.style.height = `${Math.max(0, Math.floor(100 * this.game_state.hitpoints / this.maxHitpoints))}%`;
+    }
+    updateMines(){
+        this.counter_mines.textContent = this.game_state.numMines - this.game_state.minesRevealed;
     }
     build(){
 
-        this.parent.style.height = this.settings.rows * this.settings.cellSize;
+        //this.container.style.height = this.settings.rows * this.settings.cellSize;
 
         this.bar = document.createElement("div");
         this.bar.id = 'health-bar-animate';
         this.bar.style.height = `${Math.floor(100 * this.game_state.hitpoints / this.maxHitpoints)}%`;
 
-        this.counter = document.createElement("div");
-        this.counter.id = 'health-bar-counter';
-        this.counter.textContent = this.maxHitpoints;
-
-        this.parent.appendChild(this.counter);
-        this.parent.appendChild(this.bar);
+        this.counter_HP = document.createElement("div");
+        this.counter_HP.id = 'health-bar-counter';
+        this.counter_HP.textContent = this.maxHitpoints;
+        
+        this.container.appendChild(this.counter_HP);
+        this.container.appendChild(this.bar);
         
     }
 
