@@ -46,11 +46,20 @@ import {undo} from '../assets/Svgs.js';
                 value="4.5">
             </input>
         </div>
+        <div class="toolbar-item unselectable">
+            Tile Values
+            <input 
+                type="checkbox"
+                id="show-mines-checkbox"
+            >
+        </div>
         <div class="toolbar-item unselectable" id="antimine-label">
             AntiMine
         </div>
-        ${''/*undo*/}
         `.trim());
+        //sync checkbox state with settings
+        document.getElementById("show-mines-checkbox").checked = this.settings.displayNums;
+
 
         document.getElementById("cutoff-slider").oninput = (e) => {
 
@@ -61,6 +70,11 @@ import {undo} from '../assets/Svgs.js';
         document.getElementById("multiplier-slider").oninput = (e) => {
 
             this.settings.multiplier = e.target.value;
+            this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
+        }
+        
+        document.getElementById("show-mines-checkbox").oninput = (e) => {
+            this.settings.displayNums = e.target.checked;
             this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
         }
     }

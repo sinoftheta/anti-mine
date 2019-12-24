@@ -1,4 +1,8 @@
-
+@font-face {
+    font-family: PixelTiny;
+    src: url('../PixelTiny.ttf');
+  }
+  
 #game-area{
     position: absolute;
     top: 50%;
@@ -40,6 +44,7 @@
 
     grid-row-start: 1;
     grid-row-end: 2;
+
 }
 #mine-counter-container{
     grid-column-start: 1;
@@ -97,7 +102,6 @@
     bottom:4px;
     z-index: 5;
 
-    font-weight: bolder;
     background: #0000005e;
     color: #ffffffa4;
     padding: 2px;
@@ -114,8 +118,6 @@
     box-shadow: 3px 3px 5px #00000085;
 
     position: relative;
-
-    font-weight: bolder;
 
 
     
@@ -137,6 +139,9 @@
     border-width: 4px;
     box-shadow: 3px 3px 5px #00000085;
 
+}
+.toolbar-item{
+    transform: translate(0, -35%);
 }
 .toolbar-slider{
     background: rgba(0, 0, 0, 0.644);
@@ -163,7 +168,6 @@
 }
 .toolbar-item{
     color:#ffffffaa;
-    font-weight: bolder;
 }
 
 
@@ -179,7 +183,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bolder;
 
 }
 .cell-covered{
@@ -201,12 +204,15 @@
     padding: 2px;
 }
 .cell-value{
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-weight: 900;
-    -webkit-text-stroke: 1px rgb(0, 0, 0);
+
+    
+    font-family: PixelTiny;
+    font-size: 1.2em; /*should be based on cell size*/
+
+    -webkit-text-stroke: 2px #000000c0;
     color: #ffffff; 
     user-select: none;
-    /*overflow: hidden;*/
+    overflow: hidden;
 
     
 }

@@ -49,14 +49,14 @@ export default function(){
         gradients: [],
         cutoff: 0.7, //cutoff = 0.7 and multiplier = 4.5 are good defaults
         multiplier: 4.5,
-        displayNums: false, //might turn into a debug feature idk
+        displayNums: false,
 
         /*debug */
         debug: {
             active: false,
             uncoverAll: false,
             showMines: false,
-            indicate_hidden_mine: true,
+            indicate_hidden_mine: false,
         }
     }
 
