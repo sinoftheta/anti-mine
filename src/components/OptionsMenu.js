@@ -158,10 +158,6 @@ let kcode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13];
                 this.settings.kernelDecay = kernelDecayDD.value;
             } 
 
-
-            
-            if(kernelSizeDD.value !== 'default' && kernelDecayDD.value !== 'default')
-
             deriveSettingsData(this.settings);
             //broadcast reset event
             this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));
@@ -218,7 +214,6 @@ let kcode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13];
             return acc && (cur === this.konamiInputs[i]);
         }, true);
 
-        console.log(this.konamiInputs);
         if(kCodeInput){
 
 

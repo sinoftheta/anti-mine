@@ -1,0 +1,30 @@
+
+/****************
+* CURSOR
+****************/
+
+#tile-cursor{
+    position: absolute;
+    top:0;
+    left:0;
+    z-index: 9;
+    background: #00000000;
+    border-style: solid;
+
+    animation-name: cursor-blink;
+    animation-duration: 420ms;
+    animation-iteration-count: infinite;
+    animation-direction: alternate-reverse;
+}
+@keyframes cursor-blink{ /*add more keyframes?*/
+    0% {
+        border-color: #0e01885e;
+        border-width: 3px;
+        transform: translate(-3px,-3px);
+    }
+    100%{
+        border-color: #7c11e0a1;
+        border-width: 8px;
+        transform: translate(-8px,-8px);
+    }
+}

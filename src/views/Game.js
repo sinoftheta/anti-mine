@@ -7,6 +7,7 @@ import OptionsMenu from '../components/OptionsMenu.js';
 import TileSelector from '../components/TileSelector.js';
 import HealthBar from '../components/HealthBar.js';
 import MinesCounter from '../components/MinesCounter.js';
+import BottomToolbar from '../components/BottomToolbar.js';
 
 //assets
 import {kernels} from '../assets/Kernels.js';
@@ -43,7 +44,8 @@ export default function(){
         kernelWeight: 0,
 
         /*graphics settings */
-        cellSize: 20,
+        cellSizePreset: false,
+        cellSize: 20, 
         gradients: [],
         cutoff: 0.7, //cutoff = 0.7 and multiplier = 4.5 are good defaults
         multiplier: 4.5,
@@ -101,6 +103,7 @@ export default function(){
     let mines_counter = new MinesCounter(document.getElementById("mine-counter-container"), game_logic, init_settings);
     broadcaster.subscribe(mines_counter);
 
+    let bottom_toolbar = new BottomToolbar(document.getElementById("color-levels-container"), init_settings, broadcaster);
 
 }
 

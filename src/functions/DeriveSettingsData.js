@@ -8,7 +8,6 @@ export const deriveSettingsData = (settings) => {
     console.log("mines: " + settings.mines)
     console.log("seed: " + settings.seed)
 
-
     // derive board dimensions from preset board 
     if(settings.presetBoard){
         settings.rows = settings.presetBoard.length;
@@ -17,8 +16,8 @@ export const deriveSettingsData = (settings) => {
     console.log('rows: ' + settings.rows)
     console.log('columns: ' + settings.columns)
 
-    
-    settings.seed = Math.floor(Math.random() * 1337);
+    //random seed
+    settings.seed = Math.floor(Math.random() * 420691337);
 
     // derive kernel weight
     let kernelWeight = 0;
@@ -29,6 +28,20 @@ export const deriveSettingsData = (settings) => {
         }
     }
     settings.kernelWeight = kernelWeight;
+
+
+    // derive cell size
+    if(!settings.cellSizePreset){
+        let padding = 200;
+        settings.cellSize = Math.floor(Math.min(
+            (window.innerWidth  - padding) / settings.columns,
+            (window.innerHeight - padding) / settings.rows)
+            );
+        console.log("cell size: " + settings.cellSize);
+    }
+
+
+
 
     if(settings.debug && settings.debug.active) console.log(settings.debug);
 }

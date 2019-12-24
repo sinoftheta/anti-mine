@@ -1,9 +1,9 @@
 
 #game-area{
     position: absolute;
-    top: 70px;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, 0%);
+    transform: translate(-50%, -50%);
 
     height: auto;
     width: min-content;
@@ -26,11 +26,14 @@
     grid-row-start: 1;
     grid-row-end: 2;
 
-    background: blue;
+    position: relative;
 }
 #game-board{
 
+    position: relative;
+
     width: min-content; /*???*/
+    box-shadow: 3px 3px 5px #00000085;
 
     grid-column-start: 2;
     grid-column-end: 3;
@@ -44,8 +47,6 @@
 
     grid-row-start: 2;
     grid-row-end: 3;
-
-    background: green;
 }
 #color-levels-container{
     grid-column-start: 2;
@@ -54,11 +55,10 @@
     grid-row-start: 2;
     grid-row-end: 3;
 
-    background: yellow;
+    display:flex;
+    justify-content: space-around;
 }
-.game-element{
-    box-shadow: 3px 3px 5px #00000085;
-}
+
 
 
 
@@ -74,25 +74,99 @@
 * HEALTH BAR 
 *****************/
 
-/*
+
 #health-bar-animate{
 
+    position: absolute;
+    left: 0;
+    bottom:0;
+    width: calc(100% - 8px);
+
     background: #4d0000;
+    border-style: solid;	
+    border-color: #5d0000 #3d0000 #3d0000 #5d0000; 	
+    border-width: 4px;
 
     transition: all .7s ease-in-out 0s;
     box-shadow: 3px 3px 5px #00000085;
 }
 #health-bar-counter{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    bottom:4px;
     z-index: 5;
 
     font-weight: bolder;
     background: #0000005e;
-    color: #ffffff6d;
+    color: #ffffffa4;
+    padding: 2px;
 }
-*/
+
 /******************
 * REMAINING MINES *
 ******************/
+#mine-counter-container{
+    background: #004d00;
+    border-style: solid;	
+    border-color: #005d00 #003d00 #003d00 #005d00; 	
+    border-width: 4px;
+    box-shadow: 3px 3px 5px #00000085;
+
+    position: relative;
+
+    font-weight: bolder;
+
+
+    
+}
+#mine-counter-container div{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/**********************
+* COLOR LEVELS / INFO *
+**********************/
+#color-levels-container{
+    background: #49688f;
+    border-style: solid;	
+    border-color: #4d719c #304968   #304968 #4d719c;
+    border-width: 4px;
+    box-shadow: 3px 3px 5px #00000085;
+
+}
+.toolbar-slider{
+    background: rgba(0, 0, 0, 0.644);
+    color: #ffffff5d;
+    padding: 2px;
+
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    height: 5px;
+    opacity: 0.7;
+    transition: opacity 150ms ease-in-out;
+}
+.toolbar-slider:hover{
+    opacity: 1;
+}
+.toolbar-slider::-webkit-slider-thumb{
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    cursor: pointer; /* Cursor on hover */
+
+    width: 15px; 
+    height: 15px;
+    background: #c2c2c2;
+}
+.toolbar-item{
+    color:#ffffffaa;
+    font-weight: bolder;
+}
+
+
 
 
 /**************

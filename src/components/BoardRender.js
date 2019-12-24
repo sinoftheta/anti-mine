@@ -22,6 +22,7 @@ export default class BoardRender extends EventTarget{
             this.build();
         }, false);
         this.addEventListener('tileStateUpdated', (e) => this.updateAllAppearance(), false);
+        this.addEventListener('tileRecolor', (e) => this.recolorAll(), false);
         this.addEventListener('gameLost', (e) => this.revealAllExceptMines(), false);
         this.addEventListener('gameWon', (e) => this.revealAll(), false);
         
@@ -104,6 +105,35 @@ export default class BoardRender extends EventTarget{
             targetElement.style.background = '#ff0000'
         }
     }
+    recolorTile(x,y){
+        let targetData = this.boardData.field[x][y];
+        let targetElement = this.elements[x][y];
+
+        //append number container if one does not exist
+        if(targetElement.childNodes.length == 0 && this.settings.displayNums){
+
+            //this only works for linear kernels
+            let cellChild = targetElement.appendChild(document.createElement("div"));
+            cellChild.className = `cell-value`;
+            cellChild.innerHTML = targetData.value;
+            //apply mine classes to tiles that are mines
+            if(targetData.isMine){
+                targetElement.classList.add('cell-mine');
+                cellChild.classList.add('cell-value-mine');
+            }
+
+        }
+        //remove child container if it exists but shouldnt
+        else if(targetElement.childNodes.length > 0 && !this.settings.displayNums){
+            targetElement.removeChild(targetElement.childNodes[0]);
+        }
+
+        // would be cool if color mapping was done before the game
+        //colorMap(tileVal, kWeight, cutoff, multiplier)
+        let n = colorMap(targetData.value, this.settings.kernelWeight, this.settings.cutoff, this.settings.multiplier);
+
+        targetElement.style.background = this.settings.gradients[this.colorChoice][n];
+    }
 
     uncoverTile(x, y){
 
@@ -122,30 +152,12 @@ export default class BoardRender extends EventTarget{
         //remove flag text
         targetElement.textContent = '';
         
-
         //update click functionality
         targetElement.onclick = null;
         targetElement.oncontextmenu = () => false;
 
-        //append number container if one does not exist
-        if(targetElement.childNodes.length == 0 && this.settings.displayNums){
+        this.recolorTile(x,y);
 
-            //this only works for linear kernels
-            let cellChild = targetElement.appendChild(document.createElement("div"));
-            cellChild.className = `cell-value`;
-            cellChild.innerHTML = targetData.value;
-            //apply mine classes to tiles that are mines
-            if(targetData.isMine){
-                targetElement.classList.add('cell-mine');
-                cellChild.classList.add('cell-value-mine');
-            }
-
-        }
-        // would be cool if color mapping was done before the game
-        //colorMap(tileVal, kWeight, cutoff, multiplier)
-        let n = colorMap(targetData.value, this.settings.kernelWeight, this.settings.cutoff, this.settings.multiplier);
-
-        targetElement.style.background = this.settings.gradients[this.colorChoice][n];
 
         if(this.settings.debug && this.settings.debug.active && this.settings.debug.showMines){
             
@@ -164,6 +176,13 @@ export default class BoardRender extends EventTarget{
         for(let i = 0; i < this.boardData.rows; i++){
             for(let j = 0; j < this.boardData.columns; j++){
                 if(this.boardData.field[i][j].revealed) this.uncoverTile(i,j);
+            }
+        }
+    }
+    recolorAll(){
+        for(let i = 0; i < this.boardData.rows; i++){
+            for(let j = 0; j < this.boardData.columns; j++){
+                if(this.boardData.field[i][j].revealed) this.recolorTile(i,j);
             }
         }
     }

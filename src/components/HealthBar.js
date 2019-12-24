@@ -7,6 +7,9 @@ import {hitpointsCalc} from '../functions/HitpointsCalc.js';
  * BROADCASTS: tileClick, tilesRendered
  * 
  */
+
+let padding = '8px';
+
 export default class HealthBar extends EventTarget{
     //initiate board elements, handle animations, handle click events
     constructor(container, game_state, settings){
@@ -20,7 +23,7 @@ export default class HealthBar extends EventTarget{
         this.addEventListener('reset', (e) => {
             this.maxHitpoints = hitpointsCalc(this.settings.kernelWeight, this.settings.mines);
             this.counter_HP.textContent = this.maxHitpoints;
-            this.bar.style.height = '100%';
+            this.bar.style.height = `calc(100% - ${padding})`;
         }, false);
         this.addEventListener('damageTaken', (e) => this.updateHealth(), false);
         this.addEventListener('gameLost', (e) => {}, false); //maybe use for animation idk
@@ -42,7 +45,7 @@ export default class HealthBar extends EventTarget{
 
         this.bar = document.createElement("div");
         this.bar.id = 'health-bar-animate';
-        this.bar.style.height = `${Math.floor(100 * this.game_state.hitpoints / this.maxHitpoints)}%`;
+        this.bar.style.height = `calc(${Math.floor(100 * this.game_state.hitpoints / this.maxHitpoints)}% - ${padding})`;
 
         this.counter_HP = document.createElement("div");
         this.counter_HP.id = 'health-bar-counter';
