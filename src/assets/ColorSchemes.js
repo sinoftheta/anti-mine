@@ -4,7 +4,8 @@ export default [
         title: "Ice",
         data:[ 
             {weight: 100, r: 255, g: 255, b: 255,},
-            {weight: 20,  r: 7,  g: 120, b: 168,}, 
+            {weight: 60,  r: 26,  g: 219, b: 210,}, 
+            {weight: 40,  r: 11,  g: 164, b: 191,}, 
             {weight: 0,   r: 0,   g: 0,   b: 0,},
         ]
     },   
@@ -19,19 +20,11 @@ export default [
         ]
     },
     {
-        title: "Valentine",
-        data: [
-            {weight: 100, r: 255, g: 214, b: 225,},
-            {weight: 40,  r: 227, g: 129, b: 250,},
-            {weight: 0,   r: 64,  g: 31,  b: 156,},
-        ]
-    },
-    {
-        title: "Shrimp",
+        title: "Lobster",
         data: [
             {weight: 100, r: 255, g: 191, b: 236,},
             {weight: 50,  r: 224,  g: 20,  b: 44,},
-            {weight: 0,   r: 20,  g: 1,  b: 28,},
+            {weight: 0,   r: 19,  g: 2,  b: 35,},
         ]
     },
     {
@@ -39,14 +32,21 @@ export default [
         data: [
             {weight: 100, r: 255, g: 255, b: 255,},
             {weight: 50,  r: 235,  g: 69,  b: 19,},
-            {weight: 0,   r: 0,  g: 0,  b: 0,},
+            {weight: 0,   r: 12,  g: 0,  b: 0,},
         ],
     },
     {
         title: "Nightshade",
         data: [
-            {weight: 100, r: 255, g: 255, b: 255,},
+            {weight: 100, r: 255, g: 237, b: 237,},
             {weight: 50,  r: 69,  g: 19,  b: 235,},
+            {weight: 0,   r: 0,  g: 10,  b: 27,},
+        ],
+    },
+    {
+        title: "Black&White",
+        data: [
+            {weight: 100, r: 255, g: 255, b: 255,},
             {weight: 0,   r: 0,  g: 0,  b: 0,},
         ],
     }

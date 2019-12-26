@@ -9,6 +9,7 @@ import HealthBar from '../components/HealthBar.js';
 import MinesCounter from '../components/MinesCounter.js';
 import BottomToolbar from '../components/BottomToolbar.js';
 import KernelTooltip from '../components/KernelTooltip.js';
+import ColorSelector from '../components/ColorSelector.js';
 
 //assets
 import {kernels} from '../assets/Kernels.js';
@@ -47,7 +48,7 @@ export default function(){
         cellSizePreset: false,
         cellSize: 20, 
         themes: ColorSchemes,
-        theme: 0, //defaults to 0th theme
+        theme: Math.floor(Math.random() * ColorSchemes.length),
         gradientRaster: [], //rasterized gradient
         cutoff: 0.7, //cutoff = 0.7 and multiplier = 4.5 are good defaults
         multiplier: 4.5,
@@ -98,6 +99,8 @@ export default function(){
 
     /*MENUS*/
     let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);
+
+    let color_selector = new ColorSelector(document.body, init_settings, broadcaster);
 
 }
 

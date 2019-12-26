@@ -40,15 +40,10 @@ export const deriveSettingsData = (settings) => {
             );
         console.log("cell size: " + settings.cellSize);
     }
-
-    //choose random theme
-    settings.theme = Math.floor(Math.random() * settings.themes.length);
     
     //rasterizeGradient 
     settings.gradientRaster = rasterizeGradient(settings.themes[settings.theme].data);
     console.log("theme: " + settings.themes[settings.theme].title);
-
-
 
 
     if(settings.debug && settings.debug.active) console.log(settings.debug);

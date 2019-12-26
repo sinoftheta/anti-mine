@@ -1,0 +1,39 @@
+
+#color-selector-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.color-selector-element{
+    cursor: pointer;
+    padding: 2px;
+    /*background-size: cover;*/
+
+    height: 3vh;
+    width: 3vh;
+
+    z-index: 20;
+
+    border-style: solid;
+    border-color: #696969 #444444 #444444 #696969; 
+    border-width: 5px;
+    margin: 3px;
+
+    font-size: 1.7em;
+    color: #00000000;
+    -webkit-text-stroke: 2px #00000000;
+
+    overflow: hidden;
+    transition:  .7s ease-in-out 0s;
+}
+.color-selector-element:hover,.color-selector-element:focus{ /*COMMA IS THE "OR" OPERATOR FOR SELECTORS*/
+    width: 270px;
+    height: 5vh;
+    -webkit-text-stroke: 2.5px #6464647e;
+    color: #ffffffaa; 
+}

@@ -17,9 +17,8 @@
         this.boardContainer = boardContainer;
         this.settings = settings;
         this.active = false;
-        this.displayNums = this.settings.displayNums;
 
-        this.addEventListener('reset', () => this.buildKernel());
+        this.addEventListener('reset', () => this.buildKernel()); //why rebuild pn reset?
         this.addEventListener('displayNumsUpdate', (e) => this.updateNums(), false);
 
         //init position
@@ -57,6 +56,9 @@
         this.buildKernel();
     }
     buildKernel(){
+        
+        if(this.kernelContainer && this.kernelContainer.parentElement === this.boardContainer) this.boardContainer.removeChild(this.kernelContainer);
+
         this.kernelContainer = document.createElement("div");
         this.kernelContainer.id = "kernel-container"
         this.kernelContainer.style.display = 'none';
@@ -75,7 +77,7 @@
                 this.elements[i][j] = row.appendChild(document.createElement("div"));
                 let target = this.elements[i][j];
 
-                if(k[i][j] !== 0){
+                if(k[i][j] !== 0 && this.settings.displayNums){
                     target.innerHTML = `<div class="kernel-cell-value">${k[i][j]}</div>`;
                     target.className = 'kernel-cell unselectable';
                 }
@@ -111,8 +113,8 @@
         // assumes kernel is square
         let offset = Math.floor(k.length/2);
         
-        this.kernelContainer.style.top = (this.x - offset) * (this.settings.cellSize + padding);//+ (padding / 2);
-        this.kernelContainer.style.left = (this.y - offset) * (this.settings.cellSize + padding);// + (padding / 2);
+        this.kernelContainer.style.top = (this.x - offset) * (this.settings.cellSize + padding);
+        this.kernelContainer.style.left = (this.y - offset) * (this.settings.cellSize + padding);
     }
 
  }
