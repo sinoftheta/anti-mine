@@ -23,6 +23,7 @@ export default class BoardRender extends EventTarget{
         }, false);
         this.addEventListener('tileStateUpdated', (e) => this.updateAllAppearance(), false);
         this.addEventListener('tileRecolor', (e) => this.recolorAll(), false);
+        this.addEventListener('displayNumsUpdate', (e) => this.renumberAll(), false);
         this.addEventListener('gameLost', (e) => this.revealAllExceptMines(), false);
         this.addEventListener('gameWon', (e) => this.revealAll(), false);
         
@@ -34,9 +35,6 @@ export default class BoardRender extends EventTarget{
         }
     }
     build(){
-        //choose color
-        this.colorChoice = Math.floor( Math.random() * this.settings.gradients.length);
-        console.log("color scheme #" + (this.colorChoice + 1));
 
         //build board
         for(let i = 0; i < this.boardData.rows; i++){
@@ -64,6 +62,11 @@ export default class BoardRender extends EventTarget{
                 targetElement.style.height = this.settings.cellSize;
                 targetElement.style.width = this.settings.cellSize;
 
+                targetElement.onmouseenter = (e) => {
+                    //console.log(e.target.x + ', ' + e.target.y);
+                    this.broadcaster.dispatchEvent(new CustomEvent('updateCurrentTile', {detail: {x: e.target.x, y: e.target.y}})); 
+                }
+
                 //init tile style
                 this.coverTile(i,j);
 
@@ -72,6 +75,10 @@ export default class BoardRender extends EventTarget{
                 }
                 
             }
+        }
+        this.container.onmouseleave = (e) => {
+            //console.log('off board');
+            this.broadcaster.dispatchEvent(new CustomEvent('updateCurrentTile', {detail: {x: -1, y: -1}}));
         }
     }
     coverTile(x,y){
@@ -109,6 +116,15 @@ export default class BoardRender extends EventTarget{
         let targetData = this.boardData.field[x][y];
         let targetElement = this.elements[x][y];
 
+        // would be cool if color mapping was done before the game
+        //colorMap(tileVal, kWeight, cutoff, multiplier)
+        let n = colorMap(targetData.value, this.settings.kernelWeight, this.settings.cutoff, this.settings.multiplier);
+
+        targetElement.style.background = this.settings.gradientRaster[n];
+    }
+    renumberTile(x,y){
+        let targetData = this.boardData.field[x][y];
+        let targetElement = this.elements[x][y];
         //append number container if one does not exist
         if(targetElement.childNodes.length == 0 && this.settings.displayNums){
 
@@ -127,12 +143,7 @@ export default class BoardRender extends EventTarget{
         else if(targetElement.childNodes.length > 0 && !this.settings.displayNums){
             targetElement.removeChild(targetElement.childNodes[0]);
         }
-
-        // would be cool if color mapping was done before the game
-        //colorMap(tileVal, kWeight, cutoff, multiplier)
-        let n = colorMap(targetData.value, this.settings.kernelWeight, this.settings.cutoff, this.settings.multiplier);
-
-        targetElement.style.background = this.settings.gradients[this.colorChoice][n];
+    
     }
 
     uncoverTile(x, y){
@@ -157,6 +168,7 @@ export default class BoardRender extends EventTarget{
         targetElement.oncontextmenu = () => false;
 
         this.recolorTile(x,y);
+        this.renumberTile(x,y);
 
 
         if(this.settings.debug && this.settings.debug.active && this.settings.debug.showMines){
@@ -183,6 +195,13 @@ export default class BoardRender extends EventTarget{
         for(let i = 0; i < this.boardData.rows; i++){
             for(let j = 0; j < this.boardData.columns; j++){
                 if(this.boardData.field[i][j].revealed) this.recolorTile(i,j);
+            }
+        }
+    }
+    renumberAll(){
+        for(let i = 0; i < this.boardData.rows; i++){
+            for(let j = 0; j < this.boardData.columns; j++){
+                if(this.boardData.field[i][j].revealed) this.renumberTile(i,j);
             }
         }
     }

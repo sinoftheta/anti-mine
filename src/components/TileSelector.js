@@ -3,13 +3,12 @@
  * 
  * SUBSCRIBES TO: reset, gameWon, gameLost
  * 
- * BROADCASTS: tileClick
+ * BROADCASTS: tileClick, updateCurrentTile
  * 
  * 
  */
 
 const padding = 4; //TODO: make this dynamic
-
  export default class TileSelecor extends EventTarget{
 
     constructor(boardContainer, settings, broadcaster){
@@ -44,6 +43,7 @@ const padding = 4; //TODO: make this dynamic
             }
             else if((e.keyCode == 32 || e.keyCode == 13) && !this.active){
                 this.active = true;
+                this.broadcaster.dispatchEvent(new CustomEvent('updateCurrentTile', {detail: {x: this.y, y: this.x}}));
                 this.initCursor();
             }
         });
@@ -53,22 +53,21 @@ const padding = 4; //TODO: make this dynamic
 
             if(!this.active) return;
 
-            if(e.keyCode == 40){ //down
-                this.y = Math.min(this.y + 1, this.settings.rows - 1);
+            //down
+            if(e.keyCode == 40)this.y = Math.min(this.y + 1, this.settings.rows - 1);
+            //up
+            else if(e.keyCode == 38)this.y = Math.max(this.y - 1, 0);
+            //right
+            else if(e.keyCode == 39)this.x = Math.min(this.x + 1, this.settings.columns - 1);
+            //left
+            else if(e.keyCode == 37)this.x = Math.max(this.x - 1, 0);
+
+            if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
                 this.updateVisualPosition();
+                this.broadcaster.dispatchEvent(new CustomEvent('updateCurrentTile', {detail: {x: this.y, y: this.x}}));
+                //console.log('cur tile: ' + this.x + ', ' + this.y);
             }
-            else if(e.keyCode == 38){ //up
-                this.y = Math.max(this.y - 1, 0);
-                this.updateVisualPosition();
-            }
-            else if(e.keyCode == 39){ //right
-                this.x = Math.min(this.x + 1, this.settings.columns - 1);
-                this.updateVisualPosition();
-            }
-            else if(e.keyCode == 37){ //left
-                this.x = Math.max(this.x - 1, 0);
-                this.updateVisualPosition();
-            }
+
         });
 
 

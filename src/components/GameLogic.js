@@ -105,7 +105,7 @@ export default class GameLogic extends EventTarget{
 
         //check win condition
         //this.gameWon = (this.area - this.revealedTiles === this.numMines);
-        this.gameWon = this.minesRevealed === this.numMines || (this.minesRevealed + this.safeTilesRevealed === this.area) || this.numMines + this.safeTilesRevealed === this.area;
+        this.gameWon = (this.minesRevealed === this.numMines) || (this.minesRevealed + this.safeTilesRevealed === this.area) || (this.numMines + this.safeTilesRevealed === this.area) ;
         if(this.gameWon && !this.gameLost) this.broadcaster.dispatchEvent(new CustomEvent('gameWon', {}));
 
         //console.log('mines revealed: ' + this.minesRevealed + ' totalMines: ' + this.numMines);
@@ -114,9 +114,9 @@ export default class GameLogic extends EventTarget{
     }
     mineHit(value){
 
-        let c = 5; //constant ensures that hitting a null mine results in losing health
+        let c = 1; //constant ensures that hitting a null mine results in losing health
 
-        let damage = Math.abs(value + 5); 
+        let damage = Math.abs(value + c); 
         //console.log('you lost ' + damage + ' health');
         this.hitpoints -= damage;
 

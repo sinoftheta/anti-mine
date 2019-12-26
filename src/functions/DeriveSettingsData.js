@@ -1,3 +1,4 @@
+import { rasterizeGradient } from "./ColorMap";
 /*
 derrive settings data from settings
 console log current settings
@@ -39,6 +40,13 @@ export const deriveSettingsData = (settings) => {
             );
         console.log("cell size: " + settings.cellSize);
     }
+
+    //choose random theme
+    settings.theme = Math.floor(Math.random() * settings.themes.length);
+    
+    //rasterizeGradient 
+    settings.gradientRaster = rasterizeGradient(settings.themes[settings.theme].data);
+    console.log("theme: " + settings.themes[settings.theme].title);
 
 
 

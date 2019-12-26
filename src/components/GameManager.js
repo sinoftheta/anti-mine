@@ -1,3 +1,5 @@
+import { deriveSettingsData } from "../functions/DeriveSettingsData";
+
 /**
  * 
  * SUBSCRIBES TO: gameWon, gameLost, reset
@@ -23,15 +25,14 @@ export default class GameManager extends EventTarget{
         this.addEventListener('gameLost', (e) => this.playAgainPopup("Oh no, you were annihilated!"), false);
 
         this.addEventListener('reset', (e) => {
-            console.log('game mang resetting')
             this.modal && this.modal.parentNode === this.modalContainer ? this.modalContainer.removeChild(this.modal) : null;
         }, false);
 
     }
     createNewGame(){
         //this.settings.randMines ? this.settings.mines =  Math.floor(Math.random() * 30) + 45 : null;
-        this.settings.seed =  Math.floor(Math.random() * 1337);
-        console.log("mines: " + this.settings.mines);
+
+        deriveSettingsData(this.settings);
         this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));
     }
     playAgainPopup(message){

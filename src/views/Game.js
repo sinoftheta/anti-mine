@@ -8,14 +8,14 @@ import TileSelector from '../components/TileSelector.js';
 import HealthBar from '../components/HealthBar.js';
 import MinesCounter from '../components/MinesCounter.js';
 import BottomToolbar from '../components/BottomToolbar.js';
+import KernelTooltip from '../components/KernelTooltip.js';
 
 //assets
 import {kernels} from '../assets/Kernels.js';
-import * as gradient from '../assets/Gradients.js';
+import ColorSchemes from '../assets/ColorSchemes.js';
 import * as boards from '../assets/PresetBoards.js';
 
 //functions
-import {rasterizeGradient} from '../functions/ColorMap.js';
 import {deriveSettingsData} from '../functions/DeriveSettingsData.js';
 
 
@@ -38,18 +38,20 @@ export default function(){
         seed: Math.floor(Math.random() * 1337),
         
         /*kernel settings */
-        kernelSize: "_7x7",
-        kernelDecay: "exp2",
+        kernelSize: "_9x9",
+        kernelDecay: "linear",
         kernels: kernels,
         kernelWeight: 0,
 
         /*graphics settings */
         cellSizePreset: false,
         cellSize: 20, 
-        gradients: [],
+        themes: ColorSchemes,
+        theme: 0, //defaults to 0th theme
+        gradientRaster: [], //rasterized gradient
         cutoff: 0.7, //cutoff = 0.7 and multiplier = 4.5 are good defaults
         multiplier: 4.5,
-        displayNums: false,
+        displayNums: true,
 
         /*debug */
         debug: {
@@ -60,25 +62,13 @@ export default function(){
         }
     }
 
-
-    // generate raster for gradients
-    init_settings.gradients.push(rasterizeGradient(gradient.g1));
-    init_settings.gradients.push(rasterizeGradient(gradient.g2));
-    init_settings.gradients.push(rasterizeGradient(gradient.g3));
-    init_settings.gradients.push(rasterizeGradient(gradient.g4));
-    init_settings.gradients.push(rasterizeGradient(gradient.g5));
-    init_settings.gradients.push(rasterizeGradient(gradient.g6));
-
-
     deriveSettingsData(init_settings);
-
-
-
 
     /*
     * Instantiate components
     */
 
+    /*LOGIC */
     let broadcaster = new Broadcaster;
 
     let game_manager = new GameManager(document.body, init_settings, broadcaster);
@@ -87,23 +77,27 @@ export default function(){
     let game_logic = new GameLogic(init_settings, broadcaster);
     broadcaster.subscribe(game_logic);
 
-    let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);
-
-    /**GAME INTERFACES */
-
+    /**GAME COMPONENTS */
     let board_render = new BoardRender(document.getElementById("game-board"), game_logic, init_settings, broadcaster);
     broadcaster.subscribe(board_render);
 
     let healthbar = new HealthBar(document.getElementById('hp-container'), game_logic, init_settings, broadcaster);
     broadcaster.subscribe(healthbar);
 
-    let tile_selector = new TileSelector(document.getElementById("game-board"), init_settings, broadcaster);
-    broadcaster.subscribe(tile_selector);
-
     let mines_counter = new MinesCounter(document.getElementById("mine-counter-container"), game_logic, init_settings);
     broadcaster.subscribe(mines_counter);
 
     let bottom_toolbar = new BottomToolbar(document.getElementById("color-levels-container"), init_settings, broadcaster);
+
+    /* GAME peripherals*/
+    let tile_selector = new TileSelector(document.getElementById("game-board"), init_settings, broadcaster);
+    broadcaster.subscribe(tile_selector);
+
+    let kernel_tooltip = new KernelTooltip(document.getElementById("game-board"), init_settings);
+    broadcaster.subscribe(kernel_tooltip);
+
+    /*MENUS*/
+    let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);
 
 }
 

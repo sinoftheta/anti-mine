@@ -1,7 +1,8 @@
 /**
- * Kernel Generator tool for Anti Mine
+ * Kernel Generator tool for AntiMine
  * 
- * This tool generates a square coeffincent matrix for a given diameter
+ * This tool generates a square coeffincent matrix for a given input diameter
+ * 
  * 
  */
 var fs = require('fs');
@@ -22,19 +23,14 @@ if(diameter % 2 == undefined || diameter % 2 === 0){
 
 let k = [];
 
+let radius = Math.floor(diameter / 2);
 
-
-//let r = Math.floor(diameter / 2);
 for(let i = 0; i < diameter; i++){
     k[i] = [];
     for(let j = 0; j < diameter; j++){
 
-        //k[i][j] = 0;
-
-        //pythagorean theorem to find distance from origin ... this algorithm sucks
-        //let distance = Math.pow(Math.pow((i - r), 2) + Math.pow((j - r), 2), 0.5);
-        //if(i === Math.floor(diameter / 2) && j === Math.floor(diameter / 2)) k[i][j] = 1;
-            
+        //compute taxicab distance
+        k[i][j] = Math.max(Math.abs(Math.abs(i - radius) + Math.abs( j - radius) - diameter) - radius, 0);
     }
 }
 

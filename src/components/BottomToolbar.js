@@ -64,18 +64,18 @@ import {undo} from '../assets/Svgs.js';
         document.getElementById("cutoff-slider").oninput = (e) => {
 
             this.settings.cutoff = e.target.value;
-            this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
+            this.broadcaster.dispatchEvent(new CustomEvent('tileRecolor', {}));
         }
 
         document.getElementById("multiplier-slider").oninput = (e) => {
 
             this.settings.multiplier = e.target.value;
-            this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
+            this.broadcaster.dispatchEvent(new CustomEvent('tileRecolor', {}));
         }
         
         document.getElementById("show-mines-checkbox").oninput = (e) => {
             this.settings.displayNums = e.target.checked;
-            this.broadcaster.dispatchEvent(new CustomEvent('tileStateUpdated', {}));
+            this.broadcaster.dispatchEvent(new CustomEvent('displayNumsUpdate', {}));
         }
     }
  }

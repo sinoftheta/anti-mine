@@ -1,8 +1,3 @@
-@font-face {
-    font-family: PixelTiny;
-    src: url('../PixelTiny.ttf');
-  }
-  
 #game-area{
     position: absolute;
     top: 50%;
@@ -206,7 +201,6 @@
 .cell-value{
 
     
-    font-family: PixelTiny;
     font-size: 1.2em; /*should be based on cell size*/
 
     -webkit-text-stroke: 2px #000000c0;
