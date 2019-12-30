@@ -39,6 +39,7 @@ import { rasterizeGradient } from "../functions/ColorMap";
                 if(!(e.keyCode == 32 || e.keyCode == 13)) return;
                 this.selectTheme(i);
             }
+            element.onmouseleave = e => e.target.blur();
             element.tabIndex = 0;
             
             this.elements.push(element);

@@ -1,4 +1,4 @@
-import { rasterizeGradient } from "./ColorMap";
+import { rasterizeGradient } from './ColorMap.js';
 /*
 derrive settings data from settings
 console log current settings
@@ -6,8 +6,7 @@ console log current settings
 export const deriveSettingsData = (settings) => {
     if(!settings) return;
 
-    console.log("mines: " + settings.mines)
-    console.log("seed: " + settings.seed)
+    console.log("mines: " + settings.numMines)
 
     // derive board dimensions from preset board 
     if(settings.presetBoard){
@@ -19,6 +18,7 @@ export const deriveSettingsData = (settings) => {
 
     //random seed
     settings.seed = Math.floor(Math.random() * 420691337);
+    console.log('using seed: ' + settings.seed);
 
     // derive kernel weight
     let kernelWeight = 0;
@@ -29,17 +29,6 @@ export const deriveSettingsData = (settings) => {
         }
     }
     settings.kernelWeight = kernelWeight;
-
-
-    // derive cell size
-    if(!settings.cellSizePreset){
-        let padding = 200;
-        settings.cellSize = Math.floor(Math.min(
-            (window.innerWidth  - padding) / settings.columns,
-            (window.innerHeight - padding) / settings.rows)
-            );
-        console.log("cell size: " + settings.cellSize);
-    }
     
     //rasterizeGradient 
     settings.gradientRaster = rasterizeGradient(settings.themes[settings.theme].data);

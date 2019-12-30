@@ -112,9 +112,14 @@
 
         // assumes kernel is square
         let offset = Math.floor(k.length/2);
+
+        let parse = this.settings.cellSize.split('v');
         
-        this.kernelContainer.style.top = (this.x - offset) * (this.settings.cellSize + padding);
-        this.kernelContainer.style.left = (this.y - offset) * (this.settings.cellSize + padding);
+        this.kernelContainer.style.top = `calc(${(this.x - offset) * Number(parse[0]) }v${parse[1]} + ${(this.x - offset) * padding}px)`;
+        this.kernelContainer.style.left = `calc(${(this.y - offset) * Number(parse[0]) }v${parse[1]} + ${(this.y - offset) * padding}px)`;
+
+        //console.log(`calc(${(this.y - offset) * Number(parse[0]) }v${parse[1]} + ${(this.y - offset) * padding}px)`);
+        
     }
 
  }

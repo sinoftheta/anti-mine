@@ -21,9 +21,9 @@ export default class BoardRender extends EventTarget{
             this.destroy();
             this.build();
         }, false);
-        this.addEventListener('tileStateUpdated', (e) => this.updateAllAppearance(), false);
-        this.addEventListener('tileRecolor', (e) => this.recolorAll(), false);
-        this.addEventListener('displayNumsUpdate', (e) => this.renumberAll(), false);
+        this.addEventListener('tileStateUpdated', (e) => this.updateAllAppearance(), false); //needed...?
+        this.addEventListener('tileRecolor', (e) => this.recolorAll(), false); //needed...?
+        this.addEventListener('displayNumsUpdate', (e) => this.renumberAll(), false); //not needed
         this.addEventListener('gameLost', (e) => this.revealAllExceptMines(), false);
         this.addEventListener('gameWon', (e) => this.revealAll(), false);
         
@@ -59,8 +59,8 @@ export default class BoardRender extends EventTarget{
                 targetElement.oncontextmenu = () => {return false};
                 targetElement.x = i;
                 targetElement.y = j;
-                targetElement.style.height = this.settings.cellSize;
-                targetElement.style.width = this.settings.cellSize;
+                //targetElement.style.height = this.settings.cellSize;
+                //targetElement.style.width = this.settings.cellSize;
 
                 targetElement.onmouseenter = (e) => {
                     //console.log(e.target.x + ', ' + e.target.y);
@@ -80,6 +80,7 @@ export default class BoardRender extends EventTarget{
             //console.log('off board');
             this.broadcaster.dispatchEvent(new CustomEvent('updateCurrentTile', {detail: {x: -1, y: -1}}));
         }
+        
     }
     coverTile(x,y){
         let targetData = this.boardData.field[x][y];
@@ -89,7 +90,10 @@ export default class BoardRender extends EventTarget{
         targetElement.classList.add('cell-covered');
 
         //click behavior
-        targetElement.onclick = (e) => this.broadcaster.dispatchEvent(new CustomEvent('tileReveal', {detail: {x: e.target.x, y: e.target.y }}));
+        targetElement.onmouseup = (e) => {
+            //click event
+            this.broadcaster.dispatchEvent(new CustomEvent('tileReveal', {detail: {x: e.target.x, y: e.target.y }}));
+        }
 
         //left click behavior
         targetElement.oncontextmenu = (e) => {
@@ -120,6 +124,11 @@ export default class BoardRender extends EventTarget{
         //colorMap(tileVal, kWeight, cutoff, multiplier)
         let n = colorMap(targetData.value, this.settings.kernelWeight, this.settings.cutoff, this.settings.multiplier);
 
+        //manually adjust color for mines
+        if(targetData.isMine && targetData.value > 0) n = Math.min( n + 15, 99 );
+        if(targetData.isMine && targetData.value < 0) n = Math.max( n - 15, 0 );
+
+
         targetElement.style.background = this.settings.gradientRaster[n];
     }
     renumberTile(x,y){
@@ -131,7 +140,9 @@ export default class BoardRender extends EventTarget{
             //this only works for linear kernels
             let cellChild = targetElement.appendChild(document.createElement("div"));
             cellChild.className = `cell-value`;
-            cellChild.innerHTML = targetData.value;
+
+            
+            cellChild.innerHTML = targetData.value === 0 && !targetData.isMine? '' : targetData.value; //dont show zeros, like regular MS, but show null mines
             //apply mine classes to tiles that are mines
             if(targetData.isMine){
                 targetElement.classList.add('cell-mine');
@@ -184,9 +195,13 @@ export default class BoardRender extends EventTarget{
             }   
         }
     }
+
     updateAllAppearance(){ //inefficent, should only update a list of tiles that have actually been updated
         for(let i = 0; i < this.boardData.rows; i++){
             for(let j = 0; j < this.boardData.columns; j++){
+                //this.elements[i][j].style.height = this.settings.cellSize;
+                //this.elements[i][j].style.width = this.settings.cellSize;
+
                 if(this.boardData.field[i][j].revealed) this.uncoverTile(i,j);
             }
         }

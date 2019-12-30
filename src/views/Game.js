@@ -10,6 +10,7 @@ import MinesCounter from '../components/MinesCounter.js';
 import BottomToolbar from '../components/BottomToolbar.js';
 import KernelTooltip from '../components/KernelTooltip.js';
 import ColorSelector from '../components/ColorSelector.js';
+import AspectDetector from '../components/AspectDetector.js'; 
 
 //assets
 import {kernels} from '../assets/Kernels.js';
@@ -35,18 +36,19 @@ export default function(){
         presetBoard: false, //boolean indicating the existance of a preset board
         boardPreset: [], //the preset board obj TODO: MAKE THESE 1 VAR
         randMines: true,
-        mines: Math.floor(Math.random() * 10) + 5,
+        numMines: Math.floor(Math.random() * 15) + 10,
+        limitInteractions: true,
+        haveAntiMines: true,
         seed: Math.floor(Math.random() * 1337),
         
         /*kernel settings */
-        kernelSize: "_9x9",
-        kernelDecay: "linear",
+        kernelSize: "_5x5",
+        kernelDecay: "taxi",
         kernels: kernels,
         kernelWeight: 0,
 
         /*graphics settings */
         cellSizePreset: false,
-        cellSize: 20, 
         themes: ColorSchemes,
         theme: Math.floor(Math.random() * ColorSchemes.length),
         gradientRaster: [], //rasterized gradient
@@ -90,6 +92,8 @@ export default function(){
 
     let bottom_toolbar = new BottomToolbar(document.getElementById("color-levels-container"), init_settings, broadcaster);
 
+    let size_manager = new AspectDetector(init_settings, broadcaster);
+
     /* GAME peripherals*/
     let tile_selector = new TileSelector(document.getElementById("game-board"), init_settings, broadcaster);
     broadcaster.subscribe(tile_selector);
@@ -101,6 +105,8 @@ export default function(){
     let options_menu = new OptionsMenu(document.body, init_settings, broadcaster);
 
     let color_selector = new ColorSelector(document.body, init_settings, broadcaster);
+
+    /* LISTENERS */
 
 }
 

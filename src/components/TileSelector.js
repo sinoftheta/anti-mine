@@ -108,8 +108,13 @@ const padding = 4; //TODO: make this dynamic
     }
     updateVisualPosition(){
         
-        this.cursor.style.top = this.y * (this.settings.cellSize + padding) + (padding / 2);
-        this.cursor.style.left = this.x * (this.settings.cellSize + padding) + (padding / 2);
+        //this.cursor.style.top = this.y * (this.settings.cellSize + padding) + (padding / 2);
+        //this.cursor.style.left = this.x * (this.settings.cellSize + padding) + (padding / 2);
+
+        let parse = this.settings.cellSize.split('v');
+        
+        this.cursor.style.left = `calc(${(this.x) * Number(parse[0]) }v${parse[1]} + ${(this.x) * padding}px)`;
+        this.cursor.style.top = `calc(${(this.y) * Number(parse[0]) }v${parse[1]} + ${(this.y) * padding}px)`;
     }
 
  }

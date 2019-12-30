@@ -24,10 +24,12 @@ export default class GameLogic extends EventTarget{
     }
     setup(){ //may change to num mines + num anti mines, maybe a mine will just have random value 
 
-        this.numMines = this.settings.mines;
+        this.numMines = this.settings.numMines;
         this.rows = this.settings.rows;
         this.columns = this.settings.columns;
         this.area = this.rows * this.columns;
+
+        this.firstClick = true;
     
         
         this.gameLost = false;
@@ -48,6 +50,7 @@ export default class GameLogic extends EventTarget{
             }
         }
 
+        /** this should go in first click handle */
         if(this.settings.presetBoard) this.placeMinesPreset();
         else this.placeMinesRandom();
         
@@ -63,10 +66,18 @@ export default class GameLogic extends EventTarget{
 
     }*/
     handleReveal(e){
+
+
         if(this.gameLost || this.gameWon || this.field[e.detail.x][e.detail.y].revealed) return;
         let x = e.detail.x, y = e.detail.y;
 
         let target = this.field[x][y];
+
+        if(this.fisrtClick){
+            this.firstClick = false;
+            //generate board
+
+        }
 
         if(target.isMine){
             this.mineHit(target.value);
@@ -116,7 +127,7 @@ export default class GameLogic extends EventTarget{
 
         let c = 1; //constant ensures that hitting a null mine results in losing health
 
-        let damage = Math.abs(value + c); 
+        let damage = Math.abs(value) + c; 
         //console.log('you lost ' + damage + ' health');
         this.hitpoints -= damage;
 
@@ -234,7 +245,7 @@ export default class GameLogic extends EventTarget{
     
     }
     
-    placeMinesRandom(){ 
+    placeMinesRandom(exclude){ 
 
         if(this.numMines >= this.area){
             console.log('Error: too many mines for this board size');
@@ -246,11 +257,14 @@ export default class GameLogic extends EventTarget{
         while(n > 0){
             x = Math.floor(rng() * this.rows );
             y = Math.floor(rng() * this.columns );
+
+            if(exclude && x == exclude.x && y == exclude.y) continue;
+
             target = this.field[x][y];
 
             //if no mine already at x,y
             if(!target.isMine){
-                target.value = rng() > .5 ? 1 : -1 ;
+                target.value = this.settings.haveAntiMines? (rng() > .5 ? 1 : -1) : 1;
                 target.isMine = true;
                 --n;
             }
@@ -320,8 +334,11 @@ export default class GameLogic extends EventTarget{
 
         let target = field[x][y];
 
+        //new logic to correct for new originValue passing logic
+        if((target.checked && target.isMine) || target.revealed) return;
+
         //check if mine is revealed or has been checked
-        if(target.checked || target.revealed) return;
+        //if(target.checked || target.revealed) return;
         target.checked = true;
 
         if(typeof originValue === 'number'){
@@ -336,6 +353,7 @@ export default class GameLogic extends EventTarget{
             //stop at 0 or sign change boundary
             if(target.value !== 0 && originValue === 0)return;
 
+            //"down hill both ways"
             if(target.value > 0 && originValue < 0)return;//{ console.log('=-=-=- not revealed 4 =-=-=-=-='); return;}
             if(target.value < 0 && originValue > 0)return;//{ console.log('=-=-=- not revealed 5 =-=-=-=-='); return;}
             if(originValue > 0 && target.value > originValue)return;//{ console.log('=-=-=- not revealed 1 =-=-=-=-='); return;} //only uncover "down hill" if positive
@@ -354,34 +372,38 @@ export default class GameLogic extends EventTarget{
         }
 
         
-        //recurse over all neighbors, example of a DFS
+        // recurse over all neighbors, example of a DFS
+
+        // try passing this: "down hill both ways, never back up hill"
 
         //east
-        this.autoRevealTile(x + 1, y, originValue);
+        this.autoRevealTile(x + 1, y, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
 
         //north
-        this.autoRevealTile(x, y + 1, originValue);
+        this.autoRevealTile(x, y + 1, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
 
         //west
-        this.autoRevealTile(x - 1, y, originValue);
+        this.autoRevealTile(x - 1, y, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
 
         //south
-        this.autoRevealTile(x, y - 1, originValue);
+        this.autoRevealTile(x, y - 1, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
 
         //dont recurse over diagonals
         //return;
 
         //northeast
-        this.autoRevealTile(x + 1, y + 1, originValue);
+        this.autoRevealTile(x + 1, y + 1, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
 
         //northwest
-        this.autoRevealTile(x - 1, y + 1, originValue);
+        this.autoRevealTile(x - 1, y + 1, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
 
         //southwest
-        this.autoRevealTile(x - 1, y - 1, originValue);
+        this.autoRevealTile(x - 1, y - 1, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
 
         //southeast
-        this.autoRevealTile(x + 1, y - 1, originValue);
+        this.autoRevealTile(x + 1, y - 1, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
+        
+        
     }
     resetCheckStatus(){
         for(let i = 0; i < this.rows; i++){ //vertical

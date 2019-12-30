@@ -166,8 +166,6 @@ let kcode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13];
             this.close();
 
         }
-
-
         menuPanel.appendChild(fieldGroup);
         
         menuPanel.insertAdjacentHTML('beforeend',`
@@ -187,7 +185,7 @@ let kcode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13];
                     <option value='default'>Kernel Decay</option>
                     <option value='exp2'>Exponential</option>
                     <option value='square'>Square</option>
-                    <option value='linear'>Linear</option>
+                    <option value='taxi'>Taxi Cab</option>
                     <option value='constant'>Constant</option>
                 </select>
             </div>

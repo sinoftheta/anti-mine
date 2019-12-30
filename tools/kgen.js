@@ -9,14 +9,14 @@ var fs = require('fs');
 
 
 if(!process.argv[2]){
-    console.log("error: please provide a diameter");
+    console.log("error: please provide a canter value");
     return;
 }
 
-let diameter = Number(process.argv[2]);
+let diameter = Number(process.argv[2] * 2 - 1);
 
 if(diameter % 2 == undefined || diameter % 2 === 0){
-    console.log("error: diameter must be an odd integer");
+    console.log("error: canter value must be an integer");
     return;
 }
 //console.log("diameter = " + diameter);
@@ -35,4 +35,4 @@ for(let i = 0; i < diameter; i++){
 }
 
 
-fs.writeFile(`kernel-${diameter}.json`, JSON.stringify(k), 'utf8', (err) => { err ? console.log("An error occured while writing JSON Object to File.") : null});
+fs.writeFile(`kernel-${process.argv[2]}.json`, JSON.stringify(k), 'utf8', (err) => { err ? console.log("An error occured while writing JSON Object to File.") : null});

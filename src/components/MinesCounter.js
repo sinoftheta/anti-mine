@@ -25,6 +25,7 @@ export default class MinesCounter extends EventTarget{
     build(){
 
         this.counter_mines = document.createElement("div");
+        this.counter_mines.classList.add("cell-value");
         this.counter_mines.textContent = this.game_state.numMines - this.game_state.minesRevealed;
 
         this.container.appendChild(this.counter_mines);

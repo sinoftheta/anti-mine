@@ -49,5 +49,20 @@ export default [
             {weight: 100, r: 255, g: 255, b: 255,},
             {weight: 0,   r: 0,  g: 0,  b: 0,},
         ],
-    }
+    },
+    {
+        title: "tea",
+        data: [
+            {weight: 100, r: 111, g: 19, b: 176,},
+            {weight: 0,   r: 245,  g: 185,  b: 34,},
+        ],
+    },
+    {
+        title: "votes",
+        data: [
+            {weight: 100, r: 217, g: 51, b: 0,},
+            {weight: 50,  r: 255,  g: 255,  b: 255,},
+            {weight: 0,   r: 69,  g: 0,  b: 217,},
+        ],
+    },
 ]
