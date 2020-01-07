@@ -51,7 +51,7 @@ export default [
         ],
     },
     {
-        title: "passion fruit",
+        title: "passionfruit",
         data: [
             {weight: 100, r: 111, g: 19, b: 176,},
             {weight: 0,   r: 245,  g: 185,  b: 34,},

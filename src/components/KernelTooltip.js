@@ -18,9 +18,10 @@
         this.settings = settings;
         this.active = false;
 
-        this.addEventListener('reset', () => this.buildKernel()); //why rebuild pn reset?
+        this.addEventListener('reset', () => this.initKernel()); //why rebuild pn reset?
         this.addEventListener('displayNumsUpdate', (e) => this.updateNums(), false);
 
+        this.buildKernelContainer();
         //control key listeners
         window.addEventListener('keydown', (e) => {
             if(e.keyCode == 17){
@@ -37,15 +38,23 @@
             }
         });
 
-        this.buildKernel();
+        this.initKernel();
     }
-    buildKernel(){
-        
-        if(this.kernelContainer && this.kernelContainer.parentElement === this.boardContainer) this.boardContainer.removeChild(this.kernelContainer);
-
+    buildKernelContainer(){
         this.kernelContainer = document.createElement("div");
         this.kernelContainer.id = "kernel-container"
         this.kernelContainer.style.display = 'none';
+        this.boardContainer.appendChild(this.kernelContainer);
+
+    }
+    initKernel(){
+        
+        while(this.kernelContainer.firstChild){
+            this.kernelContainer.firstChild.remove();
+        }
+
+        console.log(this.kernelContainer);
+
         this.elements = [];
 
         let k = this.settings.kernels[this.settings.kernelSize][this.settings.kernelDecay];
@@ -76,8 +85,6 @@
 
             }
         }
-
-        this.boardContainer.appendChild(this.kernelContainer);
     }
     updateNums(){
         //update

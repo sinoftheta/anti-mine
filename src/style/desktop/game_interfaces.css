@@ -19,10 +19,10 @@
 
 
     display: grid;
-    grid-template-columns: var(--cell-size) auto;
-    grid-template-rows: auto var(--cell-size);
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
+    grid-template-columns: calc(var(--cell-size) + 2 * var(--cell-border)) auto;
+    grid-template-rows: auto calc(var(--cell-size) + 2 * var(--cell-border));
+    grid-column-gap: var(--cell-border);
+    grid-row-gap: var(--cell-border);
 
     justify-content: center;
 

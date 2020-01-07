@@ -180,6 +180,7 @@ export default class BoardRender extends EventTarget{
         //update click functionality
         targetElement.onclick = null;
         targetElement.oncontextmenu = () => false;
+        targetElement.onmouseup = null;
 
         this.recolorTile(x,y);
         this.renumberTile(x,y);
