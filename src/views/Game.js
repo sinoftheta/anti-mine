@@ -30,6 +30,7 @@ export default function(){
     //initial game settings
     let init_settings = {
 
+        levelText: 'level 1', //other titles could be: 'tutorial' 'free play' 'chellenge'
         /*board settings */
         rows: 12,
         columns: 20,
