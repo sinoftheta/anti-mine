@@ -29,8 +29,11 @@ for(let i = 0; i < diameter; i++){
     k[i] = [];
     for(let j = 0; j < diameter; j++){
 
-        //compute taxicab distance
+        //compute inverse  taxicab distance
         k[i][j] = Math.max(Math.abs(Math.abs(i - radius) + Math.abs( j - radius) - diameter) - radius, 0);
+
+        //compute king distance
+        //k[i][j] = 1 + radius - Math.max(Math.abs(i - radius), Math.abs(j - radius));
     }
 }
 

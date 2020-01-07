@@ -1,10 +1,11 @@
 #kernel-container{
     position: absolute;
-    top:0;
-    left:0;
+    top:  calc(var(--cur-y) * (var(--cell-size) + var(--cell-border) * 2));
+    left: calc(var(--cur-x) * (var(--cell-size) + var(--cell-border) * 2));
     z-index: 15;
-
-    
+    transform:  translate(-50%, -50%) 
+                translate(calc(var(--cell-size) / 2), calc(var(--cell-size) / 2)) 
+                translate(calc(var(--cell-border) ), calc(var(--cell-border) ));
 }
 .kernel-row{
     display: flex;
@@ -17,33 +18,39 @@
     color: #00ff8858;
 
     border-style: solid;
-    border-width: 2px; /*Kernel Cell border width must be same as cell border width*/
+    border-width: var(--cell-border); /*Kernel Cell border width must be same as cell border width*/
+
+    height: var(--cell-size);
+    width: var(--cell-size);
+
 
     animation-duration: 420ms;
     animation-iteration-count: infinite;
     animation-direction: alternate-reverse;
 }
 .kernel-cell-empty{
-    border: 2px solid #00000000; /*Kernel Cell border width must be same as cell border width*/
+    border-color: #00000000;
+    border-style: solid;
+    border-width: var(--cell-border); /*Kernel Cell border width must be same as cell border width*/
+
+    height: var(--cell-size);
+    width: var(--cell-size);
 }
 .kernel-cell-value{
     color: inherit;
     position: relative;
-    left: 10%;
-    top: -5%;
+    left: 5%;
+    top: -33%;
+    font-size: calc(var(--cell-text-size) * 0.7);
 }
 
 @keyframes cell-pulse-green{ /*add more keyframes?*/
     0% {
         border-color: #00ff8888;
         color: #00ff88A8;
-        /*border-width: 3px;
-        transform: translate(-3px,-3px);*/
     }
     100%{
         border-color: #00ff8820;
         color: #00ff8858;
-        /*border-width: 8px;
-        transform: translate(-8px,-8px);*/
     }
 }

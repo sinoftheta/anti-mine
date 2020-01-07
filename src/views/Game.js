@@ -93,6 +93,7 @@ export default function(){
     let bottom_toolbar = new BottomToolbar(document.getElementById("color-levels-container"), init_settings, broadcaster);
 
     let size_manager = new AspectDetector(init_settings, broadcaster);
+    broadcaster.subscribe(size_manager);
 
     /* GAME peripherals*/
     let tile_selector = new TileSelector(document.getElementById("game-board"), init_settings, broadcaster);

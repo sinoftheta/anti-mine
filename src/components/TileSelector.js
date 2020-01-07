@@ -8,7 +8,6 @@
  * 
  */
 
-const padding = 4; //TODO: make this dynamic
  export default class TileSelecor extends EventTarget{
 
     constructor(boardContainer, settings, broadcaster){
@@ -20,7 +19,7 @@ const padding = 4; //TODO: make this dynamic
         this.standby = false;
 
         //init position
-        this.x = Math.floor(this.settings.columns / 2);
+        this.x = Math.floor(this.settings.columns / 2); //this code is coupled with the reset method in AspectDetector
         this.y = Math.floor(this.settings.rows / 2);
 
         //listen for game win/lose
@@ -63,7 +62,7 @@ const padding = 4; //TODO: make this dynamic
             else if(e.keyCode == 37)this.x = Math.max(this.x - 1, 0);
 
             if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
-                this.updateVisualPosition();
+                //this.updateVisualPosition();
                 this.broadcaster.dispatchEvent(new CustomEvent('updateCurrentTile', {detail: {x: this.y, y: this.x}}));
                 //console.log('cur tile: ' + this.x + ', ' + this.y);
             }
@@ -103,18 +102,6 @@ const padding = 4; //TODO: make this dynamic
 
         this.boardContainer.appendChild(this.cursor);
 
-        this.updateVisualPosition();
-
-    }
-    updateVisualPosition(){
-        
-        //this.cursor.style.top = this.y * (this.settings.cellSize + padding) + (padding / 2);
-        //this.cursor.style.left = this.x * (this.settings.cellSize + padding) + (padding / 2);
-
-        let parse = this.settings.cellSize.split('v');
-        
-        this.cursor.style.left = `calc(${(this.x) * Number(parse[0]) }v${parse[1]} + ${(this.x) * padding}px)`;
-        this.cursor.style.top = `calc(${(this.y) * Number(parse[0]) }v${parse[1]} + ${(this.y) * padding}px)`;
     }
 
  }

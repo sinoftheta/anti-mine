@@ -5,26 +5,34 @@
 
 #tile-cursor{
     position: absolute;
-    top:0;
-    left:0;
+    top:  calc(var(--cur-y) * (var(--cell-size) + var(--cell-border) * 2) + var(--cell-border));
+    left: calc(var(--cur-x) * (var(--cell-size) + var(--cell-border) * 2) + var(--cell-border));
     z-index: 9;
     background: #00000000;
     border-style: solid;
+
+    height: var(--cell-size);
+    width: var(--cell-size);
 
     animation-name: cursor-blink;
     animation-duration: 420ms;
     animation-iteration-count: infinite;
     animation-direction: alternate-reverse;
 }
-@keyframes cursor-blink{ /*add more keyframes?*/
+:root{
+    --cursor-min: 5px;
+    --cursor-max: 10px;
+}
+
+@keyframes cursor-blink{
     0% {
         border-color: #0e01885e;
-        border-width: 3px;
-        transform: translate(-3px,-3px);
+        border-width: var(--cursor-min);
+        transform: translate(calc(-1 * var(--cursor-min)),calc(-1 * var(--cursor-min)));
     }
     100%{
         border-color: #7c11e0a1;
-        border-width: 8px;
-        transform: translate(-8px,-8px);
+        border-width: var(--cursor-max);
+        transform: translate(calc(-1 * var(--cursor-max)),calc(-1 * var(--cursor-max)));
     }
 }

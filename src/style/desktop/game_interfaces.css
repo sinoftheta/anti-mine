@@ -1,8 +1,11 @@
-:root{
+:root{ /*these can go above their rezspective rules, just be careful with naming conventions*/
     --cell-size: '';
-    --cell-text-size: 6em;
-    --cell-borders: 2px;
+    --cell-text-size: 0px;
+    --cell-border: 5px;
     --hover-color: #8a8a8a;
+    --cur-x: 0;
+    --cur-y: 0;
+
 }
 
 #game-area{
@@ -82,17 +85,22 @@
 *****************/
 
 
+:root{
+ --health-bar-ratio: 100%;
+}
 #health-bar-animate{
 
     position: absolute;
     left: 0;
     bottom:0;
-    width: calc(100% - 8px);
+
+    width: calc(100% - (2 * var(--cell-border) ));
+    height: calc(var(--health-bar-ratio) - ( 2 * var(--cell-border) ));
 
     background: #4d0000;
     border-style: solid;	
     border-color: #5d0000 #3d0000 #3d0000 #5d0000; 	
-    border-width: 4px;
+    border-width: var(--cell-border);
 
     transition: all .7s ease-in-out 0s;
     box-shadow: 3px 3px 5px #00000085;
@@ -103,8 +111,10 @@
     transform: translate(-50%, 0);
     bottom:4px;
     z-index: 5;
+    
+    font-size: var(--cell-text-size);
 
-    background: #0000005e;
+    background: #00000000;
     color: #ffffffa4;
     padding: 2px;
 }
@@ -116,7 +126,7 @@
     background: #004d00;
     border-style: solid;	
     border-color: #005d00 #003d00 #003d00 #005d00; 	
-    border-width: 4px;
+    border-width: var(--cell-border);
     box-shadow: 3px 3px 5px #00000085;
 
     position: relative;
@@ -125,10 +135,11 @@
     
 }
 #mine-counter-container div{
-    position: absolute;
-    left: 50%;
+    position: relative;
+    right: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform:  translate(50%, -50%) 
+                translateY(calc(var(--cell-text-size) / -9.5));         
 }
 
 /**********************
@@ -138,12 +149,19 @@
     background: #49688f;
     border-style: solid;	
     border-color: #4d719c #304968   #304968 #4d719c;
-    border-width: 4px;
+    border-width: var(--cell-border);
     box-shadow: 3px 3px 5px #00000085;
 
 }
 .toolbar-item{
-    transform: translate(0, -35%);
+    transform: translate(0, -50%);
+    font-size: var(--cell-text-size); /*should be based on cell size*/
+    color: #ffffff; 
+    user-select: none;
+}
+.toolbar-item input{
+    position: relative;
+    top: -25%;
 }
 .toolbar-slider{
     background: rgba(0, 0, 0, 0.644);
@@ -167,6 +185,9 @@
     width: 15px; 
     height: 15px;
     background: #c2c2c2;
+}
+#show-mines-checkbox{
+    transform: scale(2); /*good enough for now*/
 }
 .toolbar-item{
     color:#ffffffaa;
@@ -192,28 +213,35 @@
     background: #535353;
     border-style: solid;
     border-color: #696969 #444444 #444444 #696969; 
-    border-width: 2px;
+    border-width: var(--cell-border);
     transition: all 49ms ease-in-out;
 
     box-shadow: 1px 1px 1px #00000085;
 
-    z-index: 3;
+    z-index: 3
 }
 .cell-covered:hover{
     background: var(--hover-color);
 }
 .cell-revealed{
-    padding: 2px;
+    padding: var(--cell-border);
 }
 .cell-value{
+    /*position: relative;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);*/ /*uhh, might just leave for now tbh*/
 
     
-    font-size: var(--cell-text-size); /*should be based on cell size*/
-
-    -webkit-text-stroke: 2.5px #000000d0;
+    font-size: var(--cell-text-size); 
     color: #ffffff; 
     user-select: none;
     overflow: hidden;
+
+    -webkit-text-stroke: calc(var(--cell-text-size) / 40) #000000d0;  /*dependant on pixelTiny font*/
+    transform: translateY(calc(var(--cell-text-size) / -9.5));          /*dependant on pixelTiny font*/
+   
+    
 
     
 }
@@ -231,4 +259,3 @@
 .cell-flagged-2{
     color: #000000;
 }
-

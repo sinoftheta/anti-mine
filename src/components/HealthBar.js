@@ -23,17 +23,22 @@ export default class HealthBar extends EventTarget{
         this.addEventListener('reset', (e) => {
             this.maxHitpoints = hitpointsCalc(this.settings.kernelWeight, this.settings.numMines);
             this.counter_HP.textContent = this.maxHitpoints;
-            this.bar.style.height = `calc(100% - ${padding})`;
+            this.updateHealth();
         }, false);
         this.addEventListener('damageTaken', (e) => this.updateHealth(), false);
         this.addEventListener('gameLost', (e) => {}, false); //maybe use for animation idk
         this.addEventListener('gameWon', (e) => {}, false); //maybe use for animation idk
+
+        this.updateHealth();
+
+
     }
+
     updateHealth(){
         //play animation or something
-        console.log('ouch!');
         this.counter_HP.textContent = Math.max(0, this.game_state.hitpoints);
-        this.bar.style.height = `${Math.max(0, Math.floor(100 * this.game_state.hitpoints / this.maxHitpoints))}%`;
+        //this.bar.style.height = `${Math.max(0, Math.floor(100 * this.game_state.hitpoints / this.maxHitpoints))}%`;
+        document.documentElement.style.setProperty('--health-bar-ratio', `${Math.max(0, Math.floor(100 * this.game_state.hitpoints / this.maxHitpoints))}%`);
     }
     updateMines(){
         this.counter_mines.textContent = this.game_state.numMines - this.game_state.minesRevealed;
@@ -44,7 +49,6 @@ export default class HealthBar extends EventTarget{
 
         this.bar = document.createElement("div");
         this.bar.id = 'health-bar-animate';
-        this.bar.style.height = `calc(${Math.floor(100 * this.game_state.hitpoints / this.maxHitpoints)}% - ${padding})`;
         
 
         this.counter_HP = document.createElement("div");

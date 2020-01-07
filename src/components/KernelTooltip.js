@@ -21,22 +21,6 @@
         this.addEventListener('reset', () => this.buildKernel()); //why rebuild pn reset?
         this.addEventListener('displayNumsUpdate', (e) => this.updateNums(), false);
 
-        //init position
-        this.x = Math.floor(this.settings.columns / 2);
-        this.y = Math.floor(this.settings.rows / 2);
-
-        //listen for new current tile
-        this.addEventListener('updateCurrentTile', (e) => {
-            
-            //dont update pos if no current tile (cursor is off board)
-            if(e.detail.x == -1 || e.detail.y == -1) return;
-
-            this.x = e.detail.x;
-            this.y = e.detail.y;
-
-            this.updateVisualPosition();
-        });
-
         //control key listeners
         window.addEventListener('keydown', (e) => {
             if(e.keyCode == 17){
@@ -84,8 +68,7 @@
                 else{
                     target.className = 'kernel-cell-empty  unselectable';
                 }
-                target.style.height = this.settings.cellSize;
-                target.style.width = this.settings.cellSize;
+
                 
                 //apply animation delay based off of kernel cell value, creates "pulsating" effect
                 target.style.animationDelay = `${k[i][j] * 50}ms`;
@@ -107,7 +90,7 @@
             }
         }
     }
-    updateVisualPosition(){
+    updateVisualPosition(){ //depreciated, logic should be used as a reference
         let k = this.settings.kernels[this.settings.kernelSize][this.settings.kernelDecay];
 
         // assumes kernel is square
@@ -115,7 +98,7 @@
 
         let parse = this.settings.cellSize.split('v');
         
-        this.kernelContainer.style.top = `calc(${(this.x - offset) * Number(parse[0]) }v${parse[1]} + ${(this.x - offset) * padding}px)`;
+        this.kernelContainer.style.top = `calc(${(this.x - offset)} * var(--cell-size) + ${(this.x - offset) * padding}px)`;
         this.kernelContainer.style.left = `calc(${(this.y - offset) * Number(parse[0]) }v${parse[1]} + ${(this.y - offset) * padding}px)`;
 
         //console.log(`calc(${(this.y - offset) * Number(parse[0]) }v${parse[1]} + ${(this.y - offset) * padding}px)`);

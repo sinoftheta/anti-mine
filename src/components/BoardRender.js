@@ -76,10 +76,10 @@ export default class BoardRender extends EventTarget{
                 
             }
         }
-        this.container.onmouseleave = (e) => {
+        /*this.container.onmouseleave = (e) => {
             //console.log('off board');
             this.broadcaster.dispatchEvent(new CustomEvent('updateCurrentTile', {detail: {x: -1, y: -1}}));
-        }
+        }*/
         
     }
     coverTile(x,y){
@@ -130,6 +130,7 @@ export default class BoardRender extends EventTarget{
 
 
         targetElement.style.background = this.settings.gradientRaster[n];
+        this.container.style.background = this.settings.gradientRaster[n];
     }
     renumberTile(x,y){
         let targetData = this.boardData.field[x][y];
