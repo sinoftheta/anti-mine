@@ -30,8 +30,7 @@ export default class GameLogic extends EventTarget{
         this.area = this.rows * this.columns;
 
         this.firstClick = true;
-    
-        
+
         this.gameLost = false;
         this.gameWon = false;
         this.mineRevealList = [];
@@ -51,10 +50,14 @@ export default class GameLogic extends EventTarget{
         }
 
         /** this should go in first click handle */
-        if(this.settings.presetBoard) this.placeMinesPreset();
-        else this.placeMinesRandom();
+        if(this.settings.presetBoard){
+            this.placeMinesPreset();
+            this.placeNumbersKernel();
+            this.firstClick = false;
+        }
+        //else this.placeMinesRandom();
         
-        this.placeNumbersKernel();
+        //this.placeNumbersKernel();
 
     }
     /*handleFlag(e){
@@ -73,10 +76,12 @@ export default class GameLogic extends EventTarget{
 
         let target = this.field[x][y];
 
-        if(this.fisrtClick){
+        if(this.firstClick){
             this.firstClick = false;
-            //generate board
+            //generate board... works but slow, good enough for 1.0
 
+            this.placeMinesRandom({x: x, y: y});
+            this.placeNumbersKernel();
         }
 
         if(target.isMine){

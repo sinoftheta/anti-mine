@@ -112,9 +112,11 @@ export default class BoardRender extends EventTarget{
             return false;
         };
 
-        if(this.settings.debug && this.settings.debug.active && this.settings.debug.indicate_hidden_mine && targetData.isMine){
+        /* broken
+        if(this.settings.debug && this.settings.debug.active && this.settings.debug.indicate_hidden_mine && targetData.isMine){ //
             targetElement.style.background = '#ff0000'
         }
+        */
     }
     recolorTile(x,y){
         let targetData = this.boardData.field[x][y];
