@@ -1,7 +1,8 @@
+import GameManager from './GameManager.js';
+
 //components
 import GameLogic from '../components/GameLogic.js';
 import BoardRender from '../components/BoardRender.js';
-import GameManager from '../components/GameManager.js';
 import Broadcaster from '../components/Broadcaster.js';
 import OptionsMenu from '../components/OptionsMenu.js';
 import TileSelector from '../components/TileSelector.js';

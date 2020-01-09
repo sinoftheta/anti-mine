@@ -1,4 +1,19 @@
+import * as _ from 'lodash';
 import { deriveSettingsData } from "../functions/DeriveSettingsData";
+
+//components
+import GameLogic from '../components/GameLogic.js';
+import BoardRender from '../components/BoardRender.js';
+import Broadcaster from '../components/Broadcaster.js';
+import OptionsMenu from '../components/OptionsMenu.js';
+import TileSelector from '../components/TileSelector.js';
+import HealthBar from '../components/HealthBar.js';
+import MinesCounter from '../components/MinesCounter.js';
+import BottomToolbar from '../components/BottomToolbar.js';
+import KernelTooltip from '../components/KernelTooltip.js';
+import ColorSelector from '../components/ColorSelector.js';
+import AspectDetector from '../components/AspectDetector.js'; 
+
 
 /**
  * 
@@ -15,22 +30,50 @@ import { deriveSettingsData } from "../functions/DeriveSettingsData";
   */
 export default class GameManager extends EventTarget{
 
-    constructor(modalContainer, settings, broadcaster){
+    constructor(modalContainer,levels, broadcaster){
         super();
-        this.settings = settings;
+        this.level = 0;
+        this.levels = levels;
         this.modalContainer = modalContainer;
         this.broadcaster = broadcaster;
         //this.addEventListener('tileClick', (e) => console.log(e.detail), false);
-        this.addEventListener('gameWon', (e) => this.playAgainPopup("Congrats, you located all the mines!"), false);
-        this.addEventListener('gameLost', (e) => this.playAgainPopup("Oh no, you were annihilated!"), false);
+        this.addEventListener('gameWon', (e) => this.gameWon(), false);
+        this.addEventListener('gameLost', (e) => this.gameLost(), false);
 
         this.addEventListener('reset', (e) => {
             this.modal && this.modal.parentNode === this.modalContainer ? this.modalContainer.removeChild(this.modal) : null;
         }, false);
 
     }
+    init(){
+         //instantiate all elements
+    }
+    gameWon(){
+
+        this.playAgainPopup("Congrats, you located all the mines!");
+
+        
+        this.level += 1; // need to cap level
+
+
+        //assign global settings
+        
+
+        //next level
+    }
+    gameLost(){
+
+
+        this.playAgainPopup("Oh no, you were annihilated!")
+    }
+
+    gotoLevel(level){
+
+    }
     createNewGame(){
-        //this.settings.randMines ? this.settings.mines =  Math.floor(Math.random() * 30) + 45 : null;
+        
+
+
 
         deriveSettingsData(this.settings);
         this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));
