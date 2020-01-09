@@ -67,9 +67,7 @@ export default class GameManager extends EventTarget{
         this.playAgainPopup("Oh no, you were annihilated!")
     }
 
-    gotoLevel(level){
 
-    }
     createNewGame(){
         
 
@@ -98,6 +96,24 @@ export default class GameManager extends EventTarget{
         resetButton.focus();
 
 
+    }
+
+    gotoLevel(level){
+
+        //set level
+        this.level = level;
+
+        //update settings
+
+        //reset
+    }
+    setMode(mode){
+
+        
+
+        // add / remove settings menu
+
+        // reset
     }
 
 }
