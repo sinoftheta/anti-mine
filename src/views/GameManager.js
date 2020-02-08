@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import { deriveSettingsData } from "../functions/DeriveSettingsData";
+import levels from '../assets/Levels.js'
 
 //components
 import GameLogic from '../components/GameLogic.js';
@@ -30,10 +31,15 @@ import AspectDetector from '../components/AspectDetector.js';
   */
 export default class GameManager extends EventTarget{
 
-    constructor(modalContainer,levels, broadcaster){
+    constructor(modalContainer, init_settings, broadcaster){
         super();
         this.level = 0;
         this.levels = levels;
+        this.settings = init_settings;
+        _.merge(this.settings, this.levels[this.level]);
+        console.log(this.levels[this.level]);
+        console.log(this.settings);
+
         this.modalContainer = modalContainer;
         this.broadcaster = broadcaster;
         //this.addEventListener('tileClick', (e) => console.log(e.detail), false);
@@ -44,39 +50,67 @@ export default class GameManager extends EventTarget{
             this.modal && this.modal.parentNode === this.modalContainer ? this.modalContainer.removeChild(this.modal) : null;
         }, false);
 
+        this.init();
+
     }
     init(){
-         //instantiate all elements
+        //instantiate all elements
+
+        /*GAME LOGIC */
+        let game_logic = new GameLogic(this.settings, this.broadcaster);
+        this.broadcaster.subscribe(game_logic);
+
+        /**GAME COMPONENTS */
+        let board_render = new BoardRender(document.getElementById("game-board"), game_logic, this.settings, this.broadcaster);
+        this.broadcaster.subscribe(board_render);
+
+        let healthbar = new HealthBar(document.getElementById('hp-container'), game_logic, this.settings, this.broadcaster);
+        this.broadcaster.subscribe(healthbar);
+
+        let mines_counter = new MinesCounter(document.getElementById("mine-counter-container"), game_logic, this.settings);
+        this.broadcaster.subscribe(mines_counter);
+
+        let bottom_toolbar = new BottomToolbar(document.getElementById("color-levels-container"), this.settings, this.broadcaster);
+
+        let size_manager = new AspectDetector(this.settings, this.broadcaster);
+        this.broadcaster.subscribe(size_manager);
+
+        /* GAME peripherals*/
+        let tile_selector = new TileSelector(document.getElementById("game-board"), this.settings, this.broadcaster);
+        this.broadcaster.subscribe(tile_selector);
+
+        let kernel_tooltip = new KernelTooltip(document.getElementById("game-board"), this.settings);
+        this.broadcaster.subscribe(kernel_tooltip);
+
     }
     gameWon(){
 
-        this.playAgainPopup("Congrats, you located all the mines!");
-
-        
-        this.level += 1; // need to cap level
+        //incremement level without going out of bounds
+        this.level = Math.min(this.level + 1, this.levels.length - 1); 
 
 
-        //assign global settings
-        
+        //assign global settings by overwriting changes
+        _.merge(this.settings, this.levels[this.level]);
 
-        //next level
+        console.log("settings after game won:");
+        console.log(this.settings);
+
+        this.playAgainPopup("Congrats, you located all the mines!", "Next Level");
     }
     gameLost(){
 
+        // level does not change upon losing a game
 
-        this.playAgainPopup("Oh no, you were annihilated!")
+        this.playAgainPopup("Oh no, you were annihilated!", "Try Again");
     }
 
 
     createNewGame(){
         
-
-
-
         deriveSettingsData(this.settings);
         this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));
     }
-    playAgainPopup(message){
+    playAgainPopup(message, buttonText){
 
         this.modal = document.createElement("div");
         let resetButton = document.createElement("button");
@@ -87,16 +121,15 @@ export default class GameManager extends EventTarget{
         this.modal.appendChild(resetButton);
 
         resetButton.onclick = (e) => this.createNewGame();
-        resetButton.innerHTML = "Play Again";
+        resetButton.innerHTML = buttonText;
 
         messageContainer.innerHTML = message;
 
         this.modalContainer.appendChild(this.modal);
 
         resetButton.focus();
-
-
     }
+
 
     gotoLevel(level){
 

@@ -1,4 +1,7 @@
+import {kernels} from './Kernels.js';
+import * as boards from './PresetBoards.js';
 export default [
+    // SETTINGS ASSOCIATED WITH EACH LEVEL
 
     {
         levelText: 'level 1', //other titles could be: 'tutorial' 'free play' 'chellenge'
@@ -17,16 +20,6 @@ export default [
         kernelDecay: "taxi",
         kernels: kernels,
         kernelWeight: 0,
-
-        //this wont change by the level
-        /*graphics settings */
-        cellSizePreset: false,
-        themes: ColorSchemes,
-        theme: Math.floor(Math.random() * ColorSchemes.length),
-        gradientRaster: [], //rasterized gradient
-        cutoff: 0.7, //cutoff = 0.7 and multiplier = 4.5 are good defaults
-        multiplier: 4.5,
-        displayNums: true,
     },
     {
         levelText: 'level 2', 

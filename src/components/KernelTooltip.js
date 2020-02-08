@@ -27,16 +27,16 @@
             if(e.keyCode == 17){
                 this.active = true;
                 this.kernelContainer.style.display = '';
-                console.log('showing ktool');// on ' + this.x + ', ' + this.y);
-                console.log(this.kernelContainer);
+                //console.log('showing ktool');// on ' + this.x + ', ' + this.y);
+                //console.log(this.kernelContainer);
             }
         });
         window.addEventListener('keyup', (e) => {
             if(e.keyCode == 17){
                 this.active = false;
                 this.kernelContainer.style.display = 'none';
-                console.log('hiding ktool');
-                console.log(this.kernelContainer);
+                //console.log('hiding ktool');
+                //console.log(this.kernelContainer);
             }
         });
 
