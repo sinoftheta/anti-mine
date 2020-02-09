@@ -37,7 +37,7 @@ export default class GameManager extends EventTarget{
         this.levels = levels;
         this.settings = init_settings;
         _.merge(this.settings, this.levels[this.level]);
-        console.log(this.levels[this.level]);
+        //console.log(this.levels[this.level]);
         console.log(this.settings);
 
         this.modalContainer = modalContainer;
@@ -82,6 +82,8 @@ export default class GameManager extends EventTarget{
         let kernel_tooltip = new KernelTooltip(document.getElementById("game-board"), this.settings);
         this.broadcaster.subscribe(kernel_tooltip);
 
+        this.createNewGame();
+
     }
     gameWon(){
 
@@ -92,9 +94,6 @@ export default class GameManager extends EventTarget{
         //assign global settings by overwriting changes
         _.merge(this.settings, this.levels[this.level]);
 
-        console.log("settings after game won:");
-        console.log(this.settings);
-
         this.playAgainPopup("Congrats, you located all the mines!", "Next Level");
     }
     gameLost(){
@@ -102,13 +101,6 @@ export default class GameManager extends EventTarget{
         // level does not change upon losing a game
 
         this.playAgainPopup("Oh no, you were annihilated!", "Try Again");
-    }
-
-
-    createNewGame(){
-        
-        deriveSettingsData(this.settings);
-        this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));
     }
     playAgainPopup(message, buttonText){
 
@@ -136,17 +128,20 @@ export default class GameManager extends EventTarget{
         //set level
         this.level = level;
 
-        //update settings
-
-        //reset
+        this.createNewGame();
     }
     setMode(mode){
 
-        
+        //modify settings based on mode
 
         // add / remove settings menu
 
         // reset
+    }
+    createNewGame(){
+        
+        deriveSettingsData(this.settings);
+        this.broadcaster.dispatchEvent(new CustomEvent('reset', {detail: {settings: this.settings}}));
     }
 
 }

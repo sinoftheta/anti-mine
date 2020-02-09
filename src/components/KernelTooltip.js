@@ -43,12 +43,11 @@
         this.initKernel();
     }
     buildKernelContainer(){
-        console.log('wtf if more than once');
+        //console.log('wtf if more than once');
         this.kernelContainer = document.createElement("div");
         this.kernelContainer.id = "kernel-container"
         this.kernelContainer.style.display = 'none';
         this.boardContainer.appendChild(this.kernelContainer);
-
     }
     initKernel(){
         
@@ -56,7 +55,7 @@
             this.kernelContainer.firstChild.remove();
         }
 
-        console.log(this.kernelContainer);
+        //console.log(this.kernelContainer);
 
         this.elements = [];
 
