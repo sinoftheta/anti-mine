@@ -8,21 +8,13 @@ import ColorSelector from '../components/ColorSelector.js';
 //import AspectDetector from '../components/AspectDetector.js'; //might yoink to this file
 
 //assets
-
 import ColorSchemes from '../assets/ColorSchemes.js';
 
 
 //functions
 import {deriveSettingsData} from '../functions/DeriveSettingsData.js';
 
-
-/************************************************************** 
-        SOME OF THIS GOES IN ANOTHER VIEW
-********V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V*V**/
-
-export default function(){
-
-    //initial game settings
+//initial game settings... import from another file
     let init_settings = {
 
 
@@ -46,9 +38,7 @@ export default function(){
         }
     }
 
-
-
-    
+export default function(){
     let broadcaster = new Broadcaster;
 
     let game_manager = new GameManager(document.body, init_settings, broadcaster);
@@ -57,7 +47,7 @@ export default function(){
     /*MENUS*/
     let options_menu = new OptionsMenu(document.body, init_settings, broadcaster); //??? will prob rework
 
-    let color_selector = new ColorSelector(document.body, init_settings, broadcaster);
+    let color_selector = new ColorSelector(document.body, init_settings, broadcaster); // restyle?
 
     /* LISTENERS */
 
