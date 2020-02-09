@@ -18,7 +18,7 @@
         this.settings = settings;
         this.active = false;
 
-        this.addEventListener('reset', () => this.initKernel()); //why rebuild pn reset?
+        this.addEventListener('reset', () => this.initKernel()); //why rebuild on reset? because its easy
         this.addEventListener('displayNumsUpdate', (e) => this.updateNums(), false);
 
         this.buildKernelContainer();
@@ -27,7 +27,8 @@
             if(e.keyCode == 17){
                 this.active = true;
                 this.kernelContainer.style.display = '';
-                //console.log('showing ktool on ' + this.x + ', ' + this.y);
+                //console.log('showing ktool');// on ' + this.x + ', ' + this.y);
+                //console.log(this.kernelContainer);
             }
         });
         window.addEventListener('keyup', (e) => {
@@ -35,12 +36,14 @@
                 this.active = false;
                 this.kernelContainer.style.display = 'none';
                 //console.log('hiding ktool');
+                //console.log(this.kernelContainer);
             }
         });
 
         this.initKernel();
     }
     buildKernelContainer(){
+        console.log('wtf if more than once');
         this.kernelContainer = document.createElement("div");
         this.kernelContainer.id = "kernel-container"
         this.kernelContainer.style.display = 'none';

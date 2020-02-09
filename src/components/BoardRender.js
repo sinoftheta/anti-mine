@@ -30,8 +30,9 @@ export default class BoardRender extends EventTarget{
     }
 
     destroy(){
-        while(this.container.firstChild){
-            this.container.removeChild(this.container.firstChild); 
+        let rows = document.getElementsByClassName('game-row');
+        while(rows[0]){
+            rows[0].parentNode.removeChild(rows[0]);
         }
     }
     build(){

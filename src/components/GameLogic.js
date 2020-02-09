@@ -394,7 +394,7 @@ export default class GameLogic extends EventTarget{
         this.autoRevealTile(x, y - 1, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
 
         //dont recurse over diagonals
-        //return;
+        return;
 
         //northeast
         this.autoRevealTile(x + 1, y + 1, Math.abs(originValue) > Math.abs(target.value) ? target.value : originValue);
