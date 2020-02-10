@@ -21,7 +21,8 @@ class game{
             story: new gameManager(this),
             
         };
-        this.title.init();
+        // init first view
+        this.views[this.view].init();
     }
     switchToView(view){
         //destroy current view
