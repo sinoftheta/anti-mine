@@ -11,8 +11,6 @@ AntiMine aims to bring the deductive reasoning, pattern recognition, and satisfa
 
 [Glossary](https://github.com/IanBand/anti-mine/blob/master/glossary.md "Glossary")
 
-Questions? Comments? Want Updates? Contact or follow me on Twitter! [@goatlink](https://twitter.com/goatlink "Twitter")
-
 
 ## Play
 [Play it here!](http://web.engr.oregonstate.edu/~bandi/AntiMine/ "Play Here!")
